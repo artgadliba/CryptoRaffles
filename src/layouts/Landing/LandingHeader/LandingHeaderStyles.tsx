@@ -1,0 +1,175 @@
+import { FC, PropsWithChildren, SyntheticEvent } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import pxIntoRem from "../../../utils/pxIntoRem";
+
+const LandingHeaderBlock = styled.header`
+  width: 100%;
+  z-index: 999999999;
+`;
+
+const LandingHeaderBody = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-top: ${pxIntoRem(28)};
+  @media (max-width: 500px) {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      "logo burger"
+      "button button";
+    padding-top: ${pxIntoRem(16)};
+    gap: ${pxIntoRem(20)};
+  }
+`;
+
+const LandingHeaderLogoBlock = styled.div`
+  width: ${pxIntoRem(197)};
+  height: ${pxIntoRem(75)};
+  grid-area: logo;
+`;
+
+const LandingHeaderLogo = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const LandingHeaderNavigation = styled.nav`
+  display: flex;
+  align-items: center;
+  margin-left: ${pxIntoRem(158)};
+  margin-right: auto;
+  @media (max-width: 1240px) {
+    margin-left: ${pxIntoRem(158 * 0.6)};
+  }
+
+  @media (max-width: 1000px) {
+    margin-left: ${pxIntoRem(158 * 0.5)};
+  }
+
+  @media (max-width: 500px) {
+    display: none;
+  }
+`;
+
+const LandingHeaderNavigationLinkBlock = styled.button`
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 500;
+  font-size: ${pxIntoRem(16)};
+  line-height: 172.52%;
+  color: #ffffff;
+  margin-left: ${pxIntoRem(92)};
+  background-color: transparent;
+  @media (max-width: 1240px) {
+    margin-left: ${pxIntoRem(92 * 0.6)};
+  }
+
+  @media (max-width: 1000px) {
+    margin-left: ${pxIntoRem(92 * 0.5)};
+  }
+
+  @media (max-width: 750px) {
+    margin-left: ${pxIntoRem(92 * 0.3)};
+  }
+
+  &:first-of-type {
+    margin-left: 0px;
+  }
+`;
+
+interface ILandingHeaderNavigationLink {
+  to: string;
+  onClick(e: SyntheticEvent): any;
+}
+
+const LandingHeaderNavigationLink: FC<PropsWithChildren<ILandingHeaderNavigationLink>> = ({ children, onClick, to }) => {
+  const location = useLocation();
+  return (
+    <LandingHeaderNavigationLinkBlock
+      onClick={onClick}
+      style={
+        to === location.pathname
+          ? {
+              color: "#08e2bd",
+            }
+          : {}
+      }
+    >
+      {children}
+    </LandingHeaderNavigationLinkBlock>
+  );
+};
+
+const LandingHeaderIcons = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: ${pxIntoRem(65)};
+  margin-left: auto;
+  @media (max-width: 1240px) {
+    margin-right: ${pxIntoRem(65 * 0.6)};
+  }
+
+  @media (max-width: 1000px) {
+    margin-right: ${pxIntoRem(65 * 0.5)};
+  }
+
+  @media (max-width: 500px) {
+    display: none;
+  }
+`;
+
+const LandingHeaderIconBlock = styled(Link)`
+  margin-left: ${pxIntoRem(27)};
+  width: auto;
+  height: auto;
+  &:first-of-type {
+    margin-left: 0px;
+  }
+
+  @media (max-width: 1000px) {
+    margin-left: ${pxIntoRem(27 * 0.5)};
+  }
+`;
+
+interface ILandingHeaderIcon {
+  width: number;
+}
+
+const LandingHeaderIcon = styled.img<ILandingHeaderIcon>`
+  width: ${({ width }) => pxIntoRem(width)};
+`;
+
+const LandingHeaderButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.69);
+  border-radius: ${pxIntoRem(5)};
+  background-color: transparent;
+  padding: ${pxIntoRem(19)} ${pxIntoRem(35)};
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 600;
+  font-size: ${pxIntoRem(16)};
+  line-height: ${pxIntoRem(20)};
+  color: #ffffff;
+  cursor: pointer;
+  grid-area: button;
+
+  @media (max-width: 500px) {
+    justify-content: center;
+    width: 100%;
+  }
+`;
+
+const LandingHeaderButtonImage = styled.img`
+  width: ${pxIntoRem(18)};
+  height: ${pxIntoRem(18)};
+  margin-left: ${pxIntoRem(13)};
+`;
+
+export { LandingHeaderBlock, LandingHeaderBody, LandingHeaderLogo, LandingHeaderLogoBlock, LandingHeaderNavigation, LandingHeaderNavigationLink, LandingHeaderIcons, LandingHeaderIconBlock, LandingHeaderIcon, LandingHeaderButton, LandingHeaderButtonImage };
