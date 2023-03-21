@@ -16,10 +16,10 @@ interface IIndexSlider {
 const IndexSlider: FC<IIndexSlider> = ({ items }) => {
   return (
     <IndexSliderBlock>
-      <IndexSliderBorderLeft alt="border" src="/images/greeting-card-left-border.png" />
-      <IndexSliderBorderRight alt="border" src="/images/greeting-card-right-border.png" />
+      <IndexSliderBorderLeft alt="border" src="/images/greeting-card-left-border.svg" />
+      <IndexSliderBorderRight alt="border" src="/images/greeting-card-right-border.svg" />
       <IndexSliderLightning alt="lightning" src="/images/greeting-card-lightning.png" />
-      <IndexSliderLines alt="lines" src="/images/greeting-card-lines.png" />
+      <IndexSliderLines alt="lines" src="/images/greeting-card-lines.svg" />
       <IndexSliderPrev className="swiper-prev" />
       <IndexSliderNext className="swiper-next" />
       <IndexSliderPrevTop className="swiper-prev" />

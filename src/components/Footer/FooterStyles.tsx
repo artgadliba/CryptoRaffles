@@ -89,8 +89,9 @@ const FooterNavigationLink = styled(NavLink)`
     margin-top: 0px;
   }
 
-  &.active {
+  &:hover {
     color: #08e2bd;
+    transition: 0.5s;
   }
 `;
 
@@ -134,8 +135,29 @@ const FooterIconBlock = styled(Link)`
   }
 `;
 
-const FooterIcon = styled.img<IFooterIcon>`
-  width: ${({ width }) => pxIntoRem(width)};
+const FooterIcon = styled.svg`
+  width: ${pxIntoRem(27)};
+  fill: #ffffff;
+
+  @media (max-width: 1000px) {
+    width: ${pxIntoRem(27 * 0.5)};
+  }
+
+  @media (max-width: 500px) {
+    width: ${pxIntoRem(27)};
+  }
+
+  &:hover {
+    color: #08e2bd;
+    transition: 0.5s;
+  }
+`;
+
+const FooterIconWrapper = styled.div`
+  &:hover {
+    color: #08e2bd;
+    transition: 0.5s;
+  }
 `;
 
 const FooterButton = styled.button`
@@ -151,6 +173,8 @@ const FooterButton = styled.button`
   font-size: ${pxIntoRem(16)};
   line-height: ${pxIntoRem(20)};
   color: #ffffff;
+  cursor: pointer;
+  grid-area: button;
 
   @media (max-width: 500px) {
     justify-content: center;
@@ -160,10 +184,26 @@ const FooterButton = styled.button`
   }
 `;
 
-const FooterButtonImage = styled.img`
+const FooterButtonImage = styled.svg`
   width: ${pxIntoRem(18)};
   height: ${pxIntoRem(18)};
   margin-left: ${pxIntoRem(13)};
+  fill: white;
+`;
+
+const FooterButtonWrapper = styled.div`
+  z-index: 9;
+  &:hover ${FooterButton} {
+    color: #08e2bd;
+    transition: 0.5s;
+    outline: none;
+    border-color: #08e2bd;
+  }
+
+  &:hover ${FooterButtonImage} {
+    fill: #08e2bd;
+    transition: 0.5s;
+  }
 `;
 
 const FooterBottom = styled.div`
@@ -213,4 +253,4 @@ const FooterBlurredCircle = styled.div`
   }
 `;
 
-export { FooterBlock, FooterTop, FooterBody, FooterButton, FooterButtonImage, FooterIconBlock, FooterIcon, FooterIcons, FooterLogo, FooterLogoBlock, FooterNavigation, FooterNavigationLink, FooterBottom, FooterLink, FooterBlurredCircle };
+export { FooterBlock, FooterTop, FooterBody, FooterButton, FooterButtonImage, FooterIconBlock, FooterIcon, FooterIcons, FooterLogo, FooterLogoBlock, FooterNavigation, FooterNavigationLink, FooterBottom, FooterLink, FooterBlurredCircle, FooterButtonWrapper };

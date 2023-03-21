@@ -80,6 +80,11 @@ const LandingHeaderNavigationLinkBlock = styled.button`
   &:first-of-type {
     margin-left: 0px;
   }
+
+  &:hover {
+    color: #08e2bd;
+    transition: 0.5s;
+  }
 `;
 
 interface ILandingHeaderNavigationLink {
@@ -93,11 +98,7 @@ const LandingHeaderNavigationLink: FC<PropsWithChildren<ILandingHeaderNavigation
     <LandingHeaderNavigationLinkBlock
       onClick={onClick}
       style={
-        to === location.pathname
-          ? {
-              color: "#08e2bd",
-            }
-          : {}
+        {}
       }
     >
       {children}
@@ -140,8 +141,18 @@ interface ILandingHeaderIcon {
   width: number;
 }
 
-const LandingHeaderIcon = styled.img<ILandingHeaderIcon>`
-  width: ${({ width }) => pxIntoRem(width)};
+const LandingHeaderIcon = styled.svg`
+  width: ${pxIntoRem(27)};
+  fill: white;
+
+  @media (max-width: 1000px) {
+    width: ${pxIntoRem(27 * 0.5)};
+  }
+
+  &:hover {
+    fill: #08e2bd;
+    transition: 0.5s;
+  }
 `;
 
 const LandingHeaderButton = styled(Link)`
@@ -166,10 +177,25 @@ const LandingHeaderButton = styled(Link)`
   }
 `;
 
-const LandingHeaderButtonImage = styled.img`
+const LandingHeaderButtonImage = styled.svg`
   width: ${pxIntoRem(18)};
   height: ${pxIntoRem(18)};
   margin-left: ${pxIntoRem(13)};
+  fill: white;
 `;
 
-export { LandingHeaderBlock, LandingHeaderBody, LandingHeaderLogo, LandingHeaderLogoBlock, LandingHeaderNavigation, LandingHeaderNavigationLink, LandingHeaderIcons, LandingHeaderIconBlock, LandingHeaderIcon, LandingHeaderButton, LandingHeaderButtonImage };
+const LandingHeaderWrapper = styled.div`
+  &:hover ${LandingHeaderButton} {
+    color: #08e2bd;
+    transition: 0.5s;
+    outline: none;
+    border-color: #08e2bd;
+  }
+
+  &:hover ${LandingHeaderButtonImage} {
+    fill: #08e2bd;
+    transition: 0.5s;
+  }
+`;
+
+export { LandingHeaderBlock, LandingHeaderBody, LandingHeaderLogo, LandingHeaderLogoBlock, LandingHeaderNavigation, LandingHeaderNavigationLink, LandingHeaderIcons, LandingHeaderIconBlock, LandingHeaderIcon, LandingHeaderButton, LandingHeaderButtonImage, LandingHeaderWrapper };

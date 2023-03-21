@@ -94,7 +94,7 @@ function Give() {
             <GiveInfoSumm>
               <GiveInfoSummTitle>Сумма розыгрыша</GiveInfoSummTitle>
               <GiveInfoSummValue>
-                <GiveInfoSummValueImage alt="treasure" src="/images/treasure.png" /> {info.price}
+                <GiveInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> {info.price}
               </GiveInfoSummValue>
             </GiveInfoSumm>
           )}
@@ -169,7 +169,7 @@ function Give() {
               />
               <GiveDoneLogoBlock>
                 <GiveDoneLogo alt="logo" src="/images/give-c-logo.svg" />
-                <GiveDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.png" />
+                <GiveDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />
               </GiveDoneLogoBlock>
             </GiveDoneContent>
           </GiveDone>

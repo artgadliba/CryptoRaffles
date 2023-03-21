@@ -27,7 +27,7 @@ interface IIndexWinners {
   }[];
 }
 
-const ROW_LENGTH = 10;
+const ROW_LENGTH = 8;
 
 const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
   return (

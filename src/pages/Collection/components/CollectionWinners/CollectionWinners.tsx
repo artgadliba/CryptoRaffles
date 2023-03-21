@@ -39,9 +39,9 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
         return (
           <CollectionDoneWinnersRow>
             <CollectionDoneWinnersRowItem>
-              {item.isFirst && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/first-medal.png" />}
-              {item.isSecond && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/second-medal.png" />}
-              {item.isThird && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/third-medal.png" />}
+              {item.isFirst && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/1st-place-medal.png" />}
+              {item.isSecond && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/2nd-place-medal.png" />}
+              {item.isThird && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}
               <CollectionDoneWinnersRowItemHash>{item.winner}</CollectionDoneWinnersRowItemHash>
             </CollectionDoneWinnersRowItem>
             <CollectionDoneWinnersRowItem>

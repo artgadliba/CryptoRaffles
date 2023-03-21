@@ -80,8 +80,9 @@ const DefaultHeaderNavigationLink = styled(NavLink)`
     margin-left: 0px;
   }
 
-  &.active {
+  &:hover {
     color: #08e2bd;
+    transition: 0.5s;
   }
 `;
 
@@ -125,8 +126,18 @@ interface IDefaultHeaderIcon {
   width: number;
 }
 
-const DefaultHeaderIcon = styled.img<IDefaultHeaderIcon>`
-  width: ${({ width }) => pxIntoRem(width)};
+const DefaultHeaderIcon = styled.svg`
+  width: ${pxIntoRem(27)};
+  fill: white;
+
+  @media (max-width: 1000px) {
+    width: ${pxIntoRem(27 * 0.5)};
+  }
+
+  &:hover {
+    fill: #08e2bd;
+    transition: 0.5s;
+  }
 `;
 
 const DefaultHeaderButton = styled.button`
@@ -193,8 +204,6 @@ const DefaultHeaderUserNameText = styled.span`
   line-height: 172.52%;
   color: #08e2bd;
 `;
-
-// etherium.png
 
 const DefaultHeaderUserHash = styled.span`
   display: flex;

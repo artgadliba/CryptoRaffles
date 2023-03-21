@@ -16,8 +16,8 @@ const Default: FC<PropsWithChildren<IDefault>> = ({ children, isHeaderActive = f
       <Container maxWidth={1442}>
         <DefaultContent>
           <DefaultNavigation>
-            <DefaultNavigationLink to={"/collections"}>
-              <DefaultNavigationLinkText>Коллекции</DefaultNavigationLinkText>
+            <DefaultNavigationLink to={"/raffles"}>
+              <DefaultNavigationLinkText>Раффлы</DefaultNavigationLinkText>
             </DefaultNavigationLink>
             <DefaultNavigationLink to={"/gives"}>
               <DefaultNavigationLinkText>Гивы</DefaultNavigationLinkText>

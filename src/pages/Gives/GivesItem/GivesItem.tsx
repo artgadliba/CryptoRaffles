@@ -53,7 +53,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
         <GivesFakeItemUsername>
           <div />
         </GivesFakeItemUsername>
-        <GivesFakeItemClock alt="clock" src="/images/clock.png" />
+        <GivesFakeItemClock alt="clock" src="/images/clock.svg" />
         <GivesFakeItemContent>
           <GivesFakeItemId />
           <GivesFakeItemSumm>

@@ -103,7 +103,7 @@ function Collection() {
             <CollectionInfoSumm>
               <CollectionInfoSummTitle>Сумма розыгрыша</CollectionInfoSummTitle>
               <CollectionInfoSummValue>
-                <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.png" /> {info.price}
+                <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> {info.price}
               </CollectionInfoSummValue>
             </CollectionInfoSumm>
           )}
@@ -159,11 +159,11 @@ function Collection() {
               <CollectionBuyTokensButtons>
                 <CollectionBuyTokensControls>
                   <CollectionBuyTokensControl onClick={() => setTokensCounter((prev) => prev - 1)}>
-                    <CollectionBuyTokensControlImage alt="minus" src="/images/minus.png" />
+                    <CollectionBuyTokensControlImage alt="minus" src="/images/minus.svg" />
                   </CollectionBuyTokensControl>
                   <CollectionBuyTokensCounter>{tokensCounter}</CollectionBuyTokensCounter>
                   <CollectionBuyTokensControl onClick={() => setTokensCounter((prev) => prev + 1)}>
-                    <CollectionBuyTokensControlImage alt="plus" src="/images/plus.png" />
+                    <CollectionBuyTokensControlImage alt="plus" src="/images/plus.svg" />
                   </CollectionBuyTokensControl>
                 </CollectionBuyTokensControls>
                 <CollectionBuyTokensButton>Купить токены</CollectionBuyTokensButton>
@@ -177,33 +177,35 @@ function Collection() {
               <CollectionWinners
                 items={
                   [
-                    // {
-                    //   isThird: true,
-                    //   winner: "010lfdx6c07...",
-                    //   tokens: "105",
-                    //   price: "37,075$",
-                    // },
-                    // {
-                    //   winner: "010lfdx6c07...",
-                    //   tokens: "105",
-                    //   price: "37,075$",
-                    // },
-                    // {
-                    //   winner: "010lfdx6c07...",
-                    //   tokens: "105",
-                    //   price: "37,075$",
-                    // },
-                    // {
-                    //   winner: "010lfdx6c07...",
-                    //   tokens: "105",
-                    //   price: "37,075$",
-                    // },
+                    {
+                      isFirst: true,
+                      winner: "010lfdx6c07...",
+                      tokens: "105",
+                      price: "37,075$",
+                    },
+                    {
+                      isSecond: true,
+                      winner: "010lfdx6c07...",
+                      tokens: "105",
+                      price: "37,075$",
+                    },
+                    {
+                      isThird: true,
+                      winner: "010lfdx6c07...",
+                      tokens: "105",
+                      price: "37,075$",
+                    },
+                    {
+                      winner: "010lfdx6c07...",
+                      tokens: "105",
+                      price: "37,075$",
+                    },
                   ]
                 }
               />
               <CollectionDoneLogoBlock>
                 <CollectionDoneLogo alt="logo" src="/images/give-c-logo.svg" />
-                <CollectionDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.png" />
+                <CollectionDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />
               </CollectionDoneLogoBlock>
             </CollectionDoneContent>
           </CollectionDone>

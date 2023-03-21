@@ -53,7 +53,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
         <CollectionsFakeItemUsername>
           <div />
         </CollectionsFakeItemUsername>
-        <CollectionsFakeItemClock alt="clock" src="/images/clock.png" />
+        <CollectionsFakeItemClock alt="clock" src="/images/clock.svg" />
         <CollectionsFakeItemContent>
           <CollectionsFakeItemId />
           <CollectionsFakeItemSumm>

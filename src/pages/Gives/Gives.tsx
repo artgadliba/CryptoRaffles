@@ -6,21 +6,21 @@ import { GivesBlock } from "./GivesStyles";
 function Gives() {
   const [items, setItems] = useState([
     {
-      id: "Raffle # 54c1ae03",
+      id: "Raffle # 0x323ff",
       wallet: "@ Nike",
       price: "$9,445",
       timerDate: Date.now(),
     },
     {
-      id: "Raffle # 54c1ae03",
-      wallet: "@ Nike",
-      price: "$9,445",
+      id: "Raffle # 7fh12ba",
+      wallet: "@ Baxter",
+      price: "$100,087",
       timerDate: Date.now(),
     },
     {
-      id: "Raffle # 54c1ae03",
-      wallet: "@ Nike",
-      price: "$9,445",
+      id: "Raffle # 3da71c5",
+      wallet: "@ Jango",
+      price: "$49,615",
       timerDate: Date.now(),
     },
   ]);
