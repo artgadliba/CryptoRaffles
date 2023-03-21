@@ -26,7 +26,7 @@ const RegisterModal: FC<IRegisterModal> = ({ onClose }) => {
         <RegisterModalTitle>Регистрация</RegisterModalTitle>
         <RegisterModalHashInputBlock>
           <RegisterModalHashInput placeholder="010lfdx6c07010lfdx6c07010lfdx6c07" />
-          <RegisterModalHashInputEtherium alt="etherium" src="/images/etherium.png" />
+          <RegisterModalHashInputEtherium alt="Ethereum" src="/images/ethereum-small-logo.svg" />
         </RegisterModalHashInputBlock>
         <RegisterModalReferenceInput placeholder="Ссылка на аккаунт в соц. сети (youtube, instagram..." />
         <RegisterModalButton>Отправить</RegisterModalButton>

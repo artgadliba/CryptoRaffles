@@ -1,5 +1,5 @@
-import { FC, SyntheticEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, SyntheticEvent, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Container from "../../../components/Container/Container";
 import HeaderBurger from "../../../components/HeaderBurger/HeaderBurger";
 import {
@@ -18,50 +18,20 @@ import {
 } from "./LandingHeaderStyles";
 
 const LandingHeader: FC = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
 
-  function toMain(e: SyntheticEvent) {
-    e.preventDefault();
+  useEffect(()=> {
+          if (location.hash) {
+              let elem = document.getElementById(location.hash.slice(1))
+              if (elem) {
+                  elem.scrollIntoView({behavior: "smooth"})
+              }
+          } else {
+          window.scrollTo({top:0,left:0, behavior: "smooth"})
+          }
+  }, [location,])
 
-    navigate("/");
-    window.scrollTo({
-      top: 0,
-    });
-  }
-
-  function toFAQ(e: SyntheticEvent) {
-    e.preventDefault();
-
-    navigate("/");
-    const faq = document.querySelector("#faq");
-    if (!faq) {
-      return;
-    }
-
-    const yOffset = 85;
-    const startAxis = faq.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({
-      top: startAxis,
-      behavior: "smooth",
-    });
-  }
-
-  function toHow(e: SyntheticEvent) {
-    e.preventDefault();
-
-    navigate("/");
-    const how = document.querySelector("#how");
-    if (!how) {
-      return;
-    }
-
-    const yOffset = 85;
-    const startAxis = how.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({
-      top: startAxis,
-      behavior: "smooth",
-    });
-  }
   return (
     <LandingHeaderBlock>
       <Container>
@@ -70,13 +40,13 @@ const LandingHeader: FC = () => {
             <LandingHeaderLogo alt="logo" src="/images/logo.svg" />
           </LandingHeaderLogoBlock>
           <LandingHeaderNavigation>
-            <LandingHeaderNavigationLink to="/" onClick={toMain}>
+            <LandingHeaderNavigationLink to={"/"} >
               Главная
             </LandingHeaderNavigationLink>
-            <LandingHeaderNavigationLink to="/us" onClick={toHow}>
+            <LandingHeaderNavigationLink to={"/#how"} >
               Как мы работаем
             </LandingHeaderNavigationLink>
-            <LandingHeaderNavigationLink to="/faq" onClick={toFAQ}>
+            <LandingHeaderNavigationLink to={"/#faq"} >
               FAQ
             </LandingHeaderNavigationLink>
           </LandingHeaderNavigation>

@@ -18,8 +18,8 @@ const WinnerModal: FC<IWinnerModal> = ({ onClose }) => {
           Поздравляем вы владелец токена № с <span>ХХХХ суммой приза</span>
         </WinnerModalText>
         <WinnerModalButton>Забрать приз</WinnerModalButton>
-        <WinnerModalLines alt="lines" src="/images/modal-lines.png" />
-        <WinnerModalHoliday alt="holiday" src="/images/modal-holiday.png" />
+        <WinnerModalLines alt="lines" src="/images/modal-lines.svg" />
+        <WinnerModalHoliday alt="holiday" src="/images/modal-holiday.svg" />
       </WinnerModalContent>
     </WinnerModalBlock>
   );

@@ -56,7 +56,7 @@ const LandingHeaderNavigation = styled.nav`
   }
 `;
 
-const LandingHeaderNavigationLinkBlock = styled.button`
+const LandingHeaderNavigationLink = styled(NavLink)`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 500;
@@ -64,7 +64,7 @@ const LandingHeaderNavigationLinkBlock = styled.button`
   line-height: 172.52%;
   color: #ffffff;
   margin-left: ${pxIntoRem(92)};
-  background-color: transparent;
+
   @media (max-width: 1240px) {
     margin-left: ${pxIntoRem(92 * 0.6)};
   }
@@ -86,25 +86,6 @@ const LandingHeaderNavigationLinkBlock = styled.button`
     transition: 0.5s;
   }
 `;
-
-interface ILandingHeaderNavigationLink {
-  to: string;
-  onClick(e: SyntheticEvent): any;
-}
-
-const LandingHeaderNavigationLink: FC<PropsWithChildren<ILandingHeaderNavigationLink>> = ({ children, onClick, to }) => {
-  const location = useLocation();
-  return (
-    <LandingHeaderNavigationLinkBlock
-      onClick={onClick}
-      style={
-        {}
-      }
-    >
-      {children}
-    </LandingHeaderNavigationLinkBlock>
-  );
-};
 
 const LandingHeaderIcons = styled.div`
   display: flex;

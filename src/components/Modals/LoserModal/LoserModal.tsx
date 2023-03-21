@@ -16,8 +16,8 @@ const LoserModal: FC<ILoserModal> = ({ onClose }) => {
         <LoserModalLine />
         <LoserModalText>Поздравляем вы выиграли утешительный приз</LoserModalText>
         <LoserModalButton>Забрать приз</LoserModalButton>
-        <LoserModalLines alt="lines" src="/images/modal-lines.png" />
-        <LoserModalHoliday alt="holiday" src="/images/modal-holiday.png" />
+        <LoserModalLines alt="lines" src="/images/modal-lines.svg" />
+        <LoserModalHoliday alt="holiday" src="/images/modal-holiday.svg" />
       </LoserModalContent>
     </LoserModalBlock>
   );

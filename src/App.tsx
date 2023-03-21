@@ -114,17 +114,18 @@ function App() {
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider chains={chains}>
           {/* Add theme={myCustomTheme} inside RainbowKitProvider element to activate custom theme */}
-          <Routes>
-            <Route index element={<Index />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/gives" element={<Gives />} />
-            <Route path="/gives/:id" element={<Give />} />
-            <Route path="/raffles" element={<Collections />} />
-            <Route path="/raffles/:id" element={<Collection />} />
-          </Routes>
+            <Routes>
+              <Route index element={<Index />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/gives" element={<Gives />} />
+              <Route path="/gives/:id" element={<Give />} />
+              <Route path="/raffles" element={<Collections />} />
+              <Route path="/raffles/:id" element={<Collection />} />
+            </Routes>
           </RainbowKitProvider>
         </WagmiConfig>
       </AppBlock>
+
   );
 }
 

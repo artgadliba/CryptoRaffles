@@ -1,5 +1,5 @@
-import { FC, SyntheticEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, SyntheticEvent, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Container from "../Container/Container";
 import MoneyBoxes from "../MoneyBoxes/MoneyBoxes";
 import {
@@ -22,57 +22,19 @@ import {
 } from "./FooterStyles";
 
 const Footer: FC = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
 
-  function toMain(e: SyntheticEvent) {
-    e.preventDefault();
-
-    navigate("/");
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }
-
-  function toFAQ(e: SyntheticEvent) {
-    e.preventDefault();
-
-    navigate("/");
-
-    setTimeout(() => {
-      const faq = document.querySelector("#faq");
-      if (!faq) {
-        return;
-      }
-
-      const yOffset = 85;
-      const startAxis = faq.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({
-        top: startAxis,
-        behavior: "smooth",
-      });
-    }, 0);
-  }
-
-  function toHow(e: SyntheticEvent) {
-    e.preventDefault();
-
-    navigate("/");
-
-    setTimeout(() => {
-      const how = document.querySelector("#how");
-      if (!how) {
-        return;
-      }
-
-      const yOffset = 85;
-      const startAxis = how.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({
-        top: startAxis,
-        behavior: "smooth",
-      });
-    }, 0);
-  }
+  useEffect(()=> {
+          if (location.hash) {
+              let elem = document.getElementById(location.hash.slice(1))
+              if (elem) {
+                  elem.scrollIntoView({behavior: "smooth"})
+              }
+          } else {
+          window.scrollTo({top:0,left:0, behavior: "smooth"})
+          }
+  }, [location,])
 
   return (
     <FooterBlock>
@@ -83,13 +45,13 @@ const Footer: FC = () => {
               <FooterLogo alt="logo" src="/images/logo.svg" />
             </FooterLogoBlock>
             <FooterNavigation>
-              <FooterNavigationLink to="/" onClick={toMain}>
+              <FooterNavigationLink to={"/"} >
                 Главная
               </FooterNavigationLink>
-              <FooterNavigationLink to="/us" onClick={toHow}>
+              <FooterNavigationLink to={"/#how"} >
                 Как мы работаем
               </FooterNavigationLink>
-              <FooterNavigationLink to="/faq" onClick={toFAQ}>
+              <FooterNavigationLink to={"/#faq"} >
                 FAQ
               </FooterNavigationLink>
             </FooterNavigation>

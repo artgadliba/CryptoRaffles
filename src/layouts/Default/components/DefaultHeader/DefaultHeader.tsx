@@ -1,5 +1,5 @@
-import { FC, useState, SyntheticEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useState, useEffect, SyntheticEvent } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Container from "../../../../components/Container/Container";
 import DefaultHeaderBurger from "../../../../components/HeaderBurger/HeaderBurger";
 import {
@@ -30,50 +30,20 @@ interface IDefaultHeader {
 }
 
 const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
-  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
 
-  function toMain(e: SyntheticEvent) {
-    e.preventDefault();
+  useEffect(()=> {
+          if (location.hash) {
+              let elem = document.getElementById(location.hash.slice(1))
+              if (elem) {
+                  elem.scrollIntoView({behavior: "smooth"})
+              }
+          } else {
+          window.scrollTo({top:0,left:0, behavior: "smooth"})
+          }
+  }, [location,])
 
-    navigate("/");
-    window.scrollTo({
-      top: 0,
-    });
-  }
-
-  function toFAQ(e: SyntheticEvent) {
-    e.preventDefault();
-
-    navigate("/");
-    const faq = document.querySelector("#faq");
-    if (!faq) {
-      return;
-    }
-
-    const yOffset = 85;
-    const startAxis = faq.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({
-      top: startAxis,
-      behavior: "smooth",
-    });
-  }
-
-    function toHow(e: SyntheticEvent) {
-      e.preventDefault();
-
-      navigate("/");
-      const how = document.querySelector("#how");
-      if (!how) {
-        return;
-      }
-
-      const yOffset = 85;
-      const startAxis = how.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({
-        top: startAxis,
-        behavior: "smooth",
-    });
-  }
   return (
     <DefaultHeaderBlock>
       <Container>
@@ -82,9 +52,9 @@ const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
             <DefaultHeaderLogo alt="logo" src="/images/logo.svg" />
           </DefaultHeaderLogoBlock>
           <DefaultHeaderNavigation>
-            <DefaultHeaderNavigationLink to="/" onClick={toMain}>Главная</DefaultHeaderNavigationLink>
-            <DefaultHeaderNavigationLink to="/" onClick={toHow}>Как мы работаем</DefaultHeaderNavigationLink>
-            <DefaultHeaderNavigationLink to="/" onClick={toFAQ}>FAQ</DefaultHeaderNavigationLink>
+            <DefaultHeaderNavigationLink to={"/"}>Главная</DefaultHeaderNavigationLink>
+            <DefaultHeaderNavigationLink to={"/#how"}>Как мы работаем</DefaultHeaderNavigationLink>
+            <DefaultHeaderNavigationLink to={"/#faq"}>FAQ</DefaultHeaderNavigationLink>
           </DefaultHeaderNavigation>
           <DefaultHeaderIcons isActive={isActive}>
             <DefaultHeaderIconBlock to={"/"}>
