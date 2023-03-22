@@ -76,7 +76,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
 
   return (
     <CollectionsItemBlock>
-      <CollectionsItemBackground alt="background" src="/images/account-first-item-background.png" />
+      <CollectionsItemBackground alt="background" src="/images/collection_second_background.png" />
       <CollectionsItemUsername>{item.wallet}</CollectionsItemUsername>
       <CollectionsItemContent>
         <CollectionsItemId>{item.id}</CollectionsItemId>

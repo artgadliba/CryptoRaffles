@@ -80,7 +80,7 @@ const CollectionsItemId = styled.h3`
   font-size: ${pxIntoRem(24)};
   line-height: 111.5%;
   color: #ffffff;
-  top: ${pxIntoRem(-10)};
+  top: ${pxIntoRem(-7)};
   position: relative;
   @media (max-width: 1200px) {
     top: ${pxIntoRem(-15)};
@@ -232,6 +232,14 @@ const CollectionsItemButtonMore = styled.button`
   background-color: transparent;
   border-radius: ${pxIntoRem(2)};
   margin-right: ${pxIntoRem(12)};
+  transition: 1s;
+
+  &:hover {
+    color: #08e2bd;
+    transition: 0.2s;
+    outline: 1.5px solid #3ff2d4;
+    border-color: #08e2bd;
+  }
 
   @media (max-width: 1200px) {
     width: 100%;
@@ -261,6 +269,15 @@ const CollectionsItemButtonConnect = styled.button`
   border: ${pxIntoRem(1)} solid #08e2bd;
   background-color: #08e2bd;
   border-radius: ${pxIntoRem(2)};
+  transition: 1s;
+
+  &:hover {
+    transition: 0.3s;
+    outline: 1.5px solid #3ff2d4;
+    outline-offset: 2.5px;
+    transform: scale(0.95);
+  }
+
   @media (max-width: 1200px) {
     width: 100%;
   }

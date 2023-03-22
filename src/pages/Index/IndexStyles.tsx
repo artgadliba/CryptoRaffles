@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { NavLink, Link } from "react-router-dom";
 import pxIntoRem from "../../utils/pxIntoRem";
 import "swiper/css";
 
@@ -137,7 +138,7 @@ const IndexGreetingBottomText = styled.p`
   }
 `;
 
-const IndexGreetingConnect = styled.button`
+const IndexGreetingConnect = styled(NavLink)`
   width: ${pxIntoRem(307)};
   height: ${pxIntoRem(69)};
   background-color: #08e2bd;
@@ -154,11 +155,20 @@ const IndexGreetingConnect = styled.button`
   margin-left: ${pxIntoRem(5)};
   margin-top: ${pxIntoRem(38)};
   cursor: pointer;
+  outline: 2px solid transparent;
+  transition: 1s;
 
   @media (max-width: 500px) {
     margin-left: ${pxIntoRem(0)};
     margin-top: ${pxIntoRem(32)};
     width: 100%;
+  }
+
+  &:hover {
+    transition: 0.3s;
+    outline: 1.5px solid #3ff2d4;
+    outline-offset: 5px;
+    transform: scale(0.95);
   }
 `;
 
@@ -629,7 +639,7 @@ const IndexHowNeedsItemText = styled.p`
   color: #ffffff;
 `;
 
-const IndexHowNeedsItemLink = styled.a`
+const IndexHowNeedsItemLink = styled(Link)`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -637,6 +647,11 @@ const IndexHowNeedsItemLink = styled.a`
   line-height: 172.52%;
   color: #874dec;
   margin-top: ${pxIntoRem(8)};
+
+  &:hover {
+    color: #a071f5;
+    transition: 0.2s;
+  }
 `;
 
 const IndexQuestions = styled.section`

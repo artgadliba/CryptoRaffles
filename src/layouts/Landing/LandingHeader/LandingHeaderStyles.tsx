@@ -136,7 +136,7 @@ const LandingHeaderIcon = styled.svg`
   }
 `;
 
-const LandingHeaderButton = styled(Link)`
+const LandingHeaderButton = styled(NavLink)`
   display: flex;
   align-items: center;
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.69);
@@ -151,6 +151,7 @@ const LandingHeaderButton = styled(Link)`
   color: #ffffff;
   cursor: pointer;
   grid-area: button;
+  transition: 1s;
 
   @media (max-width: 500px) {
     justify-content: center;
@@ -163,13 +164,14 @@ const LandingHeaderButtonImage = styled.svg`
   height: ${pxIntoRem(18)};
   margin-left: ${pxIntoRem(13)};
   fill: white;
+  transition: 1s;
 `;
 
 const LandingHeaderWrapper = styled.div`
   &:hover ${LandingHeaderButton} {
     color: #08e2bd;
-    transition: 0.5s;
-    outline: none;
+    transition: 0.2s;
+    outline: 1.5px solid #3ff2d4;
     border-color: #08e2bd;
   }
 

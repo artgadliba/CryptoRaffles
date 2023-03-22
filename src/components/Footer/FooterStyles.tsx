@@ -153,14 +153,7 @@ const FooterIcon = styled.svg`
   }
 `;
 
-const FooterIconWrapper = styled.div`
-  &:hover {
-    color: #08e2bd;
-    transition: 0.5s;
-  }
-`;
-
-const FooterButton = styled.button`
+const FooterButton = styled(NavLink)`
   display: flex;
   align-items: center;
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.69);
@@ -195,8 +188,8 @@ const FooterButtonWrapper = styled.div`
   z-index: 9;
   &:hover ${FooterButton} {
     color: #08e2bd;
-    transition: 0.5s;
-    outline: none;
+    transition: 0.2s;
+    outline: 1.5px solid #3ff2d4;
     border-color: #08e2bd;
   }
 

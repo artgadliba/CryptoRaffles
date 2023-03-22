@@ -76,7 +76,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
 
   return (
     <GivesItemBlock>
-      <GivesItemBackground alt="background" src="/images/account-first-item-background.png" />
+      <GivesItemBackground alt="background" src="/images/collection_first_background.png" />
       <GivesItemUsername>{item.wallet}</GivesItemUsername>
       <GivesItemContent>
         <GivesItemId>{item.id}</GivesItemId>

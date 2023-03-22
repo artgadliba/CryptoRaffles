@@ -9,6 +9,7 @@ const AccountSliderBlock = styled.div`
   align-items: center;
   margin-top: ${pxIntoRem(58)};
   width: 100%;
+
   @media (max-width: 500px) {
     display: none;
   }
@@ -54,6 +55,10 @@ const AccountSliderSlideContent = styled.div`
   flex-shrink: 0;
   border: ${pxIntoRem(1)} solid #746091;
   border-radius: ${pxIntoRem(2)};
+  &:hover {
+    scale: 1.1;
+    transition: 0.1s;
+  }
 
   @media (max-width: 1420px) {
     width: ${pxIntoRem(194.34 * 0.95)} !important;

@@ -7,29 +7,22 @@ import AccountListItem from "./components/AccountListItem/AccountListItem";
 function Account() {
   const [activeItems, setActiveItems] = useState([
     {
-      id: "Raffle # 54c1ae03",
-      wallet: "@ Nike",
-      price: "$9,445",
+      id: "Raffle # 7fh12ba",
+      wallet: "@ Baxter",
+      price: "$100,087",
       timerDate: Date.now(),
       isActive: true,
-    },
-    {
-      id: "Raffle # 54c1ae03",
-      wallet: "@ Nike",
-      price: "$9,445",
-      timerDate: Date.now(),
-      isActive: true,
-    },
+    }
   ]);
 
   const [doneItems, setDoneItems] = useState([
     {
-      id: "Raffle # 54c1ae03",
-      wallet: "@ Nike",
-      price: "$9,445",
+      id: "Raffle # 3da71c5",
+      wallet: "@ Jango",
+      price: "$49,615",
       timerDate: Date.now(),
       isActive: false,
-    },
+    }
   ]);
 
   return (
@@ -38,7 +31,7 @@ function Account() {
         <AccountTitle>
           Баланс аккаунта:
           <AccountTitleTokens>
-            34 <span>токена</span>
+            5 <span>токенов</span>
           </AccountTitleTokens>
         </AccountTitle>
         <AccountSlider

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import App from "./App";
+import App, { _props } from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
@@ -94,7 +94,7 @@ const GlobalStyle = createGlobalStyle`
   a, button {
     cursor: pointer;
   }
-  
+
   @font-face {
     font-family: 'Gilroy';
     src: local('Gilroy'),

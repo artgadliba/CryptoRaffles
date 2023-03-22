@@ -76,7 +76,7 @@ function Index() {
                 </IndexGreetingTitle>
                 <IndexGreetingText>CryptoRaffles - децентрализованная платформа для организации розыгрышей призов, построенная на блокчейне сети Ethereum.</IndexGreetingText>
                 <IndexGreetingBottomText>Каждый участник имеет реальную возможность выиграть, благодаря прозрачному и честному механизму работы. Каждый этап можно легко отследить и подтвердить соответствие правилам.</IndexGreetingBottomText>
-                <IndexGreetingConnect>Подключиться</IndexGreetingConnect>
+                <IndexGreetingConnect to="/account">Подключиться</IndexGreetingConnect>
               </IndexGreetingContent>
               <IndexSlider
                 items={[
@@ -172,7 +172,7 @@ function Index() {
                       <IndexHowNeedsItemText>
                         Подключиться к веб приложению <br /> с помощью Ethereum кошелька
                       </IndexHowNeedsItemText>
-                      <IndexHowNeedsItemLink>Подключиться</IndexHowNeedsItemLink>
+                      <IndexHowNeedsItemLink to="/account">Подключиться</IndexHowNeedsItemLink>
                     </IndexHowNeedsItemContent>
                   </IndexHowNeedsItem>
                   <IndexHowNeedsItem>

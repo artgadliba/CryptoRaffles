@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import '@rainbow-me/rainbowkit/styles.css';
+import React, { ReactNode, useEffect } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import styled from "styled-components";
@@ -11,7 +12,6 @@ import Collections from "./pages/Collections/Collections";
 import Give from "./pages/Give/Give";
 import Gives from "./pages/Gives/Gives";
 import Index from "./pages/Index/Index";
-import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -21,7 +21,6 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
-import DefaultHeader from '../src/layouts/Default/components/DefaultHeader/DefaultHeader';
 
 const AppBlock = styled.div`
   display: flex;
@@ -31,7 +30,7 @@ const AppBlock = styled.div`
   overflow-x: hidden;
 `;
 
-const alchemyKey : string = process.env.REACT_APP_SOME_CONFIGURATION
+const alchemyKey : string = process.env.MY_ALCHEMY_KEY
 
 const { chains, provider } = configureChains(
   [mainnet, goerli],
@@ -108,25 +107,30 @@ const myCustomTheme: Theme = {
   },
 };
 
-function App() {
-  return (
-      <AppBlock>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains}>
-          {/* Add theme={myCustomTheme} inside RainbowKitProvider element to activate custom theme */}
-            <Routes>
-              <Route index element={<Index />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/gives" element={<Gives />} />
-              <Route path="/gives/:id" element={<Give />} />
-              <Route path="/raffles" element={<Collections />} />
-              <Route path="/raffles/:id" element={<Collection />} />
-            </Routes>
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </AppBlock>
+export const _props = {wagmiClient, chains};
 
+function RainbowKitApp(_props) {
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+      <AppBlock {..._props}/>
+      </RainbowKitProvider>
+    </WagmiConfig>
   );
 }
 
+function App() {
+  return (
+      <AppBlock {..._props}>
+        <Routes>
+          <Route index element={<Index />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/gives" element={<Gives />} />
+          <Route path="/gives/:id" element={<Give />} />
+          <Route path="/raffles" element={<Collections />} />
+          <Route path="/raffles/:id" element={<Collection />} />
+        </Routes>
+      </AppBlock>
+  );
+}
 export default App;

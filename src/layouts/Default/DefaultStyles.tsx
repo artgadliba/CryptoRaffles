@@ -99,8 +99,9 @@ const DefaultNavigationLink = styled(NavLink)`
   align-items: center;
   justify-content: center;
   width: ${pxIntoRem(302)};
-  height: ${pxIntoRem(58)};
+  height: ${pxIntoRem(56)};
   border-radius: ${pxIntoRem(2)};
+  transition: 0.2s;
 
   &:last-of-type {
     ${DefaultNavigationLinkText} {
@@ -110,6 +111,12 @@ const DefaultNavigationLink = styled(NavLink)`
 
   &.active {
     background-color: #874dec;
+    outline-offset: 2px;
+  }
+
+  &:hover:not(.active) {
+    background-color: #552d9c;
+    transition: 0.2s;
   }
 
   @media (max-width: 500px) {

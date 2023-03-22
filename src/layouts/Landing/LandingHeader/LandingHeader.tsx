@@ -19,7 +19,6 @@ import {
 
 const LandingHeader: FC = () => {
   const location = useLocation();
-  console.log(location)
 
   useEffect(()=> {
           if (location.hash) {
@@ -28,7 +27,7 @@ const LandingHeader: FC = () => {
                   elem.scrollIntoView({behavior: "smooth"})
               }
           } else {
-          window.scrollTo({top:0,left:0, behavior: "smooth"})
+          window.scrollTo({top:0,left:0, behavior: "auto"})
           }
   }, [location,])
 
