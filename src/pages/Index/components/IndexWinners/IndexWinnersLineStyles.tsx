@@ -2,7 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { SwiperSlide } from "swiper/react";
 import pxIntoRem from "../../../../utils/pxIntoRem";
 
-const IndexWinnersRowAnimation = keyframes` 
+const IndexWinnersRowAnimation = keyframes`
   0% {
     transform: translateX(0%);
   }
@@ -127,7 +127,7 @@ const IndexWinnersFakeRowItem = styled.div`
   display: flex;
   flex-direction: column;
   width: ${pxIntoRem(330)};
-  height: ${pxIntoRem(106)};
+  height: ${pxIntoRem(102.5)};
   background: rgba(45, 11, 90, 0.1);
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(${pxIntoRem(16.53)});

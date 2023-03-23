@@ -75,7 +75,7 @@ const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
             </DefaultHeaderIconBlock>
           </DefaultHeaderIcons>
           <DefaultHeaderBurger />
-          <ConnectButton/>
+          <ConnectButton label="Подключить кошелек"/>
         </DefaultHeaderBody>
       </Container>
     </DefaultHeaderBlock>

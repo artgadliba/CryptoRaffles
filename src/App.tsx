@@ -12,7 +12,7 @@ import Give from "./pages/Give/Give";
 import Gives from "./pages/Gives/Gives";
 import Index from "./pages/Index/Index";
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultWallets, RainbowKitProvider, Theme } from "@rainbow-me/rainbowkit";
+import { getDefaultWallets, RainbowKitProvider, Theme, darkTheme } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -102,7 +102,7 @@ const myCustomTheme: Theme = {
 function App() {
   return (
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider chains={chains} theme={darkTheme()}>
           <AppBlock>
             <Routes>
               <Route index element={<Index />} />
