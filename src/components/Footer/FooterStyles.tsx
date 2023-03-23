@@ -55,6 +55,7 @@ const FooterNavigation = styled.nav`
     flex-direction: column;
     margin-left: 0;
     margin-top: ${pxIntoRem(27)};
+    padding-left: 0;
   }
 `;
 
@@ -89,7 +90,7 @@ const FooterNavigationLink = styled(NavLink)`
     margin-top: 0px;
   }
 
-  &:hover {
+  &:hover, &:active {
     color: #08e2bd;
     transition: 0.5s;
   }
@@ -110,6 +111,7 @@ const FooterIcons = styled.div`
 
   @media (max-width: 500px) {
     margin-left: 0px;
+    margin-right: 0px;
     margin-top: ${pxIntoRem(27)};
   }
 `;
@@ -147,7 +149,7 @@ const FooterIcon = styled.svg`
     width: ${pxIntoRem(27)};
   }
 
-  &:hover {
+  &:hover, &:active {
     color: #08e2bd;
     transition: 0.5s;
   }
@@ -186,14 +188,15 @@ const FooterButtonImage = styled.svg`
 
 const FooterButtonWrapper = styled.div`
   z-index: 9;
-  &:hover ${FooterButton} {
+  &:hover, &:active ${FooterButton} {
     color: #08e2bd;
     transition: 0.2s;
-    outline: 1.5px solid #3ff2d4;
+    outline: 2px solid #3ff2d4;
+    outline-offset: -2px;
     border-color: #08e2bd;
   }
 
-  &:hover ${FooterButtonImage} {
+  &:hover, &:active ${FooterButtonImage} {
     fill: #08e2bd;
     transition: 0.5s;
   }

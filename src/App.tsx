@@ -1,5 +1,4 @@
-import '@rainbow-me/rainbowkit/styles.css';
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import styled from "styled-components";
@@ -12,15 +11,14 @@ import Collections from "./pages/Collections/Collections";
 import Give from "./pages/Give/Give";
 import Gives from "./pages/Gives/Gives";
 import Index from "./pages/Index/Index";
-import {
-  getDefaultWallets,
-  RainbowKitProvider,
-  Theme
-} from '@rainbow-me/rainbowkit';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet, goerli } from 'wagmi/chains';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
+import "@rainbow-me/rainbowkit/styles.css";
+import { getDefaultWallets, RainbowKitProvider, Theme } from "@rainbow-me/rainbowkit";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { mainnet, goerli } from "wagmi/chains";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { publicProvider } from "wagmi/providers/public";
+import DefaultHeader from "../src/layouts/Default/components/DefaultHeader/DefaultHeader";
+import AccountNotConnect from "pages/AccountNonConnect/AccountNonConnect";
 
 const AppBlock = styled.div`
   display: flex;
@@ -30,107 +28,93 @@ const AppBlock = styled.div`
   overflow-x: hidden;
 `;
 
-const alchemyKey : string = process.env.MY_ALCHEMY_KEY
+const alchemyKey: string = process.env.REACT_APP_SOME_CONFIGURATION;
 
-const { chains, provider } = configureChains(
-  [mainnet, goerli],
-  [
-    alchemyProvider({apiKey: alchemyKey}),
-    publicProvider()
-  ]
-);
+const { chains, provider } = configureChains([mainnet, goerli], [alchemyProvider({ apiKey: alchemyKey }), publicProvider()]);
 
 const { connectors } = getDefaultWallets({
-  appName: 'CryptoRaffles App',
-  chains
+  appName: "CryptoRaffles App",
+  chains,
 });
 
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
-  provider
+  provider,
 });
 
 const myCustomTheme: Theme = {
   blurs: {
-    modalOverlay: '...',
+    modalOverlay: "...",
   },
   colors: {
-    accentColor: '...',
-    accentColorForeground: '...',
-    actionButtonBorder: '...',
-    actionButtonBorderMobile: '...',
-    actionButtonSecondaryBackground: '...',
-    closeButton: '...',
-    closeButtonBackground: '...',
-    connectButtonBackground: '...',
-    connectButtonBackgroundError: '...',
-    connectButtonInnerBackground: '...',
-    connectButtonText: '...',
-    connectButtonTextError: '...',
-    connectionIndicator: '...',
-    downloadBottomCardBackground: '...',
-    downloadTopCardBackground: '...',
-    error: '...',
-    generalBorder: '...',
-    generalBorderDim: '...',
-    menuItemBackground: '...',
-    modalBackdrop: '...',
-    modalBackground: '...',
-    modalBorder: '...',
-    modalText: '...',
-    modalTextDim: '...',
-    modalTextSecondary: '...',
-    profileAction: '...',
-    profileActionHover: '...',
-    profileForeground: '...',
-    selectedOptionBorder: '...',
-    standby: '...',
+    accentColor: "...",
+    accentColorForeground: "...",
+    actionButtonBorder: "...",
+    actionButtonBorderMobile: "...",
+    actionButtonSecondaryBackground: "...",
+    closeButton: "...",
+    closeButtonBackground: "...",
+    connectButtonBackground: "...",
+    connectButtonBackgroundError: "...",
+    connectButtonInnerBackground: "...",
+    connectButtonText: "...",
+    connectButtonTextError: "...",
+    connectionIndicator: "...",
+    downloadBottomCardBackground: "...",
+    downloadTopCardBackground: "...",
+    error: "...",
+    generalBorder: "...",
+    generalBorderDim: "...",
+    menuItemBackground: "...",
+    modalBackdrop: "...",
+    modalBackground: "...",
+    modalBorder: "...",
+    modalText: "...",
+    modalTextDim: "...",
+    modalTextSecondary: "...",
+    profileAction: "...",
+    profileActionHover: "...",
+    profileForeground: "...",
+    selectedOptionBorder: "...",
+    standby: "...",
   },
   fonts: {
-    body: '...',
+    body: "...",
   },
   radii: {
-    actionButton: '...',
-    connectButton: '...',
-    menuButton: '...',
-    modal: '...',
-    modalMobile: '...',
+    actionButton: "...",
+    connectButton: "...",
+    menuButton: "...",
+    modal: "...",
+    modalMobile: "...",
   },
   shadows: {
-    connectButton: '...',
-    dialog: '...',
-    profileDetailsAction: '...',
-    selectedOption: '...',
-    selectedWallet: '...',
-    walletLogo: '...',
+    connectButton: "...",
+    dialog: "...",
+    profileDetailsAction: "...",
+    selectedOption: "...",
+    selectedWallet: "...",
+    walletLogo: "...",
   },
 };
 
-export const _props = {wagmiClient, chains};
-
-function RainbowKitApp(_props) {
-  return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-      <AppBlock {..._props}/>
-      </RainbowKitProvider>
-    </WagmiConfig>
-  );
-}
-
 function App() {
   return (
-      <AppBlock {..._props}>
-        <Routes>
-          <Route index element={<Index />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/gives" element={<Gives />} />
-          <Route path="/gives/:id" element={<Give />} />
-          <Route path="/raffles" element={<Collections />} />
-          <Route path="/raffles/:id" element={<Collection />} />
-        </Routes>
-      </AppBlock>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+          <AppBlock>
+            <Routes>
+              <Route index element={<Index />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/gives" element={<Gives />} />
+              <Route path="/gives/:id" element={<Give />} />
+              <Route path="/raffles" element={<Collections />} />
+              <Route path="/raffles/:id" element={<Collection />} />
+            </Routes>
+          </AppBlock>
+        </RainbowKitProvider>
+      </WagmiConfig>
   );
 }
 export default App;

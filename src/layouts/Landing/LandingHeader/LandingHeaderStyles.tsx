@@ -171,7 +171,8 @@ const LandingHeaderWrapper = styled.div`
   &:hover ${LandingHeaderButton} {
     color: #08e2bd;
     transition: 0.2s;
-    outline: 1.5px solid #3ff2d4;
+    outline: 2px solid #3ff2d4;
+    outline-offset: -2px;
     border-color: #08e2bd;
   }
 

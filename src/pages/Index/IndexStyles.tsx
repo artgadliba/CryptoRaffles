@@ -649,7 +649,7 @@ const IndexHowNeedsItemLink = styled(Link)`
   margin-top: ${pxIntoRem(8)};
 
   &:hover {
-    color: #a071f5;
+    color: #8443f7;
     transition: 0.2s;
   }
 `;

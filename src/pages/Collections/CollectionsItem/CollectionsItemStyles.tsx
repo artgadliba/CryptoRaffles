@@ -237,7 +237,8 @@ const CollectionsItemButtonMore = styled.button`
   &:hover {
     color: #08e2bd;
     transition: 0.2s;
-    outline: 1.5px solid #3ff2d4;
+    outline: 2px solid #3ff2d4;
+    outline-offset: -2px;
     border-color: #08e2bd;
   }
 
@@ -260,7 +261,7 @@ const CollectionsItemButtonConnect = styled.button`
   font-style: normal;
   font-weight: 600;
   font-size: ${pxIntoRem(15)};
-  line-height: ${pxIntoRem(18)};
+  line-height: ${pxIntoRem(18.5)};
   display: flex;
   align-items: center;
   text-align: center;
@@ -272,14 +273,21 @@ const CollectionsItemButtonConnect = styled.button`
   transition: 1s;
 
   &:hover {
+    outline: 1.5px solid #08e2bd;
+    outline-offset: 3px;
     transition: 0.3s;
-    outline: 1.5px solid #3ff2d4;
-    outline-offset: 2.5px;
-    transform: scale(0.95);
+    transform: scale3d(0.96,0.87,1);
   }
 
   @media (max-width: 1200px) {
     width: 100%;
+
+    &:hover {
+      outline: 1px solid #08e2bd;
+      outline-offset: 3px;
+      transition: 0.3s;
+      transform: scale3d(0.95,0.87,1);
+    }
   }
 `;
 
