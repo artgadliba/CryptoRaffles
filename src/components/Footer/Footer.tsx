@@ -24,7 +24,6 @@ import {
   DefaultHeaderIconBlock,
   DefaultHeaderIcon
 } from "../../../src/layouts/Default/components/DefaultHeader/DefaultHeaderStyles";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Footer: FC = () => {
   const location = useLocation();

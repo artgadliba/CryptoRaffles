@@ -90,7 +90,7 @@ const FooterNavigationLink = styled(NavLink)`
     margin-top: 0px;
   }
 
-  &:hover, &:active {
+  &:hover {
     color: #08e2bd;
     transition: 0.5s;
   }
@@ -149,7 +149,7 @@ const FooterIcon = styled.svg`
     width: ${pxIntoRem(27)};
   }
 
-  &:hover, &:active {
+  &:hover {
     color: #08e2bd;
     transition: 0.5s;
   }
@@ -188,7 +188,7 @@ const FooterButtonImage = styled.svg`
 
 const FooterButtonWrapper = styled.div`
   z-index: 9;
-  &:hover, &:active ${FooterButton} {
+  &:hover ${FooterButton} {
     color: #08e2bd;
     transition: 0.2s;
     outline: 2px solid #3ff2d4;
@@ -196,7 +196,7 @@ const FooterButtonWrapper = styled.div`
     border-color: #08e2bd;
   }
 
-  &:hover, &:active ${FooterButtonImage} {
+  &:hover ${FooterButtonImage} {
     fill: #08e2bd;
     transition: 0.5s;
   }

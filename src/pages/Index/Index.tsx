@@ -59,6 +59,7 @@ import {
 } from "./IndexStyles";
 
 function Index() {
+
   return (
     <Landing>
       <IndexBlock>

@@ -24,7 +24,6 @@ import {
 } from "./DefaultHeaderStyles";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-
 interface IDefaultHeader {
   isActive: boolean;
 }
@@ -39,7 +38,7 @@ const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
         elem.scrollIntoView({ behavior: "smooth" });
       }
     } else {
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
   }, [location]);
 
@@ -75,7 +74,7 @@ const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
             </DefaultHeaderIconBlock>
           </DefaultHeaderIcons>
           <DefaultHeaderBurger />
-          <ConnectButton label="Подключить кошелек"/>
+          <ConnectButton label="Подключить кошелек" showBalance={false} chainStatus={{ smallScreen: "icon", largeScreen: "full" }}/>
         </DefaultHeaderBody>
       </Container>
     </DefaultHeaderBlock>

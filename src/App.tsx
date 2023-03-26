@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import "@rainbow-me/rainbowkit/styles.css";
+import React, { ReactNode, FC, PropsWithChildren, useEffect } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import styled from "styled-components";
@@ -11,14 +12,11 @@ import Collections from "./pages/Collections/Collections";
 import Give from "./pages/Give/Give";
 import Gives from "./pages/Gives/Gives";
 import Index from "./pages/Index/Index";
-import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider, Theme, darkTheme } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-import DefaultHeader from "../src/layouts/Default/components/DefaultHeader/DefaultHeader";
-import AccountNotConnect from "pages/AccountNonConnect/AccountNonConnect";
 
 const AppBlock = styled.div`
   display: flex;
@@ -28,9 +26,9 @@ const AppBlock = styled.div`
   overflow-x: hidden;
 `;
 
-const alchemyKey: string = process.env.REACT_APP_SOME_CONFIGURATION;
+const alchemyKey: string = process.env.MY_ALCHEMY_KEY;
 
-const { chains, provider } = configureChains([mainnet, goerli], [alchemyProvider({ apiKey: alchemyKey }), publicProvider()]);
+const { chains, provider } = configureChains([mainnet, goerli], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
   appName: "CryptoRaffles App",
@@ -43,78 +41,44 @@ const wagmiClient = createClient({
   provider,
 });
 
-const myCustomTheme: Theme = {
-  blurs: {
-    modalOverlay: "...",
-  },
-  colors: {
-    accentColor: "...",
-    accentColorForeground: "...",
-    actionButtonBorder: "...",
-    actionButtonBorderMobile: "...",
-    actionButtonSecondaryBackground: "...",
-    closeButton: "...",
-    closeButtonBackground: "...",
-    connectButtonBackground: "...",
-    connectButtonBackgroundError: "...",
-    connectButtonInnerBackground: "...",
-    connectButtonText: "...",
-    connectButtonTextError: "...",
-    connectionIndicator: "...",
-    downloadBottomCardBackground: "...",
-    downloadTopCardBackground: "...",
-    error: "...",
-    generalBorder: "...",
-    generalBorderDim: "...",
-    menuItemBackground: "...",
-    modalBackdrop: "...",
-    modalBackground: "...",
-    modalBorder: "...",
-    modalText: "...",
-    modalTextDim: "...",
-    modalTextSecondary: "...",
-    profileAction: "...",
-    profileActionHover: "...",
-    profileForeground: "...",
-    selectedOptionBorder: "...",
-    standby: "...",
-  },
-  fonts: {
-    body: "...",
-  },
-  radii: {
-    actionButton: "...",
-    connectButton: "...",
-    menuButton: "...",
-    modal: "...",
-    modalMobile: "...",
-  },
-  shadows: {
-    connectButton: "...",
-    dialog: "...",
-    profileDetailsAction: "...",
-    selectedOption: "...",
-    selectedWallet: "...",
-    walletLogo: "...",
-  },
-};
+const RainbowKitApp = ({ children }) => {
+  return (
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider
+        chains={chains}
+        theme={darkTheme({
+          accentColor: '#7b3fe4',
+          accentColorForeground: 'white',
+          fontStack: "system",
+          borderRadius: "medium",
+          overlayBlur: "small",
+        })}
+        appInfo={{
+          appName: 'CryptoRaffles',
+        }}
+        showRecentTransactions={true}
+      >
+        {children}
+      </RainbowKitProvider>
+    </WagmiConfig>
+  );
+}
 
 function App() {
   return (
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains} theme={darkTheme()}>
-          <AppBlock>
-            <Routes>
-              <Route index element={<Index />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/gives" element={<Gives />} />
-              <Route path="/gives/:id" element={<Give />} />
-              <Route path="/raffles" element={<Collections />} />
-              <Route path="/raffles/:id" element={<Collection />} />
-            </Routes>
-          </AppBlock>
-        </RainbowKitProvider>
-      </WagmiConfig>
+    <RainbowKitApp>
+      <AppBlock>
+        <Routes>
+          <Route index element={<Index />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/gives" element={<Gives />} />
+          <Route path="/gives/:id" element={<Give />} />
+          <Route path="/raffles" element={<Collections />} />
+          <Route path="/raffles/:id" element={<Collection />} />
+        </Routes>
+      </AppBlock>
+    </RainbowKitApp>
   );
 }
+
 export default App;
