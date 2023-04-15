@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, SyntheticEvent } from "react";
+import React, { FC, useState, useRef, useEffect, SyntheticEvent } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Container from "../../../../components/Container/Container";
 import DefaultHeaderBurger from "../../../../components/HeaderBurger/HeaderBurger";
@@ -21,8 +21,10 @@ import {
   DefaultHeaderUserName,
   DefaultHeaderUserNameImage,
   DefaultHeaderUserNameText,
+  StyledConnectButton
 } from "./DefaultHeaderStyles";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import * as ReactDOM from 'react-dom';
 
 interface IDefaultHeader {
   isActive: boolean;
@@ -74,7 +76,7 @@ const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
             </DefaultHeaderIconBlock>
           </DefaultHeaderIcons>
           <DefaultHeaderBurger />
-          <ConnectButton label="Подключить кошелек" showBalance={false} chainStatus={{ smallScreen: "icon", largeScreen: "full" }}/>
+          <StyledConnectButton label="Подключить кошелек" showBalance={false} chainStatus={{ smallScreen: "icon", largeScreen: "full" }} />
         </DefaultHeaderBody>
       </Container>
     </DefaultHeaderBlock>

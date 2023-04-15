@@ -356,6 +356,40 @@ const GiveRegisterButton = styled.button`
   margin-top: ${pxIntoRem(40)};
   margin-left: ${pxIntoRem(70)};
   cursor: pointer;
+  transition: 1s;
+
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 15px #23f7d3;
+  }
+  @media (max-width: 500px) {
+    font-size: ${pxIntoRem(15)};
+    line-height: ${pxIntoRem(18)};
+    margin-left: 0;
+    width: 100%;
+    padding: ${pxIntoRem(17)} ${pxIntoRem(37)};
+    margin-top: ${pxIntoRem(30)};
+  }
+`;
+
+const GiveRegisterButtonInactive = styled.button`
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 600;
+  font-size: ${pxIntoRem(18)};
+  line-height: ${pxIntoRem(22)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2d0b5a;
+  padding: ${pxIntoRem(23)} ${pxIntoRem(95)};
+  background-color: #a7a8a8;
+  border-radius: ${pxIntoRem(2)};
+  width: fit-content;
+  margin-top: ${pxIntoRem(40)};
+  margin-left: ${pxIntoRem(70)};
+  cursor: pointer;
+
   @media (max-width: 500px) {
     font-size: ${pxIntoRem(15)};
     line-height: ${pxIntoRem(18)};
@@ -466,6 +500,7 @@ export {
   GiveConditionsListItemDot,
   GiveConditionsListItemText,
   GiveRegisterButton,
+  GiveRegisterButtonInactive,
   GiveActive,
   GiveDone,
   GiveDoneContent,

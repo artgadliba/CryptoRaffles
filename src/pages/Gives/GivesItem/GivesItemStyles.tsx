@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import pxIntoRem from "../../../utils/pxIntoRem";
+import { Link } from "react-router-dom";
 
 const GivesItemBlock = styled.div`
   display: flex;
@@ -215,7 +216,7 @@ const GivesItemButtons = styled.div`
   }
 `;
 
-const GivesItemButtonMore = styled.button`
+const GivesItemButtonMore = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,7 +255,7 @@ const GivesItemButtonMore = styled.button`
   }
 `;
 
-const GivesItemButtonConnect = styled.button`
+const GivesItemButtonConnect = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -274,21 +275,12 @@ const GivesItemButtonConnect = styled.button`
   transition: 1s;
 
   &:hover {
-    outline: 1.5px solid #08e2bd;
-    outline-offset: 3px;
-    transition: 0.3s;
-    transform: scale3d(0.96,0.87,1);
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
   }
 
   @media (max-width: 1200px) {
     width: 100%;
-
-    &:hover {
-      outline: 1px solid #08e2bd;
-      outline-offset: 3px;
-      transition: 0.3s;
-      transform: scale3d(0.95,0.87,1);
-    }
   }
 `;
 
@@ -297,7 +289,20 @@ const GivesFakeItemBlock = styled(GivesItemBlock)`
   padding: ${pxIntoRem(24)} ${pxIntoRem(34)} ${pxIntoRem(40)} ${pxIntoRem(28)};
 `;
 
-const GivesFakeItemBackground = styled(GivesItemBackground)``;
+const GivesFakeItemBackground = styled(GivesItemBackground)`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
 
 const GivesFakeItemUsername = styled.div`
   padding: ${pxIntoRem(14.5)} ${pxIntoRem(23)};

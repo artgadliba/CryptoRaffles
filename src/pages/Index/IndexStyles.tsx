@@ -158,17 +158,14 @@ const IndexGreetingConnect = styled(NavLink)`
   outline: 2px solid transparent;
   transition: 1s;
 
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 15px #23f7d3;
+  }
   @media (max-width: 500px) {
     margin-left: ${pxIntoRem(0)};
     margin-top: ${pxIntoRem(32)};
     width: 100%;
-  }
-
-  &:hover {
-    transition: 0.3s;
-    outline: 1.5px solid #3ff2d4;
-    outline-offset: 5px;
-    transform: scale(0.95);
   }
 `;
 
@@ -647,11 +644,18 @@ const IndexHowNeedsItemLink = styled(Link)`
   line-height: 172.52%;
   color: #874dec;
   margin-top: ${pxIntoRem(8)};
+  animation: blink-text 1.9s linear infinite;
 
-  &:hover {
-    color: #8443f7;
-    transition: 0.2s;
-  }
+  @keyframes blink-text {
+   0% {
+    opacity: 0.3;
+   }
+   50% {
+    opacity: 1;
+   }
+   100% {
+    opacity: 0.3;
+   }
 `;
 
 const IndexQuestions = styled.section`

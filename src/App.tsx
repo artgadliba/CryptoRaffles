@@ -14,8 +14,9 @@ import Gives from "./pages/Gives/Gives";
 import Index from "./pages/Index/Index";
 import { getDefaultWallets, RainbowKitProvider, Theme, darkTheme } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet, goerli } from "wagmi/chains";
+import { mainnet, goerli, sepolia } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
+import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
 
 const AppBlock = styled.div`
@@ -26,9 +27,17 @@ const AppBlock = styled.div`
   overflow-x: hidden;
 `;
 
-const alchemyKey: string = process.env.MY_ALCHEMY_KEY;
+const alchemyKey: string = process.env.REACT_APP_ALCHEMY_SEPOLIA_LINK;
+const infuraKey: string = process.env.REACT_APP_INFURA_SEPOLIA_KEY;
 
-const { chains, provider } = configureChains([mainnet, goerli], [publicProvider()]);
+const { chains, provider } = configureChains(
+  [mainnet, goerli, sepolia],
+  [
+    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_SEPOLIA_KEY }),
+    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_SEPOLIA_KEY }),
+    publicProvider()
+  ],
+);
 
 const { connectors } = getDefaultWallets({
   appName: "CryptoRaffles App",
@@ -49,7 +58,7 @@ const RainbowKitApp = ({ children }) => {
         theme={darkTheme({
           accentColor: '#7b3fe4',
           accentColorForeground: 'white',
-          fontStack: "system",
+          fontStack: "rounded",
           borderRadius: "medium",
           overlayBlur: "small",
         })}
@@ -66,18 +75,18 @@ const RainbowKitApp = ({ children }) => {
 
 function App() {
   return (
-    <RainbowKitApp>
-      <AppBlock>
-        <Routes>
-          <Route index element={<Index />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/gives" element={<Gives />} />
-          <Route path="/gives/:id" element={<Give />} />
-          <Route path="/raffles" element={<Collections />} />
-          <Route path="/raffles/:id" element={<Collection />} />
-        </Routes>
-      </AppBlock>
-    </RainbowKitApp>
+      <RainbowKitApp>
+        <AppBlock>
+          <Routes>
+            <Route index element={<Index />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/giveaways" element={<Gives />} />
+            <Route path="/giveaways/:id" element={<Give />} />
+            <Route path="/raffles" element={<Collections />} />
+            <Route path="/raffles/:id" element={<Collection />} />
+          </Routes>
+        </AppBlock>
+      </RainbowKitApp>
   );
 }
 

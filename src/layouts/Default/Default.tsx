@@ -19,7 +19,7 @@ const Default: FC<PropsWithChildren<IDefault>> = ({ children, isHeaderActive = f
             <DefaultNavigationLink to={"/raffles"}>
               <DefaultNavigationLinkText>Раффлы</DefaultNavigationLinkText>
             </DefaultNavigationLink>
-            <DefaultNavigationLink to={"/gives"}>
+            <DefaultNavigationLink to={"/giveaways"}>
               <DefaultNavigationLinkText>Гивы</DefaultNavigationLinkText>
             </DefaultNavigationLink>
             <DefaultNavigationLink to={"/account"}>

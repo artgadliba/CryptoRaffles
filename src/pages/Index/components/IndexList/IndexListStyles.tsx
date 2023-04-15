@@ -13,6 +13,8 @@ const IndexListBlock = styled.ul`
 
 interface IIndexListItemBlock {
   isOpen: boolean;
+  openHeight?: number;
+  openMobileHeight?: number;
 }
 
 const IndexListItemBlock = styled.li<IIndexListItemBlock>`
@@ -24,7 +26,7 @@ const IndexListItemBlock = styled.li<IIndexListItemBlock>`
   transition-duration: 0.45s;
   background-color: ${({ isOpen }) => (isOpen ? "rgba(255, 255, 255, 0.1)" : "rgba(45, 11, 90, 0.3)")};
   border: ${({ isOpen }) => (isOpen ? `${pxIntoRem(2)} solid rgba(255, 255, 255, 0.35)` : `${pxIntoRem(1)} solid rgba(255, 255, 255, 0.46)`)};
-  height: ${({ isOpen }) => (isOpen ? pxIntoRem(202) : pxIntoRem(103))};
+  height: ${({ isOpen, openHeight }) => (isOpen ? pxIntoRem(openHeight || 202) : pxIntoRem(103))};
   cursor: pointer;
   &:first-of-type {
     margin-top: 0px;
@@ -34,7 +36,7 @@ const IndexListItemBlock = styled.li<IIndexListItemBlock>`
     font-weight: 500;
     font-size: ${pxIntoRem(17)};
     margin-top: ${pxIntoRem(5)};
-    height: ${({ isOpen }) => (isOpen ? pxIntoRem(315) : pxIntoRem(103))};
+    height: ${({ isOpen, openMobileHeight }) => (isOpen ? pxIntoRem(openMobileHeight || 315) : pxIntoRem(103))};
     padding: ${pxIntoRem(0)} ${pxIntoRem(15)} ${pxIntoRem(0)} ${pxIntoRem(18)};
   }
 `;

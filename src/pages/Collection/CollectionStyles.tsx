@@ -373,13 +373,34 @@ const CollectionBuyTokensControls = styled.div`
 const CollectionBuyTokensControl = styled.button`
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.54);
   border-radius: ${pxIntoRem(2.91)};
-  padding: ${pxIntoRem(15.47)} ${pxIntoRem(12.37)};
+  padding: 0px ${pxIntoRem(12.37)};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: ${pxIntoRem(50)};
   background-color: transparent;
 `;
 
-const CollectionBuyTokensControlImage = styled.img`
+const CollectionBuyTokensControlImage = styled.svg`
   width: ${pxIntoRem(17.47)};
   height: ${pxIntoRem(17.47)};
+  fill: white;
+`;
+
+const CollectionBuyTokensControllWrapper = styled.div`
+  &:hover ${CollectionBuyTokensControl} {
+    color: #08e2bd;
+    transition: 0.2s;
+    outline: 1.4px solid #3ff2d4;
+    outline-offset: -1.4px;
+    border-color: #08e2bd;
+  }
+  &:hover ${CollectionBuyTokensControlImage} {
+    transform: scale(1.35);
+    fill: #08e2bd;
+    transition: 0.2s;
+  }
 `;
 
 const CollectionBuyTokensCounter = styled.span`
@@ -409,6 +430,36 @@ const CollectionBuyTokensButton = styled.button`
   width: fit-content;
   margin-left: ${pxIntoRem(30)};
   cursor: pointer;
+  transition: 1s;
+
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
+  }
+  @media (max-width: 500px) {
+    width: 100%;
+    margin-left: 0;
+    margin-top: ${pxIntoRem(30)};
+  }
+`;
+
+const CollectionBuyTokensButtonInactive = styled.button`
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 600;
+  font-size: ${pxIntoRem(15)};
+  line-height: ${pxIntoRem(18)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2d0b5a;
+  padding: ${pxIntoRem(16)} ${pxIntoRem(37)};
+  background-color: #a7a8a8;
+  border-radius: ${pxIntoRem(2)};
+  width: fit-content;
+  margin-left: ${pxIntoRem(30)};
+  cursor: pointer;
+
   @media (max-width: 500px) {
     width: 100%;
     margin-left: 0;
@@ -734,10 +785,12 @@ export {
   CollectionBuyTokensButtons,
   CollectionBuyTokensControls,
   CollectionBuyTokensControl,
+  CollectionBuyTokensControllWrapper,
   CollectionBuyTokensControlImage,
   CollectionBuyTokensCounter,
   CollectionBuyTokensTitle,
   CollectionBuyTokensButton,
+  CollectionBuyTokensButtonInactive,
   CollectionActive,
   CollectionDone,
   CollectionDoneContent,

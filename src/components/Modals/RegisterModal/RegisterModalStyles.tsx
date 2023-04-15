@@ -150,6 +150,12 @@ const RegisterModalButton = styled.button`
   line-height: ${pxIntoRem(22)};
   color: #2d0b5a;
   margin-top: ${pxIntoRem(30)};
+  transition: 1s;
+
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 15px #23f7d3;
+  }
   @media (max-width: 500px) {
     margin-top: ${pxIntoRem(15)};
     max-width: ${pxIntoRem(277)};

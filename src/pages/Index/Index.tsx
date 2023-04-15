@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Autoplay, Navigation } from "swiper";
 import Container from "../../components/Container/Container";
@@ -57,8 +57,33 @@ import {
   IndexWinnersBody,
   IndexWinnersTitle,
 } from "./IndexStyles";
+import axios from "axios";
+
+interface IIndexSlider {
+  raffleID?: string;
+  giveawayID?: string;
+  end_timestamp: number;
+  grand_prize: number;
+  paytoken: string;
+  owner: string;
+  promo_name: string;
+}
 
 function Index() {
+
+  const [items, setItems] = useState<Array<IIndexSlider>>();
+
+  useEffect(() => {
+    let promoData;
+    axios.get("http://127.0.0.1:8000/api/promotions")
+    .then(res => {
+      promoData = res.data;
+      setItems(promoData);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, [])
 
   return (
     <Landing>
@@ -76,31 +101,10 @@ function Index() {
                   Самые прозрачные <br /> <span>розыгрыши</span>
                 </IndexGreetingTitle>
                 <IndexGreetingText>CryptoRaffles - децентрализованная платформа для организации розыгрышей призов, построенная на блокчейне сети Ethereum.</IndexGreetingText>
-                <IndexGreetingBottomText>Каждый участник имеет реальную возможность выиграть, благодаря прозрачному и честному механизму работы. Каждый этап можно легко отследить и подтвердить соответствие правилам.</IndexGreetingBottomText>
+                <IndexGreetingBottomText>Каждый участник имеет реальную возможность выиграть, благодаря прозрачному и честному механизму работы. Каждый этап можно легко отследить и подтвердить его соответствие правилам.</IndexGreetingBottomText>
                 <IndexGreetingConnect to="/account">Подключиться</IndexGreetingConnect>
               </IndexGreetingContent>
-              <IndexSlider
-                items={[
-                  {
-                    id: "Raffle # 0x323ff",
-                    wallet: "@ Nike",
-                    price: "$9,445",
-                    timerDate: Date.now(),
-                  },
-                  {
-                    id: "Raffle # 7fh12ba",
-                    wallet: "@ Baxter",
-                    price: "$100,087",
-                    timerDate: Date.now(),
-                  },
-                  {
-                    id: "Raffle # 3da71c5",
-                    wallet: "@ Jango",
-                    price: "$49,615",
-                    timerDate: Date.now(),
-                  },
-                ]}
-              />
+              <IndexSlider items={items}/>
             </IndexGreetingBody>
           </Container>
         </IndexGreeting>
@@ -230,6 +234,7 @@ function Index() {
                   {
                     title: "Чем CryptoRaffles отличаются от других розыгрышей?",
                     text: "Проект построен на базе блокчейна Ethereum, с использованием смарт-контрактов, которые в точности описывают правила взаимодействия для каждого участника. Что позволяет утверждать о полной честности и доказуемости результатов наших розыгрышей.",
+                    openHeight: 180,
                   },
                   {
                     title: "Как выбирается победитель и насколько честно это происходит?",
@@ -258,10 +263,12 @@ function Index() {
                   {
                     title: "Что такое gas costs и почему я должен платить комиссии за транзакции?",
                     text: "Вознаграждения за включение транзакций в текущий блок, выплачиваются в адрес майнеров в качестве оплаты за выполненную работу. Стоимость газа может значительно изменятся в зависимости от загруженности сети, таким образом регулируя пропускную способность. В этом случае вы можете установить вручную меньшую цену за газ и подождать включения транзакции в последующие блоки в порядке очереди. Этот вариант рекомендуется только для опытных пользователей. Также вы можете       подождать более благоприятного времени дня, когда сеть будет наименее загружена, что существенно снизит ваши затраты на комиссию.",
+                    openHeight: 250,
                   },
                   {
                     title: "Что делать если у меня возникли трудности и я не могу самостоятельно разобраться?",
                     text: "В таком случае вы можете написать в telegram: @OxCryptoRaffles нашему оператору. Он ооперативно решит любые ваши затруднения.",
+                    openHeight: 150,
                   },
                 ]}
               ></IndexList>

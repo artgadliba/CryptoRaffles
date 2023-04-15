@@ -18,12 +18,10 @@ import {
 
 interface ICollectionWinners {
   items: {
-    isFirst?: boolean;
-    isSecond?: boolean;
-    isThird?: boolean;
-    winner: string;
-    tokens: string;
-    price: string;
+    isGrand: boolean;
+    wallet: string;
+    tokens?: number;
+    prize: string;
   }[];
 }
 
@@ -39,16 +37,16 @@ const GiveWinners: FC<ICollectionWinners> = ({ items }) => {
         return (
           <GiveDoneWinnersRow key={idx}>
             <GiveDoneWinnersRowItem>
-              {item.isFirst && <GiveDoneWinnersRowItemImage alt="medal" src="/images/1st-place-medal.png" />}
-              {item.isSecond && <GiveDoneWinnersRowItemImage alt="medal" src="/images/2nd-place-medal.png" />}
-              {item.isThird && <GiveDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}
-              <GiveDoneWinnersRowItemHash>{item.winner}</GiveDoneWinnersRowItemHash>
+              {item.isGrand && <GiveDoneWinnersRowItemImage alt="medal" src="/images/1st-place-medal.png" />}
+              {!item.isGrand && <GiveDoneWinnersRowItemImage alt="medal" src="/images/2nd-place-medal.png" />}
+              {/*{item.isThird && <GiveDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}*/}
+              <GiveDoneWinnersRowItemHash>{item.wallet}</GiveDoneWinnersRowItemHash>
             </GiveDoneWinnersRowItem>
             <GiveDoneWinnersRowItem>
               <GiveDoneWinnersRowItemText>{item.tokens}</GiveDoneWinnersRowItemText>
             </GiveDoneWinnersRowItem>
             <GiveDoneWinnersRowItem>
-              <GiveDoneWinnersRowItemText>{item.price} </GiveDoneWinnersRowItemText>
+              <GiveDoneWinnersRowItemText>{item.prize} </GiveDoneWinnersRowItemText>
             </GiveDoneWinnersRowItem>
           </GiveDoneWinnersRow>
         );

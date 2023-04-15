@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { SwiperSlide } from "swiper/react";
 import pxIntoRem from "../../../../utils/pxIntoRem";
+import { Link } from "react-router-dom";
 
 const IndexSlideBlock = styled.div`
   display: flex;
@@ -54,6 +55,9 @@ const IndexSlideHeaderDocumentImage = styled.img`
   height: ${pxIntoRem(23.33)};
 `;
 
+const IndexSlideHeaderDocumentImageLink = styled(Link)`
+`;
+
 const IndexSlideContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -83,7 +87,7 @@ const IndexSlideUsername = styled.span`
   margin-top: ${pxIntoRem(8)};
 `;
 
-const IndexSlideSum = styled.span`
+const IndexSlideSum = styled(Link)`
   font-family: "TT Firs Neue";
   font-style: normal;
   font-weight: 600;
@@ -94,6 +98,12 @@ const IndexSlideSum = styled.span`
   color: #ffffff;
   text-shadow: 0px ${pxIntoRem(5.68)} ${pxIntoRem(8.52)} rgba(0, 0, 0, 0.07);
   margin-top: ${pxIntoRem(28)};
+  transition: 1s;
+
+  &:hover {
+    text-shadow: #FC0 1px 0 10px;
+    transition: 0.3;
+  }
 `;
 
 const IndexSlideLine = styled.div`
@@ -191,6 +201,7 @@ export {
   IndexSlideHeaderCounter,
   IndexSlideHeaderDocument,
   IndexSlideHeaderDocumentImage,
+  IndexSlideHeaderDocumentImageLink,
   IndexSlideLine,
   IndexSlideBlock,
   IndexSlideSum,

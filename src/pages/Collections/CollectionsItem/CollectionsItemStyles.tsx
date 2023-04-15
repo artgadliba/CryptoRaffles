@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import pxIntoRem from "../../../utils/pxIntoRem";
+import { Link } from "react-router-dom";
 
 const CollectionsItemBlock = styled.div`
   display: flex;
@@ -214,7 +215,7 @@ const CollectionsItemButtons = styled.div`
   }
 `;
 
-const CollectionsItemButtonMore = styled.button`
+const CollectionsItemButtonMore = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,7 +254,7 @@ const CollectionsItemButtonMore = styled.button`
   }
 `;
 
-const CollectionsItemButtonConnect = styled.button`
+const CollectionsItemButtonConnect = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -273,21 +274,12 @@ const CollectionsItemButtonConnect = styled.button`
   transition: 1s;
 
   &:hover {
-    outline: 1.5px solid #08e2bd;
-    outline-offset: 3px;
-    transition: 0.3s;
-    transform: scale3d(0.96,0.87,1);
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
   }
 
   @media (max-width: 1200px) {
     width: 100%;
-
-    &:hover {
-      outline: 1px solid #08e2bd;
-      outline-offset: 3px;
-      transition: 0.3s;
-      transform: scale3d(0.95,0.87,1);
-    }
   }
 `;
 
@@ -303,7 +295,7 @@ const CollectionsFakeItemBackground = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.3;
+  opacity: 0.5;
   & > img {
     width: 100%;
     height: 100%;

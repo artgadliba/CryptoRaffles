@@ -2,6 +2,7 @@ import { FC, PropsWithChildren } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import pxIntoRem from "../../../../utils/pxIntoRem";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const DefaultHeaderBlock = styled.header`
   width: 100%;
@@ -228,6 +229,13 @@ const DefaultHeaderUserHashText = styled.span`
   color: #8e52f1;
 `;
 
+const StyledConnectButton = styled(ConnectButton)`
+  position: relative;
+  top: -10px;
+  background-color: red;
+  outline: solid 2px red;
+`;
+
 export {
   DefaultHeaderBlock,
   DefaultHeaderBody,
@@ -247,4 +255,5 @@ export {
   DefaultHeaderUserNameImage,
   DefaultHeaderUserNameText,
   DefaultHeaderUserHashText,
+  StyledConnectButton,
 };

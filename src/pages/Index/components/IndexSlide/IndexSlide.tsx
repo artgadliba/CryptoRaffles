@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import useTimer from "../../../../hooks/useTimer";
+import React, { FC, useState, useEffect } from "react";
 import {
   IndexSlideContent,
   IndexSlideFooter,
@@ -11,6 +10,7 @@ import {
   IndexSlideHeaderCounter,
   IndexSlideHeaderDocument,
   IndexSlideHeaderDocumentImage,
+  IndexSlideHeaderDocumentImageLink,
   IndexSlideLine,
   IndexSlideBlock,
   IndexSlideSum,
@@ -18,33 +18,86 @@ import {
   IndexSlideTitle,
   IndexSlideUsername,
 } from "./IndexSlideStyles";
+import { getETHPrice } from "../../../../utils/getETHPrice";
+import { useCountdown } from "../../../../hooks/useCountdown";
+import { ethers } from "ethers";
 
 interface IIndexSlide {
   index: number;
+  length: number;
   item: {
-    id: string;
-    wallet: string;
-    price: string;
-    timerDate: string | number;
+    raffle_id?: string;
+    giveaway_id?: string;
+    end_timestamp: number;
+    grand_prize: number;
+    paytoken: string;
+    owner: string;
+    promo_name: string;
   };
 }
 
-const IndexSlide: FC<IIndexSlide> = ({ item, index }) => {
-  const { seconds, days, hours, minuts, secondsNoun, daysNoun, hoursNoun, minutsNoun } = useTimer(item.timerDate ?? Date.now());
+const IndexSlide: FC<IIndexSlide> = ({ item, index, length }) => {
+  const [ethRate, setEthRate] = useState<number>();
+
+  var {
+    seconds,
+    minutes,
+    hours,
+    days,
+    secondsNoun,
+    minutesNoun,
+    hoursNoun,
+    daysNoun
+  } = useCountdown(item?.end_timestamp ?? Date.now());
+
+  if (ethRate !== undefined) {
+    var grandPrize = item.grand_prize;
+    if (item.paytoken === "0x0000000000000000000000000000000000000000") {
+      let eth = ethers.utils.formatEther(item.grand_prize);
+      grandPrize = Number(eth) * Number(ethRate);
+    } else {
+      grandPrize = Math.round(item.grand_prize / 10 ** 6);
+    }
+  }
+
+  useEffect(() => {
+    if (!ethRate) {
+      getETHPrice()
+      .then(res => {
+        setEthRate(res);
+      })
+      .catch(err =>{
+        console.log(err);
+      })
+    }
+  }, [ethRate])
+
   return (
     <IndexSlideBlock>
       <IndexSlideHeader>
         <IndexSlideHeaderCounter>
-          {index + 1} <span>/ 8</span>
+          {index + 1} <span>/ {length}</span>
         </IndexSlideHeaderCounter>
         <IndexSlideHeaderDocument>
-          <IndexSlideHeaderDocumentImage alt="document" src="/images/document.svg" />
+        {item.raffle_id ? (
+          <IndexSlideHeaderDocumentImageLink to={`/raffles/${item.raffle_id}`}>
+            <IndexSlideHeaderDocumentImage alt="document" src="/images/document.svg" />
+          </IndexSlideHeaderDocumentImageLink>
+        ) : (
+          <IndexSlideHeaderDocumentImageLink to={`/giveaways/${item.giveaway_id}`}>
+            <IndexSlideHeaderDocumentImage alt="document" src="/images/document.svg" />
+          </IndexSlideHeaderDocumentImageLink>
+        )}
         </IndexSlideHeaderDocument>
       </IndexSlideHeader>
       <IndexSlideContent>
-        <IndexSlideTitle>{item.id}</IndexSlideTitle>
-        <IndexSlideUsername>{item.wallet}</IndexSlideUsername>
-        <IndexSlideSum>{item.price}</IndexSlideSum>
+        <IndexSlideTitle>{item.promo_name}</IndexSlideTitle>
+        <IndexSlideUsername>{item.owner}</IndexSlideUsername>
+          {item.raffle_id ? (
+            <IndexSlideSum to={`/raffles/${item.raffle_id}`}>{grandPrize < 5000 || ethRate === undefined ? "$$$$$$" : `${grandPrize}`}</IndexSlideSum>
+          ) : (
+            <IndexSlideSum to={`/giveaways/${item.giveaway_id}`}>{grandPrize < 5000 || ethRate === undefined ? "$$$$$$" : `${grandPrize}`}</IndexSlideSum>
+          )}
         <IndexSlideLine />
         <IndexSlideSumTitle>Сумма розыгрыша</IndexSlideSumTitle>
       </IndexSlideContent>
@@ -60,8 +113,8 @@ const IndexSlide: FC<IIndexSlide> = ({ item, index }) => {
         </IndexSlideFooterColumn>
         <IndexSlideFooterDots>:</IndexSlideFooterDots>
         <IndexSlideFooterColumn>
-          <IndexSlideFooterColumnNumber>{minuts}</IndexSlideFooterColumnNumber>
-          <IndexSlideFooterColumnText>{minutsNoun}</IndexSlideFooterColumnText>
+          <IndexSlideFooterColumnNumber>{minutes}</IndexSlideFooterColumnNumber>
+          <IndexSlideFooterColumnText>{minutesNoun}</IndexSlideFooterColumnText>
         </IndexSlideFooterColumn>
         <IndexSlideFooterDots>:</IndexSlideFooterDots>
         <IndexSlideFooterColumn>

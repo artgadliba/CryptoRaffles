@@ -20,12 +20,13 @@ import {
   AccountSliderSlideImage,
 } from "./AccountSliderStyles";
 
-interface IAccountItem {
+interface IAccountToken {
+  tokenId: number;
   image: string;
 }
 
 interface IAccountSlider {
-  items: IAccountItem[];
+  items: IAccountToken[];
 }
 
 // Function split array into parts containing 6 or less elements: [1, 2, 3, 4, 5, 6, 7, 8] => [[1, 2, 3, 4, 5, 6], [7, 8]]
@@ -122,7 +123,7 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
           nextEl: ".account-slider-next",
         }}
       >
-        {[...items, ...items, ...items, ...items].map((item: IAccountItem, idx) => {
+        {[...items, ...items, ...items, ...items].map((item: IAccountToken, idx) => {
           return (
             <AccountSliderSlide key={idx} onClick={() => openPopUp(item.image)}>
               <AccountSliderSlideContent>

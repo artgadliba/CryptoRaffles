@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import useTimer from "../../hooks/useTimer";
+import React, { FC, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useCountdown } from "../../hooks/useCountdown";
 import Default from "../../layouts/Default/Default";
 import {
   CollectionActive,
   CollectionBlock,
   CollectionBuyTokens,
   CollectionBuyTokensButton,
+  CollectionBuyTokensButtonInactive,
   CollectionBuyTokensButtons,
   CollectionBuyTokensControl,
   CollectionBuyTokensControlImage,
+  CollectionBuyTokensControllWrapper,
   CollectionBuyTokensControls,
   CollectionBuyTokensCounter,
   CollectionBuyTokensTitle,
@@ -44,175 +47,351 @@ import {
   CollectionInfoTimerText,
 } from "./CollectionStyles";
 import CollectionWinners from "./components/CollectionWinners/CollectionWinners";
+import axios from "axios";
+import { ethers } from "ethers";
+import { getETHPrice } from "../../utils/getETHPrice";
+import { getAccountBalance, raffleAbi } from "../../utils/getAccountBalance";
+import { prepareWriteContract, writeContract } from "@wagmi/core";
+import { useAccount } from "wagmi";
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
+
+interface ICollectionData {
+  raffle_id: string;
+  end_timestamp: number;
+  image: string;
+  paytoken: string;
+  entry_fee: number;
+  grand_prize: number;
+  grand_prize_winner?: string;
+  minor_prize: number;
+  minor_prize_winners?: Array<string>;
+  owner: string;
+  raffle_name: string;
+  status: number;
+  game_type: number;
+  description: string;
+}
+
+interface IWinners {
+  isGrand: boolean;
+  wallet: string;
+  tokens?: string;
+  prize: string;
+}
+
+const nullSignature = [
+  0,
+  "0x0000000000000000000000000000000000000000000000000000000000000000"
+];
+
+const winnersList: Array<IWinners> = [];
 
 function Collection() {
-  const { seconds, days, hours, minuts, secondsNoun, daysNoun, hoursNoun, minutsNoun } = useTimer(Date.now());
+  const { id } = useParams();
+  const { address, isConnecting, isDisconnected } = useAccount();
 
-  const [isActive, setIsActive] = useState(false);
-
-  const [tokensCounter, setTokensCounter] = useState(0);
-
-  const [description, setDescription] = useState(
-    <>
-      <span>CryptoRaffles построен на базе смарт-контрактов, которые содержат в себе точные неизменяемые правила.</span> Что гарантирует полную честность в проведении розыгрышей. Ни автор розыгрыша, ни его оператор не имеют возможности как либо манипулировать результатами.
-      <br /> <br /> Денежные призы загружаются на контракт до начала розыгрыша, откуда могут быть сняты только победителями при соответствующих правилам условиях.
-    </>
-  );
-
-  const [info, setInfo] = useState({
-    title: "Raffle # 54c1ae03",
-    author: "@ Nike",
-    price: "$9,445",
-  });
-
+  const [item, setItem] = useState<ICollectionData>();
+  const [statusColor, setStatusColor] = useState<string>("#ffffff");
+  const [statusText, setStatusText] = useState<string>("Открыт");
+  const [grandPrize, setGrandPrize] = useState<number>(0);
+  const [minorPrize, setMinorPrize] = useState<number>(0);
+  const [tokensCounter, setTokensCounter] = useState<number>(1);
   const [conditions, setConditions] = useState([
     {
       text: "Подключиться к веб приложению с помощью Ethereum кошелька",
     },
     {
-      text: "Принять участие в активном раффле, приобретая любое количество токенов или зарегистрироваться для участия в гиве, выполнив его условия.",
+      text: "Принять участие в активном раффле, приобретая любое количество токенов.",
     },
     {
-      text: "Дождаться окончания раффла/ гива и проверить ваш результат.",
-    },
-    {
-      text: "В случае выигрыша - произвести мгновенный вывод средств.",
+      text: "Дождаться окончания раффла и проверить ваш результат.",
     },
   ]);
 
-  return (
-    <Default isHeaderActive>
-      <CollectionBlock>
-        <CollectionImage alt="cover" src="/images/give-cover.png" />
-        <CollectionInfo>
-          <CollectionInfoItems>
-            <CollectionInfoItem>
-              <CollectionInfoItemTitle>Название коллекции</CollectionInfoItemTitle>
-              <CollectionInfoItemValue>{info.title}</CollectionInfoItemValue>
-            </CollectionInfoItem>
-            <CollectionInfoItem>
-              <CollectionInfoItemTitle>Автор</CollectionInfoItemTitle>
-              <CollectionInfoItemValue>{info.author}</CollectionInfoItemValue>
-            </CollectionInfoItem>
-            <CollectionInfoItem>
-              <CollectionInfoItemTitle>Статус</CollectionInfoItemTitle>
-              <CollectionInfoItemValue color={isActive ? "#ffffff" : "#08E2BD"}>{isActive ? "Открыт" : "Разыгран"}</CollectionInfoItemValue>
-            </CollectionInfoItem>
-          </CollectionInfoItems>
-          {isActive && (
-            <CollectionInfoSumm>
-              <CollectionInfoSummTitle>Сумма розыгрыша</CollectionInfoSummTitle>
-              <CollectionInfoSummValue>
-                <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> {info.price}
-              </CollectionInfoSummValue>
-            </CollectionInfoSumm>
+  var {
+    seconds,
+    minutes,
+    hours,
+    days,
+    secondsNoun,
+    minutesNoun,
+    hoursNoun,
+    daysNoun
+  } = useCountdown(item?.end_timestamp ?? Date.now());
+
+  useEffect(() => {
+    let data_array;
+    let data;
+    axios.get(`http://localhost:8000/api/raffles/${id}`)
+    .then(res => {
+      data_array = res.data;
+      data = data_array[0];
+      setItem(data);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, [])
+
+  useEffect(() => {
+    if (item) {
+      if (item.status == 1) {
+        setStatusColor("#08E2BD");
+        setStatusText("Разыгран");
+      } else if (item.status == 2) {
+        setStatusColor("#08E2BD");
+        setStatusText("Отменен");
+      }
+      if (item.paytoken == "0x0000000000000000000000000000000000000000") {
+        getETHPrice()
+        .then(ethRate => {
+          let formatedGrandPrize = ethers.utils.formatEther(item.grand_prize);
+          let formatedMinorPrize = ethers.utils.formatEther(item.minor_prize);
+          let grandPrize = Math.round(Number(formatedGrandPrize) * Number(ethRate));
+          let minorPrize = Math.round(Number(formatedMinorPrize) * Number(ethRate));
+
+          if (item.grand_prize_winner !== null) {
+            let rawGPrize = grandPrize;
+            let gPrize = "$" + String(rawGPrize);
+            getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
+            .then(res => {
+              let balance = res.toString();
+              winnersList.push({
+                isGrand: true,
+                wallet: item.grand_prize_winner,
+                tokens: balance,
+                prize: gPrize
+              })
+            })
+            .catch(err => {
+              console.log(err);
+            })
+          }
+          if (item.minor_prize_winners !== null) {
+            let rawMPrize = minorPrize;
+            let mPrize = "$" + String(rawMPrize);
+            for (let i = 0; i < item.minor_prize_winners.length; i++) {
+              getAccountBalance(item.raffle_id, item.minor_prize_winners[i], true)
+              .then(res => {
+                let balance = res.toString();
+                winnersList.push({
+                  isGrand: false,
+                  wallet: item.minor_prize_winners[i],
+                  tokens: balance,
+                  prize: mPrize
+                })
+              })
+              .catch(err => {
+                console.log(err);
+              })
+            }
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      } else {
+        let grandPrize = Math.round(item.grand_prize / 10 ** 6);
+        let minorPrize = Math.round(item.minor_prize / 10 ** 6);
+
+        if (item.grand_prize_winner !== null) {
+          let rawGPrize = grandPrize;
+          let gPrize = "$" + String(rawGPrize);
+          getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
+          .then(res => {
+            let balance = res.toString();
+            winnersList.push({
+              isGrand: true,
+              wallet: item.grand_prize_winner,
+              tokens: balance,
+              prize: gPrize
+            })
+          })
+          .catch(err => {
+            console.log(err);
+          })
+        }
+        if (item.minor_prize_winners !== null) {
+          let rawMPrize = minorPrize;
+          let mPrize = "$" + String(rawMPrize);
+          for (let i = 0; i < item.minor_prize_winners.length; i++) {
+            getAccountBalance(item.raffle_id, item.minor_prize_winners[i], true)
+            .then(res => {
+              let balance = res.toString();
+              winnersList.push({
+                isGrand: false,
+                wallet: item.minor_prize_winners[i],
+                tokens: balance,
+                prize: mPrize
+              })
+            })
+            .catch(err => {
+              console.log(err);
+            })
+          }
+        }
+      }
+    }
+  }, [item])
+
+  const publicMint = async () => {
+    const config = await prepareWriteContract({
+      address: id,
+      abi: raffleAbi,
+      chainId: 11155111,
+      functionName: "publicMint",
+      args: [item.paytoken, 0, tokensCounter, nullSignature[0], nullSignature[1], nullSignature[1]],
+      overrides: {
+        value: tokensCounter * item.entry_fee,
+      },
+    });
+    const { hash } = await writeContract(config);
+    addRecentTransaction({
+      hash: hash,
+      description: `Public minting of ${tokensCounter} token(s).`,
+    });
+  }
+
+  const addRecentTransaction = useAddRecentTransaction();
+
+  const handleNextValue = () => {
+      if (tokensCounter >= 1) {
+        setTokensCounter((prev) => prev + 1);
+      }
+  }
+
+  const handlePrevValue = () => {
+      if (tokensCounter > 1) {
+        setTokensCounter((prev) => prev - 1)
+      }
+  }
+
+  if (item != undefined) {
+    return (
+      <Default isHeaderActive>
+        <CollectionBlock>
+          <CollectionImage alt="cover" src={`${item.image}`} />
+          <CollectionInfo>
+            <CollectionInfoItems>
+              <CollectionInfoItem>
+                <CollectionInfoItemTitle>Название раффла</CollectionInfoItemTitle>
+                <CollectionInfoItemValue>{item.raffle_name}</CollectionInfoItemValue>
+              </CollectionInfoItem>
+              <CollectionInfoItem>
+                <CollectionInfoItemTitle>Автор</CollectionInfoItemTitle>
+                <CollectionInfoItemValue>{item.owner}</CollectionInfoItemValue>
+              </CollectionInfoItem>
+              <CollectionInfoItem>
+                <CollectionInfoItemTitle>Статус</CollectionInfoItemTitle>
+                <CollectionInfoItemValue color={statusColor}>{statusText}</CollectionInfoItemValue>
+              </CollectionInfoItem>
+            </CollectionInfoItems>
+              <CollectionInfoSumm>
+                <CollectionInfoSummTitle>Сумма розыгрыша</CollectionInfoSummTitle>
+                {grandPrize > 5000 ? (
+                  <CollectionInfoSummValue>
+                    <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> {grandPrize}
+                  </CollectionInfoSummValue>
+                ) : (
+                  <CollectionInfoSummValue>
+                    <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> $$$$$$
+                  </CollectionInfoSummValue>
+                )}
+              </CollectionInfoSumm>
+            <CollectionInfoTimer>
+              <CollectionInfoTimerColumn>
+                <CollectionInfoTimerNumber>{days}</CollectionInfoTimerNumber>
+                <CollectionInfoTimerText>{daysNoun}</CollectionInfoTimerText>
+              </CollectionInfoTimerColumn>
+              <CollectionInfoTimerSplitter marginLeft={16} marginRight={16}>
+                :
+              </CollectionInfoTimerSplitter>
+              <CollectionInfoTimerColumn>
+                <CollectionInfoTimerNumber>{hours}</CollectionInfoTimerNumber>
+                <CollectionInfoTimerText>{hoursNoun}</CollectionInfoTimerText>
+              </CollectionInfoTimerColumn>
+              <CollectionInfoTimerSplitter marginLeft={22} marginRight={12}>
+                :
+              </CollectionInfoTimerSplitter>
+              <CollectionInfoTimerColumn>
+                <CollectionInfoTimerNumber>{minutes}</CollectionInfoTimerNumber>
+                <CollectionInfoTimerText>{minutesNoun}</CollectionInfoTimerText>
+              </CollectionInfoTimerColumn>
+              <CollectionInfoTimerSplitter marginLeft={15} marginRight={19}>
+                :
+              </CollectionInfoTimerSplitter>
+              <CollectionInfoTimerColumn>
+                <CollectionInfoTimerNumber>{seconds}</CollectionInfoTimerNumber>
+                <CollectionInfoTimerText>{secondsNoun}</CollectionInfoTimerText>
+              </CollectionInfoTimerColumn>
+            </CollectionInfoTimer>
+          </CollectionInfo>
+          {item.status < 1 ? (
+            <CollectionActive>
+              <CollectionDescription>
+                <CollectionDescriptionTitle>Описание</CollectionDescriptionTitle>
+                <CollectionDescriptionText>{item.description}</CollectionDescriptionText>
+              </CollectionDescription>
+              <CollectionConditions>
+                <CollectionConditionsTitle>Условия участия</CollectionConditionsTitle>
+                <CollectionConditionsList>
+                  {conditions.map((condition, idx) => {
+                    return (
+                      <CollectionConditionsListItem key={idx}>
+                        <CollectionConditionsListItemDot>{idx + 1}</CollectionConditionsListItemDot>
+                        <CollectionConditionsListItemText>{condition.text}</CollectionConditionsListItemText>
+                      </CollectionConditionsListItem>
+                    );
+                  })}
+                </CollectionConditionsList>
+              </CollectionConditions>
+              <CollectionBuyTokens>
+                <CollectionBuyTokensTitle>
+                  Купить токены
+                </CollectionBuyTokensTitle>
+                <CollectionBuyTokensButtons>
+                  <CollectionBuyTokensControls>
+                    <CollectionBuyTokensControllWrapper>
+                      <CollectionBuyTokensControl onClick={handlePrevValue}>
+                        <CollectionBuyTokensControlImage width="18" height="18" viewBox="0 0 18 18">
+                          <path fillRule="evenodd" clipRule="evenodd" d="M3.28516 9.20346C3.28516 8.80147 3.61104 8.47559 4.01303 8.47559H14.2033C14.6053 8.47559 14.9311 8.80147 14.9311 9.20346C14.9311 9.60545 14.6053 9.93133 14.2033 9.93133H4.01303C3.61104 9.93133 3.28516 9.60545 3.28516 9.20346Z" />
+                        </CollectionBuyTokensControlImage>
+                      </CollectionBuyTokensControl>
+                    </CollectionBuyTokensControllWrapper>
+                    <CollectionBuyTokensCounter>{tokensCounter}</CollectionBuyTokensCounter>
+                    <CollectionBuyTokensControllWrapper>
+                      <CollectionBuyTokensControl onClick={handleNextValue}>
+                        <CollectionBuyTokensControlImage width="18" height="18" viewBox="0 0 18 18">
+                          <path fillRule="evenodd" clipRule="evenodd" d="M8.91635 3.37988C9.31834 3.37988 9.64422 3.70576 9.64422 4.10776V14.298C9.64422 14.7 9.31834 15.0259 8.91635 15.0259C8.51436 15.0259 8.18848 14.7 8.18848 14.298V4.10776C8.18848 3.70576 8.51436 3.37988 8.91635 3.37988Z" />
+                          <path fillRule="evenodd" clipRule="evenodd" d="M3.09277 9.20346C3.09277 8.80147 3.41865 8.47559 3.82065 8.47559H14.0109C14.4129 8.47559 14.7388 8.80147 14.7388 9.20346C14.7388 9.60545 14.4129 9.93133 14.0109 9.93133H3.82065C3.41865 9.93133 3.09277 9.60545 3.09277 9.20346Z" />
+                        </CollectionBuyTokensControlImage>
+                      </CollectionBuyTokensControl>
+                    </CollectionBuyTokensControllWrapper>
+                  </CollectionBuyTokensControls>
+                    <CollectionBuyTokensButton onClick={() => {
+                      publicMint();
+                    }}>
+                      Купить токены
+                    </CollectionBuyTokensButton>
+                </CollectionBuyTokensButtons>
+              </CollectionBuyTokens>
+            </CollectionActive>
+          ) : (
+            <CollectionDone>
+              <CollectionDoneTitle>Победители</CollectionDoneTitle>
+              <CollectionDoneContent>
+                <CollectionWinners items={winnersList} />
+                <CollectionDoneLogoBlock>
+                  <CollectionDoneLogo alt="logo" src="/images/give-c-logo.svg" />
+                  <CollectionDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />
+                </CollectionDoneLogoBlock>
+              </CollectionDoneContent>
+            </CollectionDone>
           )}
-          <CollectionInfoTimer>
-            <CollectionInfoTimerColumn>
-              <CollectionInfoTimerNumber>{days}</CollectionInfoTimerNumber>
-              <CollectionInfoTimerText>{daysNoun}</CollectionInfoTimerText>
-            </CollectionInfoTimerColumn>
-            <CollectionInfoTimerSplitter marginLeft={16} marginRight={16}>
-              :
-            </CollectionInfoTimerSplitter>
-            <CollectionInfoTimerColumn>
-              <CollectionInfoTimerNumber>{hours}</CollectionInfoTimerNumber>
-              <CollectionInfoTimerText>{hoursNoun}</CollectionInfoTimerText>
-            </CollectionInfoTimerColumn>
-            <CollectionInfoTimerSplitter marginLeft={22} marginRight={12}>
-              :
-            </CollectionInfoTimerSplitter>
-            <CollectionInfoTimerColumn>
-              <CollectionInfoTimerNumber>{minuts}</CollectionInfoTimerNumber>
-              <CollectionInfoTimerText>{minutsNoun}</CollectionInfoTimerText>
-            </CollectionInfoTimerColumn>
-            <CollectionInfoTimerSplitter marginLeft={15} marginRight={19}>
-              :
-            </CollectionInfoTimerSplitter>
-            <CollectionInfoTimerColumn>
-              <CollectionInfoTimerNumber>{seconds}</CollectionInfoTimerNumber>
-              <CollectionInfoTimerText>{secondsNoun}</CollectionInfoTimerText>
-            </CollectionInfoTimerColumn>
-          </CollectionInfoTimer>
-        </CollectionInfo>
-        {isActive ? (
-          <CollectionActive>
-            <CollectionDescription>
-              <CollectionDescriptionTitle>Описание коллекции</CollectionDescriptionTitle>
-              <CollectionDescriptionText>{description}</CollectionDescriptionText>
-            </CollectionDescription>
-            <CollectionConditions>
-              <CollectionConditionsTitle>Условия участия</CollectionConditionsTitle>
-              <CollectionConditionsList>
-                {conditions.map((condition, idx) => {
-                  return (
-                    <CollectionConditionsListItem>
-                      <CollectionConditionsListItemDot>{idx + 1}</CollectionConditionsListItemDot>
-                      <CollectionConditionsListItemText>{condition.text}</CollectionConditionsListItemText>
-                    </CollectionConditionsListItem>
-                  );
-                })}
-              </CollectionConditionsList>
-            </CollectionConditions>
-            <CollectionBuyTokens>
-              <CollectionBuyTokensTitle>Купить токены</CollectionBuyTokensTitle>
-              <CollectionBuyTokensButtons>
-                <CollectionBuyTokensControls>
-                  <CollectionBuyTokensControl onClick={() => setTokensCounter((prev) => prev - 1)}>
-                    <CollectionBuyTokensControlImage alt="minus" src="/images/minus.svg" />
-                  </CollectionBuyTokensControl>
-                  <CollectionBuyTokensCounter>{tokensCounter}</CollectionBuyTokensCounter>
-                  <CollectionBuyTokensControl onClick={() => setTokensCounter((prev) => prev + 1)}>
-                    <CollectionBuyTokensControlImage alt="plus" src="/images/plus.svg" />
-                  </CollectionBuyTokensControl>
-                </CollectionBuyTokensControls>
-                <CollectionBuyTokensButton>Купить токены</CollectionBuyTokensButton>
-              </CollectionBuyTokensButtons>
-            </CollectionBuyTokens>
-          </CollectionActive>
-        ) : (
-          <CollectionDone>
-            <CollectionDoneTitle>Победители</CollectionDoneTitle>
-            <CollectionDoneContent>
-              <CollectionWinners
-                items={
-                  [
-                    {
-                      isFirst: true,
-                      winner: "010lfdx6c07...",
-                      tokens: "105",
-                      price: "37,075$",
-                    },
-                    {
-                      isSecond: true,
-                      winner: "010lfdx6c07...",
-                      tokens: "105",
-                      price: "37,075$",
-                    },
-                    {
-                      isThird: true,
-                      winner: "010lfdx6c07...",
-                      tokens: "105",
-                      price: "37,075$",
-                    },
-                    {
-                      winner: "010lfdx6c07...",
-                      tokens: "105",
-                      price: "37,075$",
-                    },
-                  ]
-                }
-              />
-              <CollectionDoneLogoBlock>
-                <CollectionDoneLogo alt="logo" src="/images/give-c-logo.svg" />
-                <CollectionDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />
-              </CollectionDoneLogoBlock>
-            </CollectionDoneContent>
-          </CollectionDone>
-        )}
-      </CollectionBlock>
-    </Default>
-  );
+        </CollectionBlock>
+      </Default>
+    );
+  }
 }
 
 export default Collection;

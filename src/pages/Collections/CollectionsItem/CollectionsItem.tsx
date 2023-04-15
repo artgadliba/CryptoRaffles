@@ -1,5 +1,6 @@
-import React, { FC } from "react";
-import useTimer from "../../../hooks/useTimer";
+import React, { FC, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useCountdown } from "../../../hooks/useCountdown";
 import {
   CollectionsItemBlock,
   CollectionsItemBackground,
@@ -32,19 +33,67 @@ import {
   CollectionsFakeItemClock,
   CollectionsFakeItemFakeButton,
 } from "./CollectionsItemStyles";
+import axios from "axios";
+import { ethers } from "ethers";
+import { getETHPrice } from "../../../utils/getETHPrice";
 
 interface ICollectionsItem {
   item?: {
-    id: string;
-    wallet: string;
-    price: string;
-    timerDate: string | number;
+    raffle_id: string;
+    end_timestamp: number;
+    image: string;
+    paytoken: string;
+    entry_fee: number;
+    grand_prize: number;
+    grand_prize_winner?: string;
+    minor_prize: number;
+    minor_prize_winners?: Array<string>;
+    owner: string;
+    raffle_name: string;
+    status: number;
+    game_type: number;
+    description: string;
   };
   isFake?: boolean;
 }
 
 const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
-  const { seconds, days, hours, minuts, secondsNoun, daysNoun, hoursNoun, minutsNoun } = useTimer(item?.timerDate ?? Date.now());
+  const [ethRate, setEthRate] = useState<number>();
+
+  var {
+    seconds,
+    minutes,
+    hours,
+    days,
+    secondsNoun,
+    minutesNoun,
+    hoursNoun,
+    daysNoun
+  } = useCountdown(item?.end_timestamp ?? Date.now());
+
+  function handleConnectButtonClick() {
+    const element = document.getElementsByClassName(
+      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6"
+    );
+    const connectButtonRef: HTMLElement = element[0] as HTMLElement;
+    connectButtonRef.click();
+  };
+
+  function delayedConnectButton() {
+    setTimeout(handleConnectButtonClick, 1500);
+  }
+
+  useEffect(() => {
+    if (!ethRate) {
+      getETHPrice()
+      .then(res => {
+        setEthRate(res);
+      })
+      .catch(err =>{
+        console.log(err);
+      })
+    }
+  }, [ethRate])
 
   if (isFake || !item) {
     return (
@@ -73,51 +122,108 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
       </CollectionsFakeItemBlock>
     );
   }
-
-  return (
-    <CollectionsItemBlock>
-      <CollectionsItemBackground alt="background" src="/images/collection_second_background.png" />
-      <CollectionsItemUsername>{item.wallet}</CollectionsItemUsername>
-      <CollectionsItemContent>
-        <CollectionsItemId>{item.id}</CollectionsItemId>
-        <CollectionsItemSumm>
-          <CollectionsItemSummTitle>{item.price}</CollectionsItemSummTitle>
-          <CollectionsItemSummText>Сумма розыгрыша</CollectionsItemSummText>
-        </CollectionsItemSumm>
-        <CollectionsItemTimer>
-          <CollectionsItemTimerColumn>
-            <CollectionsItemTimerNumber>{days}</CollectionsItemTimerNumber>
-            <CollectionsItemTimerText>{daysNoun}</CollectionsItemTimerText>
-          </CollectionsItemTimerColumn>
-          <CollectionsItemTimerSplitter marginLeft={25} marginRight={19}>
-            :
-          </CollectionsItemTimerSplitter>
-          <CollectionsItemTimerColumn>
-            <CollectionsItemTimerNumber>{hours}</CollectionsItemTimerNumber>
-            <CollectionsItemTimerText>{hoursNoun}</CollectionsItemTimerText>
-          </CollectionsItemTimerColumn>
-          <CollectionsItemTimerSplitter marginLeft={18} marginRight={22}>
-            :
-          </CollectionsItemTimerSplitter>
-          <CollectionsItemTimerColumn>
-            <CollectionsItemTimerNumber>{minuts}</CollectionsItemTimerNumber>
-            <CollectionsItemTimerText>{minutsNoun}</CollectionsItemTimerText>
-          </CollectionsItemTimerColumn>
-          <CollectionsItemTimerSplitter marginLeft={22} marginRight={15}>
-            :
-          </CollectionsItemTimerSplitter>
-          <CollectionsItemTimerColumn>
-            <CollectionsItemTimerNumber>{seconds}</CollectionsItemTimerNumber>
-            <CollectionsItemTimerText>{secondsNoun}</CollectionsItemTimerText>
-          </CollectionsItemTimerColumn>
-        </CollectionsItemTimer>
-        <CollectionsItemButtons>
-          <CollectionsItemButtonMore>Подробнее</CollectionsItemButtonMore>
-          <CollectionsItemButtonConnect>Подключиться</CollectionsItemButtonConnect>
-        </CollectionsItemButtons>
-      </CollectionsItemContent>
-    </CollectionsItemBlock>
-  );
+  if (ethRate != undefined) {
+    var grandPrize = item.grand_prize;
+    if (item.paytoken == "0x0000000000000000000000000000000000000000") {
+      let eth = ethers.utils.formatEther(item.grand_prize);
+      grandPrize = Number(eth)  * Number(ethRate);
+    } else {
+      grandPrize = item.grand_prize / 10 ** 6;
+    }
+    return (
+      <CollectionsItemBlock>
+        <CollectionsItemBackground alt="background" src={`${item.image}`} />
+        <CollectionsItemUsername>{item.owner}</CollectionsItemUsername>
+        <CollectionsItemContent>
+          <CollectionsItemId>{item.raffle_name}</CollectionsItemId>
+          <CollectionsItemSumm>
+          {grandPrize > 5000 ? (
+            <CollectionsItemSummTitle>{grandPrize}</CollectionsItemSummTitle>
+          ) : (
+            <CollectionsItemSummTitle>$$$$$$</CollectionsItemSummTitle>
+          )}
+            <CollectionsItemSummText>Сумма розыгрыша</CollectionsItemSummText>
+          </CollectionsItemSumm>
+          <CollectionsItemTimer>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{days}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{daysNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+            <CollectionsItemTimerSplitter marginLeft={25} marginRight={19}>
+              :
+            </CollectionsItemTimerSplitter>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{hours}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{hoursNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+            <CollectionsItemTimerSplitter marginLeft={18} marginRight={22}>
+              :
+            </CollectionsItemTimerSplitter>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{minutes}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{minutesNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+            <CollectionsItemTimerSplitter marginLeft={22} marginRight={15}>
+              :
+            </CollectionsItemTimerSplitter>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{seconds}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{secondsNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+          </CollectionsItemTimer>
+          <CollectionsItemButtons>
+            <CollectionsItemButtonMore to={`/raffles/${item.raffle_id}`}>Подробнее</CollectionsItemButtonMore>
+            <CollectionsItemButtonConnect to={`/raffles/${item.raffle_id}`} onClick={delayedConnectButton}>Подключиться</CollectionsItemButtonConnect>
+          </CollectionsItemButtons>
+        </CollectionsItemContent>
+      </CollectionsItemBlock>
+    );
+  } else {
+    return (
+      <CollectionsItemBlock>
+        <CollectionsItemBackground alt="background" src={`${item.image}`} />
+        <CollectionsItemUsername>{item.owner}</CollectionsItemUsername>
+        <CollectionsItemContent>
+          <CollectionsItemId>{item.raffle_name}</CollectionsItemId>
+          <CollectionsItemSumm>
+            <CollectionsItemSummTitle>$$$$$$</CollectionsItemSummTitle>
+            <CollectionsItemSummText>Сумма розыгрыша</CollectionsItemSummText>
+          </CollectionsItemSumm>
+          <CollectionsItemTimer>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{days}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{daysNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+            <CollectionsItemTimerSplitter marginLeft={25} marginRight={19}>
+              :
+            </CollectionsItemTimerSplitter>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{hours}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{hoursNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+            <CollectionsItemTimerSplitter marginLeft={18} marginRight={22}>
+              :
+            </CollectionsItemTimerSplitter>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{minutes}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{minutesNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+            <CollectionsItemTimerSplitter marginLeft={22} marginRight={15}>
+              :
+            </CollectionsItemTimerSplitter>
+            <CollectionsItemTimerColumn>
+              <CollectionsItemTimerNumber>{seconds}</CollectionsItemTimerNumber>
+              <CollectionsItemTimerText>{secondsNoun}</CollectionsItemTimerText>
+            </CollectionsItemTimerColumn>
+          </CollectionsItemTimer>
+          <CollectionsItemButtons>
+            <CollectionsItemButtonMore to={`/raffles/${item.raffle_id}`}>Подробнее</CollectionsItemButtonMore>
+            <CollectionsItemButtonConnect to={`/raffles/${item.raffle_id}`} onClick={delayedConnectButton}>Подключиться</CollectionsItemButtonConnect>
+          </CollectionsItemButtons>
+        </CollectionsItemContent>
+      </CollectionsItemBlock>
+    );
+  }
 };
 
 export default CollectionsItem;

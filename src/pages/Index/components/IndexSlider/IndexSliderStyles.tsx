@@ -75,7 +75,7 @@ const IndexSliderSlide = styled(SwiperSlide)`
 
 const IndexSliderPrev = styled.button`
   position: absolute;
-  width: 50%;
+  width: 15%;
   height: 86%;
   bottom: 0;
   left: 0;
@@ -86,7 +86,7 @@ const IndexSliderPrev = styled.button`
 
 const IndexSliderNext = styled.button`
   position: absolute;
-  width: 50%;
+  width: 15%;
   height: 86%;
   bottom: 0;
   right: 0;
@@ -97,7 +97,7 @@ const IndexSliderNext = styled.button`
 
 const IndexSliderPrevTop = styled.button`
   position: absolute;
-  width: 50%;
+  width: 15%;
   height: 4%;
   top: 0;
   left: 0;
@@ -108,7 +108,7 @@ const IndexSliderPrevTop = styled.button`
 
 const IndexSliderNextTop = styled.button`
   position: absolute;
-  width: 50%;
+  width: 15%;
   height: 4%;
   top: 0;
   right: 0;
