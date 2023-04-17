@@ -46,20 +46,19 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
 
   const [winner, setWinner] = useState<Array<IWinner>>();
   const [owner, setOwner] = useState<string>();
-  const [seed, setSeed] = useState(1);
   const [withdrawDisabled, setWithdrawDisabled] = useState<boolean>(false);
   const addRecentTransaction = useAddRecentTransaction();
 
   const playerWithdraw = async () => {
-    let tokenIds = [];
-    for (let i = 0; i < winner.length; i++) {
-      tokenIds.push(winner[i].tokenId);
-    }
     if (winner) {
+      let tokenIds = [];
+      for (let i = 0; i < winner.length; i++) {
+        tokenIds.push(winner[i].tokenId);
+      }
       const config = await prepareWriteContract({
         address: id,
         abi: raffleAbi,
-        chainId: 11155111,
+        chainId: 11155111, // Sepolia network
         functionName: "withdrawPrize",
         args: [tokenIds],
       });
@@ -88,7 +87,13 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
   }
 
   useEffect(() => {
-    setWithdrawDisabled(false);
+    axios.get(`http://localhost:8000/api/wallet-games/${address}/${id}/`)
+    .then(res => {
+      setWithdrawDisabled(false);
+    })
+    .catch(err => {
+      setWithdrawDisabled(true);
+    })
     axios.get(`http://localhost:8000/api/raffles/${id}`)
     .then(res => {
       let data = res.data[0];
@@ -103,7 +108,7 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
           isGrand: true,
           wallet: address,
           tokenId: grandPrizeToken,
-        })
+        });
       }
       for (let i = 0; i < minorWinners.length; i ++) {
         if (address === minorWinners[i]) {
@@ -111,7 +116,7 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
             isGrand: false,
             wallet: address,
             tokenId: minorPrizeTokens[i],
-          })
+          });
         }
       }
       setOwner(ownerWallet);
@@ -127,7 +132,7 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
       if (winner.length > 0) {
         let tokenIds = [];
         for (let i = 0; i < winner.length; i ++) {
-          axios.get(`http://localhost:8000/api/withdrawed/${address}/${id}`)
+          axios.get(`http://localhost:8000/api/raffles-withdrawed/${address}/${id}`)
           .then(res => {
             let data = res.data[0];
             let withdrawedPrizeToken = data.token_id;
@@ -160,13 +165,8 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
       .catch(err => {
         console.log(err);
       })
-    } else {
-      axios.get(`http://localhost:8000/api/wallet-games/${address}/${id}/`)
-      .catch(err => {
-        setWithdrawDisabled(true);
-      })
     }
-  }, [owner, address])
+  }, [owner])
 
   return (
     <CollectionDoneWinnersBlock>

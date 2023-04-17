@@ -44,21 +44,23 @@ function Account() {
 
   const [activeItems, setActiveItems] = useState([
     {
-      id: "Raffle # 7fh12ba",
-      wallet: "@ Baxter",
-      price: "$100,087",
-      timerDate: Date.now(),
-      isActive: true,
+      promo_name: "Raffle # 7fh12ba",
+      owner: "@ Baxter",
+      grand_prize: "$100,087",
+      paytoken: "0x0000000000000000000000000000000000000000",
+      end_timestamp: Date.now(),
+      status: true,
     }
   ]);
 
   const [doneItems, setDoneItems] = useState([
     {
-      id: "Raffle # 3da71c5",
-      wallet: "@ Jango",
-      price: "$49,615",
-      timerDate: Date.now(),
-      isActive: false,
+      promo_name: "Raffle # 3da71c5",
+      owner: "@ Jango",
+      grand_prize: "$49,615",
+      paytoken: "0x0000000000000000000000000000000000000000",
+      end_timestamp: Date.now(),
+      status: false,
     }
   ]);
 

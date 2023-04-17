@@ -36,6 +36,12 @@ export const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_i
         giveaway_id: giveaway_id,
         social_link: inputData
       })
+      .then(res => {
+
+      })
+      .catch(err => {
+        console.log("Your account hasn't meet the required conditions.")
+      })
     } else {
       console.log("No input data provided")
     }

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import useTimer from "../../../../hooks/useTimer";
+import { useCountdown } from "../../../../hooks/useCountdown";
 import {
   AccountListItemBlock,
   AccountListItemBackground,
@@ -21,25 +21,37 @@ import {
 
 interface IAccountListItem {
   item: {
-    id: string;
-    wallet: string;
-    price: string;
-    timerDate: string | number;
-    isActive: boolean;
+    raffleID?: string;
+    giveawayID?: string;
+    end_timestamp: number;
+    grand_prize: string; //change to number
+    paytoken: string;
+    owner: string;
+    promo_name: string;
+    status: boolean;
   };
 }
 
 const AccountListItem: FC<IAccountListItem> = ({ item }) => {
-  const { seconds, days, hours, minuts, secondsNoun, daysNoun, hoursNoun, minutsNoun } = useTimer(item.timerDate ?? Date.now());
+  var {
+    seconds,
+    minutes,
+    hours,
+    days,
+    secondsNoun,
+    minutesNoun,
+    hoursNoun,
+    daysNoun
+  } = useCountdown(item?.end_timestamp ?? Date.now());
 
   return (
     <AccountListItemBlock>
       <AccountListItemBackground alt="background" src="/images/account-first-item-background.png" />
-      <AccountListItemUsername>{item.wallet}</AccountListItemUsername>
+      <AccountListItemUsername>{item.owner}</AccountListItemUsername>
       <AccountListItemContent>
-        <AccountListItemId>{item.id}</AccountListItemId>
+        <AccountListItemId>{item.promo_name}</AccountListItemId>
         <AccountListItemSumm>
-          <AccountListItemSummTitle>{item.price}</AccountListItemSummTitle>
+          <AccountListItemSummTitle>{item.grand_prize}</AccountListItemSummTitle>
           <AccountListItemSummText>Сумма розыгрыша</AccountListItemSummText>
         </AccountListItemSumm>
         <AccountListItemTimer>
@@ -58,8 +70,8 @@ const AccountListItem: FC<IAccountListItem> = ({ item }) => {
             :
           </AccountListItemTimerSplitter>
           <AccountListItemTimerColumn>
-            <AccountListItemTimerNumber>{minuts}</AccountListItemTimerNumber>
-            <AccountListItemTimerText>{minutsNoun}</AccountListItemTimerText>
+            <AccountListItemTimerNumber>{minutes}</AccountListItemTimerNumber>
+            <AccountListItemTimerText>{minutesNoun}</AccountListItemTimerText>
           </AccountListItemTimerColumn>
           <AccountListItemTimerSplitter marginLeft={22} marginRight={15}>
             :
@@ -69,7 +81,7 @@ const AccountListItem: FC<IAccountListItem> = ({ item }) => {
             <AccountListItemTimerText>{secondsNoun}</AccountListItemTimerText>
           </AccountListItemTimerColumn>
         </AccountListItemTimer>
-        {item.isActive ? (
+        {item.status ? (
           <AccountListItemStatus>
             <AccountListItemStatusText>Статус:</AccountListItemStatusText>
             <AccountListItemStatusIndicator backgroundColor="#874dec" textColor="#ffffff">

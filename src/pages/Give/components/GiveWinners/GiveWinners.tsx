@@ -1,4 +1,5 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   GiveDoneWinnersHeader,
   GiveDoneWinnersHeaderItem,
@@ -15,8 +16,23 @@ import {
   GiveDoneWinnersBlock,
   GiveDoneButton,
 } from "./GiveWinnersStyles";
+import { giveAbi } from "../../../../utils/getAccountBalance";
+import { prepareWriteContract, writeContract } from "@wagmi/core";
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
+import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import { MerkleTree } from "merkletreejs";
+import keccak256 from "keccak256";
+import axios from "axios";
 
-interface ICollectionWinners {
+type JSONValue =
+    | string
+    | number
+    | boolean
+    | { [x: string]: JSONValue }
+    | Array<JSONValue>;
+
+interface IGiveawayWinners {
   items: {
     isGrand: boolean;
     wallet: string;
@@ -25,7 +41,113 @@ interface ICollectionWinners {
   }[];
 }
 
-const GiveWinners: FC<ICollectionWinners> = ({ items }) => {
+interface IWinner {
+  isGrand: boolean;
+  wallet: string;
+  tokenId: number;
+}
+
+const GiveWinners: FC<IGiveawayWinners> = ({ items }) => {
+  const { id } = useParams();
+  const { address, isConnecting, isDisconnected } = useAccount();
+
+  const [winner, setWinner] = useState<IWinner>();
+  const [withdrawDisabled, setWithdrawDisabled] = useState<boolean>(false);
+  const addRecentTransaction = useAddRecentTransaction();
+  const [merkle, setMerkle] = useState<JSONValue>();
+
+  const playerWithdraw = async (address, tokenId) => {
+    if (winner && merkle) {
+      const leaf = ethers.utils.solidityKeccak256(
+        ["address", "uint256"],
+        [address, tokenId]
+      );
+      // const proof = merkle.getHexProof(leaf);
+
+      const config = await prepareWriteContract({
+        address: id,
+        abi: giveAbi,
+        chainId: 11155111, // Sepolia network
+        functionName: "withdrawPrize",
+        args: [winner.tokenId],
+      });
+      const { hash } = await writeContract(config);
+      addRecentTransaction({
+        hash: hash,
+        description: `Prize withdrawal by participant # ${winner.tokenId.toString()}.`,
+      });
+      setWithdrawDisabled(true);
+    }
+  }
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/api/merkles/${id}`)
+    .then(res => {
+      let data = res.data[0];
+      let merkleTree = data.merkle_tree;
+      setMerkle(merkleTree);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, [])
+
+  useEffect(() => {
+    axios.get(`http://localhost:8000/api/wallet-games/${address}/${id}/`)
+    .then(res => {
+      setWithdrawDisabled(false);
+    })
+    .catch(err => {
+      setWithdrawDisabled(true);
+    })
+    axios.get(`http://localhost:8000/api/giveaways/${id}`)
+    .then(res => {
+      let data = res.data[0];
+      let grandWinner = data.grand_prize_winner;
+      let grandPrizeToken = data.grand_prize_token;
+      let minorWinners = data.minor_prize_winners;
+      let minorPrizeTokens = data.minor_prize_tokens;
+      let winnerData = {} as IWinner;
+      if (address === grandWinner) {
+        winnerData = {
+          isGrand: true,
+          wallet: address,
+          tokenId: grandPrizeToken,
+        };
+      }
+      for (let i = 0; i < minorWinners.length; i ++) {
+        if (address === minorWinners[i]) {
+          winnerData = {
+            isGrand: false,
+            wallet: address,
+            tokenId: minorPrizeTokens[i],
+          };
+        }
+      }
+      setWinner(winnerData);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, [address])
+
+  useEffect(() => {
+    if (winner !== undefined) {
+      axios.get(`http://localhost:8000/api/giveaways-withdrawed/${address}/${id}`)
+      .then(res => {
+        let data = res.data[0];
+        let withdrawedPrizeToken = data.token_id;
+
+        if (winner.tokenId === withdrawedPrizeToken) {
+          setWithdrawDisabled(true);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
+  }, [winner])
+
   return (
     <GiveDoneWinnersBlock>
       <GiveDoneWinnersHeader>

@@ -120,10 +120,10 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
       </GivesFakeItemBlock>
     );
   }
-  if (ethRate != undefined) {
+  if (ethRate != undefined && item.grand_prize != null) {
     var grandPrize = item.grand_prize;
     if (item.paytoken == "0x0000000000000000000000000000000000000000") {
-      let eth = ethers.utils.formatEther(item.grand_prize);
+      let eth = ethers.utils.formatEther(String(item.grand_prize));
       grandPrize = Number(eth)  * Number(ethRate);
     }
     return (

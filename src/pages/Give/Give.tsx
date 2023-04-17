@@ -54,12 +54,6 @@ type JSONValue =
     | { [x: string]: JSONValue }
     | Array<JSONValue>;
 
-interface IRegisterModal {
-  onClose(): any;
-  address: string;
-  giveaway_id: string;
-}
-
 interface ITerm {
   condition: string,
 }

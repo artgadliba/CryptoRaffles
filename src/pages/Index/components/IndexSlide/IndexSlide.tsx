@@ -53,7 +53,7 @@ const IndexSlide: FC<IIndexSlide> = ({ item, index, length }) => {
   if (ethRate !== undefined) {
     var grandPrize = item.grand_prize;
     if (item.paytoken === "0x0000000000000000000000000000000000000000") {
-      let eth = ethers.utils.formatEther(item.grand_prize);
+      let eth = ethers.utils.formatEther(String(item.grand_prize));
       grandPrize = Number(eth) * Number(ethRate);
     } else {
       grandPrize = Math.round(item.grand_prize / 10 ** 6);
