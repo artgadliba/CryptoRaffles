@@ -18,6 +18,10 @@ import { mainnet, goerli, sepolia } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
+import LoserModal from "components/Modals/LoserModal/LoserModal";
+import NoMoneyPrizeModal from "components/Modals/NoMoneyPrizeModal/NoMoneyPrizeModal";
+import GiveWinners from "pages/Give/components/GiveWinners/GiveWinners";
+import CollectionWinners from "pages/Collection/components/CollectionWinners/CollectionWinners";
 
 const AppBlock = styled.div`
   display: flex;
@@ -30,14 +34,7 @@ const AppBlock = styled.div`
 const alchemyKey: string = process.env.REACT_APP_ALCHEMY_SEPOLIA_LINK;
 const infuraKey: string = process.env.REACT_APP_INFURA_SEPOLIA_KEY;
 
-const { chains, provider } = configureChains(
-  [mainnet, goerli, sepolia],
-  [
-    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_SEPOLIA_KEY }),
-    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_SEPOLIA_KEY }),
-    publicProvider()
-  ],
-);
+const { chains, provider } = configureChains([mainnet, goerli, sepolia], [alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_SEPOLIA_KEY }), infuraProvider({ apiKey: process.env.REACT_APP_INFURA_SEPOLIA_KEY }), publicProvider()]);
 
 const { connectors } = getDefaultWallets({
   appName: "CryptoRaffles App",
@@ -56,14 +53,14 @@ const RainbowKitApp = ({ children }) => {
       <RainbowKitProvider
         chains={chains}
         theme={darkTheme({
-          accentColor: '#7b3fe4',
-          accentColorForeground: 'white',
+          accentColor: "#7b3fe4",
+          accentColorForeground: "white",
           fontStack: "rounded",
           borderRadius: "medium",
           overlayBlur: "small",
         })}
         appInfo={{
-          appName: 'CryptoRaffles',
+          appName: "CryptoRaffles",
         }}
         showRecentTransactions={true}
       >
@@ -71,22 +68,22 @@ const RainbowKitApp = ({ children }) => {
       </RainbowKitProvider>
     </WagmiConfig>
   );
-}
+};
 
 function App() {
   return (
-      <RainbowKitApp>
-        <AppBlock>
-          <Routes>
-            <Route index element={<Index />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/giveaways" element={<Gives />} />
-            <Route path="/giveaways/:id" element={<Give />} />
-            <Route path="/raffles" element={<Collections />} />
-            <Route path="/raffles/:id" element={<Collection />} />
-          </Routes>
-        </AppBlock>
-      </RainbowKitApp>
+    <RainbowKitApp>
+      <AppBlock>
+        <Routes>
+          <Route index element={<Index />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/giveaways" element={<Gives />} />
+          <Route path="/giveaways/:id" element={<Give />} />
+          <Route path="/raffles" element={<Collections />} />
+          <Route path="/raffles/:id" element={<Collection />} />
+        </Routes>
+      </AppBlock>
+    </RainbowKitApp>
   );
 }
 

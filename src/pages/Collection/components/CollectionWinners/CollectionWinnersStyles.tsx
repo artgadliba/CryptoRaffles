@@ -65,33 +65,16 @@ const CollectionDoneWinnersRowItem = styled.div`
   position: relative;
   &:nth-child(1) {
     padding-left: ${pxIntoRem(63)};
+    width: ${pxIntoRem(160)};
   }
 
   &:nth-child(2) {
-    padding-left: ${pxIntoRem(113)};
-    justify-content: center;
-    width: ${pxIntoRem(30)};
+    padding-left: ${pxIntoRem(80)};
+    width: ${pxIntoRem(160)};
   }
 
   &:nth-child(3) {
-    padding-left: ${pxIntoRem(90)};
-    padding-right: ${pxIntoRem(47)};
-    justify-content: flex-start;
-  }
-
-  @media (max-width: 500px) {
-    &:nth-child(1) {
-      padding-left: ${pxIntoRem(49)};
-    }
-
-    &:nth-child(2) {
-      padding-left: ${pxIntoRem(63)};
-    }
-
-    &:nth-child(3) {
-      padding-left: ${pxIntoRem(54)};
-      padding-right: ${pxIntoRem(15)};
-    }
+    width: ${pxIntoRem(140)};
   }
 `;
 
@@ -148,11 +131,6 @@ const CollectionDoneWinnersFakeRowMedal = styled.div<ICollectionDoneWinnersFakeR
   background: ${({ color }) => color};
   opacity: 0.25;
   border-radius: ${pxIntoRem(40)};
-  left: ${pxIntoRem(25)};
-  position: absolute;
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(12)};
-  }
 `;
 
 const CollectionDoneWinnersFakeRowWinner = styled.div`
@@ -161,11 +139,6 @@ const CollectionDoneWinnersFakeRowWinner = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(114)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(62)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(48)};
-  }
 `;
 
 const CollectionDoneWinnersFakeRowTokens = styled.div`
@@ -174,11 +147,6 @@ const CollectionDoneWinnersFakeRowTokens = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(36)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(255)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(190)};
-  }
 `;
 
 const CollectionDoneWinnersFakeRowPrize = styled.div`
@@ -187,11 +155,6 @@ const CollectionDoneWinnersFakeRowPrize = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(56)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(360)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(260)};
-  }
 `;
 
 const CollectionDoneButton = styled.button`
@@ -233,7 +196,7 @@ const CollectionDoneButtonInactive = styled.button`
   text-align: center;
   color: #2d0b5a;
   padding: ${pxIntoRem(23)} ${pxIntoRem(95)};
-  background-color: #a7a8a8;;
+  background-color: #a7a8a8;
   border-radius: ${pxIntoRem(2)};
   width: fit-content;
   margin-top: ${pxIntoRem(30)};

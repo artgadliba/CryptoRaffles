@@ -17,9 +17,23 @@ import {
   AccountListItemStatus,
   AccountListItemStatusText,
   AccountListItemStatusIndicator,
+  AccountListFakeItemBlock,
+  AccountListFakeItemBackground,
+  AccountListFakeItemId,
+  AccountListFakeItemClock,
+  AccountListFakeItemContent,
+  AccountListFakeItemSumm,
+  AccountListFakeItemSummText,
+  AccountListFakeItemSummTitle,
+  AccountListFakeItemUsername,
+  AccountListFakeItemTimer,
+  AccountListFakeItemStatus,
+  AccountListFakeItemStatusText,
+  AccountListFakeItemStatusButton,
 } from "./AccountListItemStyles";
 
 interface IAccountListItem {
+  isFake?: boolean;
   item: {
     raffleID?: string;
     giveawayID?: string;
@@ -32,17 +46,32 @@ interface IAccountListItem {
   };
 }
 
-const AccountListItem: FC<IAccountListItem> = ({ item }) => {
-  var {
-    seconds,
-    minutes,
-    hours,
-    days,
-    secondsNoun,
-    minutesNoun,
-    hoursNoun,
-    daysNoun
-  } = useCountdown(item?.end_timestamp ?? Date.now());
+const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
+  var { seconds, minutes, hours, days, secondsNoun, minutesNoun, hoursNoun, daysNoun } = useCountdown(item?.end_timestamp ?? Date.now());
+
+  if (isFake || !item) {
+    return (
+      <AccountListFakeItemBlock>
+        <AccountListFakeItemBackground alt="background" src="/images/give-loading-background.png" />
+        <AccountListFakeItemUsername>
+          <div />
+        </AccountListFakeItemUsername>
+        <AccountListFakeItemClock alt="clock" src="/images/clock.svg" />
+        <AccountListFakeItemContent>
+          <AccountListFakeItemId />
+          <AccountListFakeItemSumm>
+            <AccountListFakeItemSummTitle />
+            <AccountListFakeItemSummText />
+          </AccountListFakeItemSumm>
+          <AccountListFakeItemTimer />
+          <AccountListFakeItemStatus>
+            <AccountListFakeItemStatusText />
+            <AccountListFakeItemStatusButton />
+          </AccountListFakeItemStatus>
+        </AccountListFakeItemContent>
+      </AccountListFakeItemBlock>
+    );
+  }
 
   return (
     <AccountListItemBlock>

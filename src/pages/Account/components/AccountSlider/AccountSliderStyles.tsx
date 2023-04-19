@@ -88,7 +88,11 @@ const AccountSliderGroup = styled(SwiperSlide)`
   justify-content: space-between;
 `;
 
-const AccountFakeSliderSlide = styled(AccountSliderSlide)`
+const AccountFakeSliderSlide = styled.div`
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+  cursor: pointer;
   margin-left: ${pxIntoRem(25)};
   &:first-of-type {
     margin-left: 0px;
@@ -154,8 +158,8 @@ const AccountMobileSliderSlide = styled(SwiperSlide)`
 `;
 
 const AccountSliderSlideImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: ${pxIntoRem(194.34)} !important;
+  height: ${pxIntoRem(194.34)} !important;
   object-fit: cover;
 `;
 
