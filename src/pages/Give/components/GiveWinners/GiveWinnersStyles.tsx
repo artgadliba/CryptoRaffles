@@ -217,6 +217,29 @@ const GiveDoneButton = styled.button`
   }
 `;
 
+const GiveDoneButtonInactive = styled.button`
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 600;
+  font-size: ${pxIntoRem(18)};
+  line-height: ${pxIntoRem(22)};
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #2d0b5a;
+  padding: ${pxIntoRem(23)} ${pxIntoRem(95)};
+  background-color: #a7a8a8;
+  border-radius: ${pxIntoRem(2)};
+  width: fit-content;
+  margin-top: ${pxIntoRem(30)};
+  cursor: pointer;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    margin-top: ${pxIntoRem(10)};
+  }
+`;
+
 export {
   GiveDoneWinnersBlock,
   GiveDoneWinnersHeader,
@@ -232,4 +255,5 @@ export {
   GiveDoneWinnersFakeRowWinner,
   GiveDoneWinnersFakeRow,
   GiveDoneButton,
+  GiveDoneButtonInactive,
 };

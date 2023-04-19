@@ -4,12 +4,6 @@ import GivesItem from "./GivesItem/GivesItem";
 import { GivesBlock } from "./GivesStyles";
 import axios from "axios";
 
-type JSONValue =
-    | string
-    | number
-    | boolean
-    | { [x: string]: JSONValue }
-    | Array<JSONValue>;
 
 interface ITerm {
   condition: string;
@@ -21,15 +15,16 @@ interface IGiveawayData {
   image: string;
   paytoken: string;
   grand_prize: number;
+  grand_prize_token?: number;
   grand_prize_winner?: string;
   minor_prize: number;
+  minor_prize_tokens?: Array<number>;
   minor_prize_winners?: Array<string>;
   owner: string;
   giveaway_name: string;
   status: number;
   description: string;
   terms: Array<ITerm>;
-  merkleTree?: JSONValue;
 }
 
 const giveaways: Array<IGiveawayData> = [];

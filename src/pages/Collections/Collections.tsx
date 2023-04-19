@@ -11,8 +11,10 @@ interface ICollectionData {
   paytoken: string;
   entry_fee: number;
   grand_prize: number;
+  grand_prize_token?: number;
   grand_prize_winner?: string;
   minor_prize: number;
+  minor_prize_tokens?: Array<number>;
   minor_prize_winners?: Array<string>;
   owner: string;
   raffle_name: string;

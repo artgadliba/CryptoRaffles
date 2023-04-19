@@ -15,28 +15,22 @@ import {
   GiveDoneWinnersFakeRow,
   GiveDoneWinnersBlock,
   GiveDoneButton,
+  GiveDoneButtonInactive,
 } from "./GiveWinnersStyles";
+import truncateEthAddress from "truncate-eth-address";
 import { giveAbi } from "../../../../utils/getAccountBalance";
 import { prepareWriteContract, writeContract } from "@wagmi/core";
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { useAccount } from "wagmi";
-import { ethers } from "ethers";
-import { MerkleTree } from "merkletreejs";
-import keccak256 from "keccak256";
+
 import axios from "axios";
 
-type JSONValue =
-    | string
-    | number
-    | boolean
-    | { [x: string]: JSONValue }
-    | Array<JSONValue>;
-
-interface IGiveawayWinners {
+interface IGiveWinners {
+  giveawayOwner: string;
   items: {
     isGrand: boolean;
     wallet: string;
-    tokens?: number;
+    tokenId: number;
     prize: string;
   }[];
 }
@@ -47,29 +41,23 @@ interface IWinner {
   tokenId: number;
 }
 
-const GiveWinners: FC<IGiveawayWinners> = ({ items }) => {
+const GiveWinners: FC<IGiveWinners> = ({ items, giveawayOwner }) => {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
   const [winner, setWinner] = useState<IWinner>();
   const [withdrawDisabled, setWithdrawDisabled] = useState<boolean>(false);
   const addRecentTransaction = useAddRecentTransaction();
-  const [merkle, setMerkle] = useState<JSONValue>();
+  const [proof, setProof] = useState<string>();
 
-  const playerWithdraw = async (address, tokenId) => {
-    if (winner && merkle) {
-      const leaf = ethers.utils.solidityKeccak256(
-        ["address", "uint256"],
-        [address, tokenId]
-      );
-      // const proof = merkle.getHexProof(leaf);
-
+  const playerWithdraw = async () => {
+    if (winner != undefined && proof != undefined) {
       const config = await prepareWriteContract({
         address: id,
         abi: giveAbi,
         chainId: 11155111, // Sepolia network
         functionName: "withdrawPrize",
-        args: [winner.tokenId],
+        args: [winner.tokenId, proof],
       });
       const { hash } = await writeContract(config);
       addRecentTransaction({
@@ -81,19 +69,7 @@ const GiveWinners: FC<IGiveawayWinners> = ({ items }) => {
   }
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/merkles/${id}`)
-    .then(res => {
-      let data = res.data[0];
-      let merkleTree = data.merkle_tree;
-      setMerkle(merkleTree);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }, [])
-
-  useEffect(() => {
-    axios.get(`http://localhost:8000/api/wallet-games/${address}/${id}/`)
+    axios.get(`http://localhost:8000/api/giveaways-registry/${address}/${id}/`)
     .then(res => {
       setWithdrawDisabled(false);
     })
@@ -129,10 +105,19 @@ const GiveWinners: FC<IGiveawayWinners> = ({ items }) => {
     .catch(err => {
       console.log(err);
     })
+    axios.get(`http://localhost:8000/api/merkles/${address}/${id}`)
+    .then(res => {
+      let data = res.data[0];
+      let merkleProof = data.proof;
+      setProof(merkleProof);
+    })
+    .catch(err => {
+      console.log(err);
+    })
   }, [address])
 
   useEffect(() => {
-    if (winner !== undefined) {
+    if (winner != undefined) {
       axios.get(`http://localhost:8000/api/giveaways-withdrawed/${address}/${id}`)
       .then(res => {
         let data = res.data[0];
@@ -162,10 +147,10 @@ const GiveWinners: FC<IGiveawayWinners> = ({ items }) => {
               {item.isGrand && <GiveDoneWinnersRowItemImage alt="medal" src="/images/1st-place-medal.png" />}
               {!item.isGrand && <GiveDoneWinnersRowItemImage alt="medal" src="/images/2nd-place-medal.png" />}
               {/*{item.isThird && <GiveDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}*/}
-              <GiveDoneWinnersRowItemHash>{item.wallet}</GiveDoneWinnersRowItemHash>
+              <GiveDoneWinnersRowItemHash>{truncateEthAddress(item.wallet)}</GiveDoneWinnersRowItemHash>
             </GiveDoneWinnersRowItem>
             <GiveDoneWinnersRowItem>
-              <GiveDoneWinnersRowItemText>{item.tokens}</GiveDoneWinnersRowItemText>
+              <GiveDoneWinnersRowItemText />
             </GiveDoneWinnersRowItem>
             <GiveDoneWinnersRowItem>
               <GiveDoneWinnersRowItemText>{item.prize} </GiveDoneWinnersRowItemText>
@@ -249,7 +234,11 @@ const GiveWinners: FC<IGiveawayWinners> = ({ items }) => {
           </GiveDoneWinnersFakeRow>
         );
       })}
-      <GiveDoneButton>Получить приз</GiveDoneButton>
+      {withdrawDisabled == true ? (
+        <GiveDoneButtonInactive>Получить приз</GiveDoneButtonInactive>
+      ) : (
+        <GiveDoneButton onClick={playerWithdraw}>Получить приз</GiveDoneButton>
+      )}
     </GiveDoneWinnersBlock>
   );
 };

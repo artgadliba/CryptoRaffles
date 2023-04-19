@@ -44,15 +44,9 @@ import useModal from "../../hooks/useModal";
 import axios from "axios";
 import { ethers } from "ethers";
 import { getAccountBalance } from "../../utils/getAccountBalance";
+import { numberWithCommas } from "../../utils/numberWithCommas";
 import { getETHPrice } from "../../utils/getETHPrice";
 import { useAccount } from "wagmi";
-
-type JSONValue =
-    | string
-    | number
-    | boolean
-    | { [x: string]: JSONValue }
-    | Array<JSONValue>;
 
 interface ITerm {
   condition: string,
@@ -66,35 +60,41 @@ interface IGiveawayData {
   image: string;
   paytoken: string;
   grand_prize: number;
+  grand_prize_token?: number;
   grand_prize_winner?: string;
   minor_prize: number;
+  minor_prize_tokens?: Array<number>;
   minor_prize_winners?: Array<string>;
   owner: string;
   giveaway_name: string;
   status: number;
   description: string;
   terms: Array<ITerm>;
-  merkleTree?: JSONValue;
 }
 
-interface IWinners {
-  isGrand: boolean;
-  wallet: string;
-  tokens?: number;
-  prize: string;
+interface IGiveWinners {
+  giveawayOwner: string;
+  items: {
+    isGrand: boolean;
+    wallet: string;
+    tokenId: number;
+    prize: string;
+  }[];
 }
 
-const winnersList: Array<IWinners> = [];
+var winnersList = {} as IGiveWinners;
 
 function Give() {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
+  const [item, setItem] = useState<IGiveawayData>();
+  const [winners, setWinners] = useState<IGiveWinners>();
+  const [owner, setOwner] = useState<string>();
   const [statusColor, setStatusColor] = useState<string>("#ffffff");
   const [statusText, setStatusText] = useState<string>("Открыт");
   const [grandPrize, setGrandPrize] = useState<number>(0);
   const [minorPrize, setMinorPrize] = useState<number>(0);
-  const [item, setItem] = useState<IGiveawayData>();
   const [terms, setTerms] = useState<ITerms>();
   const [registered, setRegistered] = useState<boolean>(false);
 
@@ -119,50 +119,75 @@ function Give() {
       data_array = res.data;
       data = data_array[0];
       setItem(data);
-
-      if (item) {
-        if (item.grand_prize_winner != undefined) {
-          let prize = "$" + String(grandPrize);
-          winnersList.push({
-            isGrand: true,
-            wallet: item.grand_prize_winner,
-            prize: prize
-          })
-        }
-        if (item.minor_prize_winners != undefined) {
-          let prize = "$" + String(minorPrize);
-          for (let i = 0; i < item.minor_prize_winners.length; i++) {
-            winnersList.push({
-              isGrand: false,
-              wallet: item.minor_prize_winners[i],
-              prize: prize
-            })
-          }
-        }
-        if (item.status == 1) {
-          setStatusColor("#08E2BD");
-          setStatusText("Разыгран");
-        } else if (item.status == 2) {
-          setStatusColor("#08E2BD");
-          setStatusText("Отменен");
-        }
-        if (item.paytoken == "0x0000000000000000000000000000000000000000") {
-          getETHPrice()
-          .then(ethRate => {
-            let formatedGrandPrize = ethers.utils.formatEther(item.grand_prize);
-            let formatedMinorPrize = ethers.utils.formatEther(item.minor_prize);
-            setGrandPrize(Number(formatedGrandPrize) * Number(ethRate));
-            setMinorPrize(Number(formatedMinorPrize) * Number(ethRate));
-          })
-        }
-      }
     })
     .catch(err => {
       console.log(err);
     })
   }, [])
 
-  if (item != undefined) {
+  useEffect(() => {
+    if (item != undefined) {
+      if (item.status == 1) {
+        setStatusColor("#08E2BD");
+        setStatusText("Разыгран");
+      } else if (item.status == 2) {
+        setStatusColor("#08E2BD");
+        setStatusText("Отменен");
+      }
+      if (item.paytoken == "0x0000000000000000000000000000000000000000") {
+        getETHPrice()
+        .then(ethRate => {
+          let formatedGrandPrize = ethers.utils.formatEther(item.grand_prize);
+          let formatedMinorPrize = ethers.utils.formatEther(item.minor_prize);
+          let grandPrize = Math.round(Number(formatedGrandPrize) * ethRate);
+          let minorPrize = Math.round(Number(formatedMinorPrize) * ethRate);
+          setGrandPrize(grandPrize);
+          setMinorPrize(minorPrize);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      } else {
+        let grandPrize = Math.round(item.grand_prize / 10 ** 6);
+        let minorPrize = Math.round(item.minor_prize / 10 ** 6);
+        setGrandPrize(grandPrize);
+        setMinorPrize(minorPrize);
+      }
+    }
+  }, [item])
+
+  useEffect(() => {
+    if (item != undefined) {
+      if (item.grand_prize_winner != undefined && grandPrize != undefined) {
+        let gPrize = "$" + numberWithCommas(grandPrize);
+        winnersList = ({
+          giveawayOwner: owner,
+          items: [{
+            isGrand: true,
+            wallet: item.grand_prize_winner,
+            tokenId: item.grand_prize_token,
+            prize: gPrize
+          }]
+        })
+        if (item.minor_prize_winners != undefined && grandPrize != undefined) {
+          let mPrize = "$" + numberWithCommas(minorPrize);
+          for (let i = 0; i < item.minor_prize_winners.length; i++) {
+            winnersList.items.push({
+              isGrand: false,
+              wallet: item.minor_prize_winners[i],
+              tokenId: item.minor_prize_tokens[i],
+              prize: mPrize
+            });
+            if (i == item.minor_prize_winners.length - 1) {
+              setWinners(winnersList);
+            }
+          }
+        }
+      }
+    }
+  }, [item, grandPrize, minorPrize])
+
+  if (item != undefined && winners != undefined) {
     return (
       <Default isHeaderActive>
         <>
@@ -187,7 +212,8 @@ function Give() {
                   <GiveInfoSummTitle>Сумма розыгрыша</GiveInfoSummTitle>
                   {grandPrize > 5000 ? (
                     <GiveInfoSummValue>
-                      <GiveInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> {grandPrize}
+                      <GiveInfoSummValueImage alt="treasure" src="/images/treasure.svg" />
+                        {`$${numberWithCommas(grandPrize)}`}
                     </GiveInfoSummValue>
                   ) : (
                     <GiveInfoSummValue>
@@ -248,8 +274,7 @@ function Give() {
               <GiveDone>
                 <GiveDoneTitle>Победители</GiveDoneTitle>
                 <GiveDoneContent>
-                  <GiveWinners
-                    items={winnersList} />
+                  <GiveWinners items={winnersList.items} giveawayOwner={winnersList.giveawayOwner} />
                   <GiveDoneLogoBlock>
                     <GiveDoneLogo alt="logo" src="/images/give-c-logo.svg" />
                     <GiveDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />

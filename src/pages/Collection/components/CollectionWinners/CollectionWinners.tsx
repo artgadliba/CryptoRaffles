@@ -24,12 +24,17 @@ import { prepareWriteContract, writeContract } from "@wagmi/core";
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import axios from "axios";
 import { readContract } from "@wagmi/core";
+import WinnerModal from "../../../../components/Modals/WinnerModal/WinnerModal";
+import LoserModal from "../../../../components/Modals/LoserModal/LoserModal";
+import useModal from "../../../../hooks/useModal";
 
 interface ICollectionWinners {
+  collectionOwner: string;
   items: {
     isGrand: boolean;
     wallet: string;
     tokens?: string;
+    tokenId: number;
     prize: string;
   }[];
 }
@@ -38,19 +43,21 @@ interface IWinner {
   isGrand: boolean;
   wallet: string;
   tokenId: number;
+  prize: string;
 }
 
-const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
+const CollectionWinners: FC<ICollectionWinners> = ({ items, collectionOwner }) => {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
-  const [winner, setWinner] = useState<Array<IWinner>>();
+  const [winner, setWinner] = useState<Array<IWinner>>([]);
   const [owner, setOwner] = useState<string>();
+  const [data, setData] = useState<Array<IWinner>>();
   const [withdrawDisabled, setWithdrawDisabled] = useState<boolean>(false);
   const addRecentTransaction = useAddRecentTransaction();
 
   const playerWithdraw = async () => {
-    if (winner) {
+    if (address === winner[0].wallet) {
       let tokenIds = [];
       for (let i = 0; i < winner.length; i++) {
         tokenIds.push(winner[i].tokenId);
@@ -86,6 +93,9 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
     setWithdrawDisabled(true);
   }
 
+  const { closeModal: closeWinnerModal, openModal: openWinnerModal, modal: winnerModal } = useModal(WinnerModal, { playerWithdraw, winnerData: winner });
+  const { closeModal: closeLoserModal, openModal: openLoserModal, modal: loserModal } = useModal(LoserModal, {});
+
   useEffect(() => {
     axios.get(`http://localhost:8000/api/wallet-games/${address}/${id}/`)
     .then(res => {
@@ -94,41 +104,25 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
     .catch(err => {
       setWithdrawDisabled(true);
     })
-    axios.get(`http://localhost:8000/api/raffles/${id}`)
-    .then(res => {
-      let data = res.data[0];
-      let grandWinner = data.grand_prize_winner;
-      let grandPrizeToken = data.grand_prize_token;
-      let minorWinners = data.minor_prize_winners;
-      let minorPrizeTokens = data.minor_prize_tokens;
-      let ownerWallet = data.owner_wallet;
-      let winnerData: Array<IWinner> = [];
-      if (address === grandWinner) {
-        winnerData.push({
-          isGrand: true,
-          wallet: address,
-          tokenId: grandPrizeToken,
-        });
-      }
-      for (let i = 0; i < minorWinners.length; i ++) {
-        if (address === minorWinners[i]) {
-          winnerData.push({
-            isGrand: false,
-            wallet: address,
-            tokenId: minorPrizeTokens[i],
-          });
-        }
-      }
-      setOwner(ownerWallet);
-      setWinner(winnerData);
-    })
-    .catch(err => {
-      console.log(err);
-    })
   }, [address])
 
   useEffect(() => {
-    if (winner !== undefined) {
+    let winnerData: Array<IWinner> = [];
+      if (items.length > 0) {
+        let data = items.filter(i => i.wallet == address);
+
+        for (let i = 0; i < data.length; i ++) {
+          winnerData.push(data[i]);
+        }
+        setWinner(winnerData);
+      }
+    if (collectionOwner != undefined) {
+      setOwner(collectionOwner);
+    }
+  }, [items, address])
+
+  useEffect(() => {
+    if (winner != undefined) {
       if (winner.length > 0) {
         let tokenIds = [];
         for (let i = 0; i < winner.length; i ++) {
@@ -141,7 +135,7 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
             if (winner.length === tokenIds.length) {
               let winnerTokens = winner.map(w => w.tokenId);
               if (JSON.stringify(winnerTokens.sort()) === JSON.stringify(tokenIds.sort())) {
-                setWithdrawDisabled(true);
+                // setWithdrawDisabled(true);
               }
             }
           })
@@ -275,12 +269,21 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items }) => {
           {owner == address ? (
             <CollectionDoneButton onClick={ownerWithdraw}>Получить приз</CollectionDoneButton>
           ) : (
-            <CollectionDoneButton onClick={playerWithdraw}>Получить приз</CollectionDoneButton>
+            <>
+            {winner.length > 0 ? (
+              <CollectionDoneButton onClick={openWinnerModal}>Получить приз</CollectionDoneButton>
+            ) : (
+              <CollectionDoneButton onClick={openLoserModal}>Получить приз</CollectionDoneButton>
+            )}
+            </>
           )}
           </>
         )}
+        {winnerModal}
+        {loserModal}
       </CollectionDoneWinnersBlock>
     );
   };
+
 
 export default CollectionWinners;

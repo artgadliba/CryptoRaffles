@@ -36,6 +36,7 @@ import {
 import axios from "axios";
 import { ethers } from "ethers";
 import { getETHPrice } from "../../../utils/getETHPrice";
+import { numberWithCommas } from "../../../utils/numberWithCommas";
 
 interface ICollectionsItem {
   item?: {
@@ -45,8 +46,10 @@ interface ICollectionsItem {
     paytoken: string;
     entry_fee: number;
     grand_prize: number;
+    grand_prize_token?: number;
     grand_prize_winner?: string;
     minor_prize: number;
+    minor_prize_tokens?: Array<number>;
     minor_prize_winners?: Array<string>;
     owner: string;
     raffle_name: string;
@@ -93,7 +96,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
         console.log(err);
       })
     }
-  }, [ethRate])
+  }, [])
 
   if (isFake || !item) {
     return (
@@ -128,7 +131,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
       let eth = ethers.utils.formatEther(String(item.grand_prize));
       grandPrize = Number(eth)  * Number(ethRate);
     } else {
-      grandPrize = item.grand_prize / 10 ** 6;
+      grandPrize = Math.round(item.grand_prize / 10 ** 6);
     }
     return (
       <CollectionsItemBlock>
@@ -138,7 +141,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
           <CollectionsItemId>{item.raffle_name}</CollectionsItemId>
           <CollectionsItemSumm>
           {grandPrize > 5000 ? (
-            <CollectionsItemSummTitle>{grandPrize}</CollectionsItemSummTitle>
+            <CollectionsItemSummTitle>{`$${numberWithCommas(grandPrize)}`}</CollectionsItemSummTitle>
           ) : (
             <CollectionsItemSummTitle>$$$$$$</CollectionsItemSummTitle>
           )}

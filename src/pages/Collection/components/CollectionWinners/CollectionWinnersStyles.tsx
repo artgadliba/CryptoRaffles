@@ -233,7 +233,7 @@ const CollectionDoneButtonInactive = styled.button`
   text-align: center;
   color: #2d0b5a;
   padding: ${pxIntoRem(23)} ${pxIntoRem(95)};
-  background-color: #a7a8a8;;
+  background-color: #a7a8a8;
   border-radius: ${pxIntoRem(2)};
   width: fit-content;
   margin-top: ${pxIntoRem(30)};

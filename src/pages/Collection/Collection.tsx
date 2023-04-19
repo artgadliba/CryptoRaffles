@@ -51,6 +51,7 @@ import axios from "axios";
 import { ethers } from "ethers";
 import { getETHPrice } from "../../utils/getETHPrice";
 import { getAccountBalance, raffleAbi } from "../../utils/getAccountBalance";
+import { numberWithCommas } from "../../utils/numberWithCommas";
 import { prepareWriteContract, writeContract } from "@wagmi/core";
 import { useAccount } from "wagmi";
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
@@ -62,8 +63,10 @@ interface ICollectionData {
   paytoken: string;
   entry_fee: number;
   grand_prize: number;
+  grand_prize_token?: number;
   grand_prize_winner?: string;
   minor_prize: number;
+  minor_prize_tokens?: Array<number>;
   minor_prize_winners?: Array<string>;
   owner: string;
   raffle_name: string;
@@ -72,11 +75,15 @@ interface ICollectionData {
   description: string;
 }
 
-interface IWinners {
-  isGrand: boolean;
-  wallet: string;
-  tokens?: string;
-  prize: string;
+interface ICollectionWinners {
+  collectionOwner?: string;
+  items?: {
+    isGrand: boolean;
+    wallet: string;
+    tokens?: string;
+    tokenId: number;
+    prize: string;
+  }[];
 }
 
 const nullSignature = [
@@ -84,17 +91,19 @@ const nullSignature = [
   "0x0000000000000000000000000000000000000000000000000000000000000000"
 ];
 
-const winnersList: Array<IWinners> = [];
+var winnersList = {} as ICollectionWinners;
 
 function Collection() {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
   const [item, setItem] = useState<ICollectionData>();
+  const [winners, setWinners] = useState<ICollectionWinners>();
+  const [owner, setOwner] = useState<string>();
   const [statusColor, setStatusColor] = useState<string>("#ffffff");
   const [statusText, setStatusText] = useState<string>("Открыт");
-  const [grandPrize, setGrandPrize] = useState<number>(0);
-  const [minorPrize, setMinorPrize] = useState<number>(0);
+  const [grandPrize, setGrandPrize] = useState<number>();
+  const [minorPrize, setMinorPrize] = useState<number>();
   const [tokensCounter, setTokensCounter] = useState<number>(1);
   const [conditions, setConditions] = useState([
     {
@@ -107,6 +116,7 @@ function Collection() {
       text: "Дождаться окончания раффла и проверить ваш результат.",
     },
   ]);
+  const addRecentTransaction = useAddRecentTransaction();
 
   var {
     seconds,
@@ -120,12 +130,11 @@ function Collection() {
   } = useCountdown(item?.end_timestamp ?? Date.now());
 
   useEffect(() => {
-    let data_array;
-    let data;
     axios.get(`http://localhost:8000/api/raffles/${id}`)
     .then(res => {
-      data_array = res.data;
-      data = data_array[0];
+      let data = res.data[0];
+      let owner = data.owner;
+      setOwner(owner);
       setItem(data);
     })
     .catch(err => {
@@ -134,7 +143,7 @@ function Collection() {
   }, [])
 
   useEffect(() => {
-    if (item) {
+    if (item != undefined) {
       if (item.status == 1) {
         setStatusColor("#08E2BD");
         setStatusText("Разыгран");
@@ -147,39 +156,56 @@ function Collection() {
         .then(ethRate => {
           let formatedGrandPrize = ethers.utils.formatEther(item.grand_prize);
           let formatedMinorPrize = ethers.utils.formatEther(item.minor_prize);
-          let grandPrize = Math.round(Number(formatedGrandPrize) * Number(ethRate));
-          let minorPrize = Math.round(Number(formatedMinorPrize) * Number(ethRate));
+          let grandPrize = Math.round(Number(formatedGrandPrize) * ethRate);
+          let minorPrize = Math.round(Number(formatedMinorPrize) * ethRate);
+          setGrandPrize(grandPrize);
+          setMinorPrize(minorPrize);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      } else {
+        let grandPrize = Math.round(item.grand_prize / 10 ** 6);
+        let minorPrize = Math.round(item.minor_prize / 10 ** 6);
+        setGrandPrize(grandPrize);
+        setMinorPrize(minorPrize);
+      }
+    }
+  }, [item])
 
-          if (item.grand_prize_winner !== null) {
-            let rawGPrize = grandPrize;
-            let gPrize = "$" + String(rawGPrize);
-            getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
-            .then(res => {
-              let balance = res.toString();
-              winnersList.push({
-                isGrand: true,
-                wallet: item.grand_prize_winner,
-                tokens: balance,
-                prize: gPrize
-              })
-            })
-            .catch(err => {
-              console.log(err);
-            })
-          }
-          if (item.minor_prize_winners !== null) {
-            let rawMPrize = minorPrize;
-            let mPrize = "$" + String(rawMPrize);
+  useEffect(() => {
+    if (item != undefined) {
+      if (item.grand_prize_winner != undefined && grandPrize != undefined) {
+        let gPrize = "$" + numberWithCommas(grandPrize);
+        getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
+        .then(res => {
+          let balance = res.toString();
+          winnersList = ({
+            collectionOwner: owner,
+            items: [{
+              isGrand: true,
+              wallet: item.grand_prize_winner,
+              tokens: balance,
+              tokenId: item.grand_prize_token,
+              prize: gPrize
+            }]
+          })
+          if (item.minor_prize_winners != undefined && grandPrize != undefined) {
+            let mPrize = "$" + numberWithCommas(minorPrize);
             for (let i = 0; i < item.minor_prize_winners.length; i++) {
               getAccountBalance(item.raffle_id, item.minor_prize_winners[i], true)
               .then(res => {
                 let balance = res.toString();
-                winnersList.push({
+                winnersList.items.push({
                   isGrand: false,
                   wallet: item.minor_prize_winners[i],
                   tokens: balance,
+                  tokenId: item.minor_prize_tokens[i],
                   prize: mPrize
-                })
+                });
+                if (i == item.minor_prize_winners.length - 1) {
+                  setWinners(winnersList);
+                }
               })
               .catch(err => {
                 console.log(err);
@@ -190,49 +216,9 @@ function Collection() {
         .catch(err => {
           console.log(err);
         })
-      } else {
-        let grandPrize = Math.round(item.grand_prize / 10 ** 6);
-        let minorPrize = Math.round(item.minor_prize / 10 ** 6);
-
-        if (item.grand_prize_winner !== null) {
-          let rawGPrize = grandPrize;
-          let gPrize = "$" + String(rawGPrize);
-          getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
-          .then(res => {
-            let balance = res.toString();
-            winnersList.push({
-              isGrand: true,
-              wallet: item.grand_prize_winner,
-              tokens: balance,
-              prize: gPrize
-            })
-          })
-          .catch(err => {
-            console.log(err);
-          })
-        }
-        if (item.minor_prize_winners !== null) {
-          let rawMPrize = minorPrize;
-          let mPrize = "$" + String(rawMPrize);
-          for (let i = 0; i < item.minor_prize_winners.length; i++) {
-            getAccountBalance(item.raffle_id, item.minor_prize_winners[i], true)
-            .then(res => {
-              let balance = res.toString();
-              winnersList.push({
-                isGrand: false,
-                wallet: item.minor_prize_winners[i],
-                tokens: balance,
-                prize: mPrize
-              })
-            })
-            .catch(err => {
-              console.log(err);
-            })
-          }
-        }
       }
     }
-  }, [item])
+  }, [item, grandPrize, minorPrize])
 
   const publicMint = async () => {
     const config = await prepareWriteContract({
@@ -252,8 +238,6 @@ function Collection() {
     });
   }
 
-  const addRecentTransaction = useAddRecentTransaction();
-
   const handleNextValue = () => {
       if (tokensCounter >= 1) {
         setTokensCounter((prev) => prev + 1);
@@ -266,7 +250,7 @@ function Collection() {
       }
   }
 
-  if (item != undefined) {
+  if (item != undefined && winners != undefined) {
     return (
       <Default isHeaderActive>
         <CollectionBlock>
@@ -290,7 +274,8 @@ function Collection() {
                 <CollectionInfoSummTitle>Сумма розыгрыша</CollectionInfoSummTitle>
                 {grandPrize > 5000 ? (
                   <CollectionInfoSummValue>
-                    <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> {grandPrize}
+                    <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" />
+                      {`$${numberWithCommas(grandPrize)}`}
                   </CollectionInfoSummValue>
                 ) : (
                   <CollectionInfoSummValue>
@@ -380,7 +365,7 @@ function Collection() {
             <CollectionDone>
               <CollectionDoneTitle>Победители</CollectionDoneTitle>
               <CollectionDoneContent>
-                <CollectionWinners items={winnersList} />
+                <CollectionWinners items={winnersList.items} collectionOwner={winnersList.collectionOwner} />
                 <CollectionDoneLogoBlock>
                   <CollectionDoneLogo alt="logo" src="/images/give-c-logo.svg" />
                   <CollectionDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />

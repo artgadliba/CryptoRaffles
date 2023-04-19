@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useCountdown } from "../../../hooks/useCountdown";
 import {
   GivesItemBlock,
@@ -34,14 +34,8 @@ import {
 } from "./GivesItemStyles";
 import axios from "axios";
 import { getETHPrice } from "../../../utils/getETHPrice";
+import { numberWithCommas } from "../../../utils/numberWithCommas";
 import { ethers } from "ethers";
-
-type JSONValue =
-    | string
-    | number
-    | boolean
-    | { [x: string]: JSONValue }
-    | Array<JSONValue>;
 
 interface ITerm {
   condition: string,
@@ -54,21 +48,22 @@ interface IGivesItem {
     image: string;
     paytoken: string;
     grand_prize: number;
+    grand_prize_token?: number;
     grand_prize_winner?: string;
     minor_prize: number;
+    minor_prize_tokens?: Array<number>;
     minor_prize_winners?: Array<string>;
     owner: string;
     giveaway_name: string;
     status: number;
     description: string;
     terms: Array<ITerm>;
-    merkleTree?: JSONValue;
   };
   isFake?: boolean;
 }
 
 const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
-  var ethRate = getETHPrice();
+  const [ethRate, setEthRate] = useState<number>();
 
   var {
     seconds,
@@ -92,6 +87,18 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
   function delayedConnectButton() {
     setTimeout(handleConnectButtonClick, 1500);
   }
+
+  useEffect(() => {
+    if (!ethRate) {
+      getETHPrice()
+      .then(res => {
+        setEthRate(res);
+      })
+      .catch(err =>{
+        console.log(err);
+      })
+    }
+  }, [])
 
   if (isFake || !item) {
     return (
@@ -125,6 +132,8 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
     if (item.paytoken == "0x0000000000000000000000000000000000000000") {
       let eth = ethers.utils.formatEther(String(item.grand_prize));
       grandPrize = Number(eth)  * Number(ethRate);
+    } else {
+      grandPrize = Math.round(item.grand_prize / 10 ** 6);
     }
     return (
       <GivesItemBlock>
@@ -134,7 +143,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
           <GivesItemId>{item.giveaway_name}</GivesItemId>
           <GivesItemSumm>
           {grandPrize > 5000 ? (
-            <GivesItemSummTitle>{grandPrize}</GivesItemSummTitle>
+            <GivesItemSummTitle>{`$${numberWithCommas(grandPrize)}`}</GivesItemSummTitle>
           ) : (
             <GivesItemSummTitle>$$$$$$</GivesItemSummTitle>
           )}
