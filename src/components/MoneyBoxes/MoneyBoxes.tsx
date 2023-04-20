@@ -14,7 +14,7 @@ const MoneyBox: FC<IMoneyBox> = ({ big }) => {
   }, []);
 
   return <MoneyBoxBlock alt="money-box" src={big ? "/images/big-money-box.png" : "/images/money-box.png"} screenHeight={screenHeight} />;
-};
+}
 
 const MoneyBoxes = () => {
   const [screenHeight, setScreenHeight] = useState(document.body.clientHeight);
@@ -47,5 +47,5 @@ const MoneyBoxes = () => {
       </Container>
     </MoneyBoxesBlock>
   );
-};
+}
 export default MoneyBoxes;

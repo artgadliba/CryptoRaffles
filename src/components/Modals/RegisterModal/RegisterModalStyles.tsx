@@ -83,7 +83,7 @@ const RegisterModalHashInputBlock = styled.div`
   }
 `;
 
-const RegisterModalHashInput = styled.input`
+const RegisterModalHash = styled.div`
   background-color: rgba(142, 82, 241, 0.22);
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.24);
   backdrop-filter: blur(${pxIntoRem(16.53)});
@@ -163,4 +163,4 @@ const RegisterModalButton = styled.button`
   }
 `;
 
-export { RegisterModalBlock, RegisterModalClose, RegisterModalCloseImage, RegisterModalContent, RegisterModalTitle, RegisterModalHashInput, RegisterModalReferenceInput, RegisterModalHashInputBlock, RegisterModalHashInputEtherium, RegisterModalButton };
+export { RegisterModalBlock, RegisterModalClose, RegisterModalCloseImage, RegisterModalContent, RegisterModalTitle, RegisterModalHash, RegisterModalReferenceInput, RegisterModalHashInputBlock, RegisterModalHashInputEtherium, RegisterModalButton };

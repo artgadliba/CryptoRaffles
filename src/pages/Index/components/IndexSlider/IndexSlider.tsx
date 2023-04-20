@@ -66,6 +66,6 @@ const IndexSlider: FC<IIndexSlider> = ({ items }) => {
       </IndexSliderBlock>
     );
   }
-};
+}
 
 export default IndexSlider;

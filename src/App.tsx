@@ -31,7 +31,7 @@ const alchemyKey: string = process.env.REACT_APP_ALCHEMY_SEPOLIA_LINK;
 const infuraKey: string = process.env.REACT_APP_INFURA_SEPOLIA_KEY;
 
 const { chains, provider } = configureChains(
-  [mainnet, goerli, sepolia],
+  [goerli, sepolia],
   [
     alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_SEPOLIA_KEY }),
     infuraProvider({ apiKey: process.env.REACT_APP_INFURA_SEPOLIA_KEY }),

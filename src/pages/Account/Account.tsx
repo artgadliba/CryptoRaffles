@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from "react";
 import Default from "../../layouts/Default/Default";
 import AccountSlider from "./components/AccountSlider/AccountSlider";
-import { AccountBlock, AccountItem, AccountItemList, AccountItems, AccountItemTitle, AccountTitle, AccountTitleTokens } from "./AccountStyles";
-import { AccountNonConnectBlock, AccountNonConnectButton, AccountNonConnectButtonImage, AccountNonConnectImage, AccountNonConnectText, AccountNonConnectTitle, AccountNonConnectWhat, AccountNonConnectWhatArrow, AccountNonConnectWhatText } from "./AccountNonConnectStyles";
+import {
+  AccountBlock,
+  AccountItem,
+  AccountItemList,
+  AccountItems,
+  AccountItemTitle,
+  AccountTitle,
+  AccountTitleTokens
+} from "./AccountStyles";
+import {
+  AccountNonConnectBlock,
+  AccountNonConnectButton,
+  AccountNonConnectButtonImage,
+  AccountNonConnectImage,
+  AccountNonConnectText,
+  AccountNonConnectTitle,
+  AccountNonConnectWhat,
+  AccountNonConnectWhatArrow,
+  AccountNonConnectWhatText
+
+} from "./AccountNonConnectStyles";
 import AccountListItem from "./components/AccountListItem/AccountListItem";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -28,7 +47,6 @@ interface IAccountGame {
 
 const accountActiveGames: Array<IAccountGame> = [];
 const accountDoneGames: Array<IAccountGame> = [];
-const accountTokens: Array<IAccountToken> = [];
 
 const settings = {
   apiKey: process.env.REACT_APP_ALCHEMY_SEPOLIA_KEY, // Replace with your Alchemy API Key.
@@ -39,19 +57,10 @@ const alchemy = new Alchemy(settings);
 
 function Account() {
   const { address, isConnected } = useAccount();
-  const [tokens, setTokens] = useState(accountTokens);
+  const [tokens, setTokens] = useState<Array<IAccountToken>>();
   const [balance, setBalance] = useState<number>();
 
-  const [activeItems, setActiveItems] = useState([
-    {
-      promo_name: "Raffle # 7fh12ba",
-      owner: "@ Baxter",
-      grand_prize: "$100,087",
-      paytoken: "0x0000000000000000000000000000000000000000",
-      end_timestamp: Date.now(),
-      status: true,
-    }
-  ]);
+  const [activeItems, setActiveItems] = useState([]);
 
   const [doneItems, setDoneItems] = useState([
     {
@@ -66,8 +75,7 @@ function Account() {
 
   function handleConnectButtonClick() {
     const element = document.getElementsByClassName(
-      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6"
-    );
+      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6");
     const connectButtonRef: HTMLElement = element[0] as HTMLElement;
     connectButtonRef.click();
   };
@@ -140,6 +148,8 @@ function Account() {
           })
         }
       }
+      const accountTokens: Array<IAccountToken> = [];
+
       alchemy.nft.getNftsForOwner(address, {
         contractAddresses: games,
       })
@@ -156,19 +166,17 @@ function Account() {
             image: imageUrl
           }
           accountTokens.push(nftData);
+          setTokens(accountTokens);
           setBalance(nfts.length);
         }
-      });
+      })
     })
     .catch(err => {
       console.log(err);
     })
-  }, [])
+  }, [address]);
 
-  var tokenBalance = 0;
-  var metadata = [];
-
-  if(isConnected) {
+  if (isConnected) {
     return (
       <Default>
         <AccountBlock>
@@ -185,15 +193,25 @@ function Account() {
             )}
           </AccountTitle>
           <AccountSlider
-            items={metadata}
+            items={tokens}
           />
           <AccountItems>
             <AccountItem>
               <AccountItemTitle>Активные раффлы / гивы:</AccountItemTitle>
               <AccountItemList>
+              {activeItems.length > 0 ? (
+                <>
                 {activeItems.map((item, idx) => {
                   return <AccountListItem item={item} key={idx} />;
                 })}
+                </>
+              ) : (
+                <>
+                {[...new Array(1)].map((_, idx) => (
+                <AccountListItem isFake={true} key={idx} />
+                ))}
+                </>
+              )}
               </AccountItemList>
             </AccountItem>
             <AccountItem>

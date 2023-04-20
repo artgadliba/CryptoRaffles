@@ -37,7 +37,7 @@ const Footer: FC = () => {
           } else {
           window.scrollTo({top:0,left:0, behavior: "auto"})
           }
-  }, [location,])
+  }, [location]);
 
   return (
     <FooterBlock>
@@ -99,6 +99,6 @@ const Footer: FC = () => {
       </Container>
     </FooterBlock>
   );
-};
+}
 
 export default Footer;

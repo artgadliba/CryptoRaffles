@@ -33,6 +33,6 @@ const Default: FC<PropsWithChildren<IDefault>> = ({ children, isHeaderActive = f
       {/* <MoneyBoxes /> */}
     </DefaultBlock>
   );
-};
+}
 
 export default Default;

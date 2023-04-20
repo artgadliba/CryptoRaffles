@@ -27,6 +27,6 @@ const AccountPopUp: FC<IAccountPopUp> = ({ image, onClose }) => {
       <AccountPopUpImage onClick={(e) => e.stopPropagation()} alt={"image"} src={image} />
     </AccountPopUpBlock>
   );
-};
+}
 
 export default AccountPopUp;

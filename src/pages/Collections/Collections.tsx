@@ -21,6 +21,8 @@ interface ICollectionData {
   status: number;
   game_type: number;
   description: string;
+  lesser_prize_text: string;
+  lesser_prize_link: string;
 }
 
 export const collections: Array<ICollectionData> = [];
@@ -39,9 +41,9 @@ function Collections() {
     .catch(err => {
       console.log(err);
     })
-  }, [])
+  }, []);
 
-  if(items === undefined)
+  if(items == undefined)
     return (
       <Default>
         <CollectionsBlock>

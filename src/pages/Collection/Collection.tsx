@@ -47,6 +47,7 @@ import {
   CollectionInfoTimerText,
 } from "./CollectionStyles";
 import CollectionWinners from "./components/CollectionWinners/CollectionWinners";
+import CollectionFakeWinners from "./components/CollectionWinners/CollectionFakeWinners";
 import axios from "axios";
 import { ethers } from "ethers";
 import { getETHPrice } from "../../utils/getETHPrice";
@@ -73,11 +74,13 @@ interface ICollectionData {
   status: number;
   game_type: number;
   description: string;
+  lesser_prize_text: string;
+  lesser_prize_link: string;
 }
 
 interface ICollectionWinners {
-  collectionOwner?: string;
-  items?: {
+  collectionOwner: string;
+  items: {
     isGrand: boolean;
     wallet: string;
     tokens?: string;
@@ -86,11 +89,20 @@ interface ICollectionWinners {
   }[];
 }
 
+interface IFakeWinner {
+  isGrand: boolean;
+  wallet: string;
+  tokens?: string;
+  tokenId: number;
+  prize: string;
+}
+
 const nullSignature = [
   0,
   "0x0000000000000000000000000000000000000000000000000000000000000000"
 ];
 
+const fakeWinnersList: Array<IFakeWinner> = [];
 var winnersList = {} as ICollectionWinners;
 
 function Collection() {
@@ -140,7 +152,7 @@ function Collection() {
     .catch(err => {
       console.log(err);
     })
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (item != undefined) {
@@ -171,7 +183,7 @@ function Collection() {
         setMinorPrize(minorPrize);
       }
     }
-  }, [item])
+  }, [item]);
 
   useEffect(() => {
     if (item != undefined) {
@@ -189,7 +201,7 @@ function Collection() {
               tokenId: item.grand_prize_token,
               prize: gPrize
             }]
-          })
+          });
           if (item.minor_prize_winners != undefined && grandPrize != undefined) {
             let mPrize = "$" + numberWithCommas(minorPrize);
             for (let i = 0; i < item.minor_prize_winners.length; i++) {
@@ -218,7 +230,7 @@ function Collection() {
         })
       }
     }
-  }, [item, grandPrize, minorPrize])
+  }, [item, grandPrize, minorPrize]);
 
   const publicMint = async () => {
     const config = await prepareWriteContract({
@@ -250,7 +262,7 @@ function Collection() {
       }
   }
 
-  if (item != undefined && winners != undefined) {
+  if (item != undefined) {
     return (
       <Default isHeaderActive>
         <CollectionBlock>
@@ -365,7 +377,11 @@ function Collection() {
             <CollectionDone>
               <CollectionDoneTitle>Победители</CollectionDoneTitle>
               <CollectionDoneContent>
-                <CollectionWinners items={winnersList.items} collectionOwner={winnersList.collectionOwner} />
+                {winners != undefined ? (
+                  <CollectionWinners items={winnersList.items} collectionOwner={winnersList.collectionOwner} text={item.lesser_prize_text} link={item.lesser_prize_link} />
+                ) : (
+                  <CollectionFakeWinners items={fakeWinnersList}/>
+                )}
                 <CollectionDoneLogoBlock>
                   <CollectionDoneLogo alt="logo" src="/images/give-c-logo.svg" />
                   <CollectionDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />

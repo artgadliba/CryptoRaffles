@@ -140,6 +140,6 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
       </IndexWinnersRow>
     </IndexWinnersLineBlock>
   );
-};
+}
 
 export default IndexWinnersLine;

@@ -51,12 +51,14 @@ const IndexSlide: FC<IIndexSlide> = ({ item, index, length }) => {
   } = useCountdown(item?.end_timestamp ?? Date.now());
 
   if (ethRate !== undefined) {
-    var grandPrize = item.grand_prize;
-    if (item.paytoken === "0x0000000000000000000000000000000000000000") {
-      let eth = ethers.utils.formatEther(String(item.grand_prize));
-      grandPrize = Number(eth) * Number(ethRate);
-    } else {
-      grandPrize = Math.round(item.grand_prize / 10 ** 6);
+    if (item.grand_prize != undefined) {
+      var grandPrize = item.grand_prize;
+      if (item.paytoken === "0x0000000000000000000000000000000000000000") {
+        let eth = ethers.utils.formatEther(String(item.grand_prize));
+        grandPrize = Number(eth) * Number(ethRate);
+      } else {
+        grandPrize = Math.round(item.grand_prize / 10 ** 6);
+      }
     }
   }
 
@@ -70,7 +72,7 @@ const IndexSlide: FC<IIndexSlide> = ({ item, index, length }) => {
         console.log(err);
       })
     }
-  }, [ethRate])
+  }, [ethRate]);
 
   return (
     <IndexSlideBlock>
@@ -94,9 +96,9 @@ const IndexSlide: FC<IIndexSlide> = ({ item, index, length }) => {
         <IndexSlideTitle>{item.promo_name}</IndexSlideTitle>
         <IndexSlideUsername>{item.owner}</IndexSlideUsername>
           {item.raffle_id ? (
-            <IndexSlideSum to={`/raffles/${item.raffle_id}`}>{grandPrize < 5000 || ethRate === undefined ? "$$$$$$" : `${grandPrize}`}</IndexSlideSum>
+            <IndexSlideSum to={`/raffles/${item.raffle_id}`}>{grandPrize < 5000 || ethRate == undefined || grandPrize == undefined ? "$$$$$$" : `${grandPrize}`}</IndexSlideSum>
           ) : (
-            <IndexSlideSum to={`/giveaways/${item.giveaway_id}`}>{grandPrize < 5000 || ethRate === undefined ? "$$$$$$" : `${grandPrize}`}</IndexSlideSum>
+            <IndexSlideSum to={`/giveaways/${item.giveaway_id}`}>{grandPrize < 5000 || ethRate == undefined || grandPrize == undefined ? "$$$$$$" : `${grandPrize}`}</IndexSlideSum>
           )}
         <IndexSlideLine />
         <IndexSlideSumTitle>Сумма розыгрыша</IndexSlideSumTitle>
@@ -124,6 +126,6 @@ const IndexSlide: FC<IIndexSlide> = ({ item, index, length }) => {
       </IndexSlideFooter>
     </IndexSlideBlock>
   );
-};
+}
 
 export default IndexSlide;

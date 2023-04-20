@@ -22,11 +22,14 @@ import { giveAbi } from "../../../../utils/getAccountBalance";
 import { prepareWriteContract, writeContract } from "@wagmi/core";
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { useAccount } from "wagmi";
-
 import axios from "axios";
+import WinnerModal from "../../../../components/Modals/WinnerModal/WinnerModal";
+import NoMoneyPrizeModal from "../../../../components/Modals/NoMoneyPrizeModal/NoMoneyPrizeModal";
+import useModal from "../../../../hooks/useModal";
 
 interface IGiveWinners {
-  giveawayOwner: string;
+  text?: string;
+  link: string;
   items: {
     isGrand: boolean;
     wallet: string;
@@ -39,34 +42,47 @@ interface IWinner {
   isGrand: boolean;
   wallet: string;
   tokenId: number;
+  prize: string;
 }
 
-const GiveWinners: FC<IGiveWinners> = ({ items, giveawayOwner }) => {
+const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
-  const [winner, setWinner] = useState<IWinner>();
+  const [winner, setWinner] = useState<Array<IWinner>>([]);
   const [withdrawDisabled, setWithdrawDisabled] = useState<boolean>(false);
   const addRecentTransaction = useAddRecentTransaction();
   const [proof, setProof] = useState<string>();
 
   const playerWithdraw = async () => {
     if (winner != undefined && proof != undefined) {
+      let currentWinner = winner[0];
       const config = await prepareWriteContract({
         address: id,
         abi: giveAbi,
         chainId: 11155111, // Sepolia network
         functionName: "withdrawPrize",
-        args: [winner.tokenId, proof],
+        args: [currentWinner.tokenId, proof],
       });
       const { hash } = await writeContract(config);
       addRecentTransaction({
         hash: hash,
-        description: `Prize withdrawal by participant # ${winner.tokenId.toString()}.`,
+        description: `Prize withdrawal by participant # ${currentWinner.tokenId.toString()}.`,
       });
       setWithdrawDisabled(true);
     }
   }
+
+  const {
+    closeModal: closeWinnerModal,
+    openModal: openWinnerModal,
+    modal: winnerModal
+  } = useModal(WinnerModal, { playerWithdraw, winnerData: winner });
+  const {
+    closeModal: closeNoMoneyModal,
+    openModal: openNoMoneyModal,
+    modal: noMoneyModal
+  } = useModal(NoMoneyPrizeModal, {modalText: text, modalLink: link });
 
   useEffect(() => {
     axios.get(`http://localhost:8000/api/giveaways-registry/${address}/${id}/`)
@@ -76,62 +92,45 @@ const GiveWinners: FC<IGiveWinners> = ({ items, giveawayOwner }) => {
     .catch(err => {
       setWithdrawDisabled(true);
     })
-    axios.get(`http://localhost:8000/api/giveaways/${id}`)
-    .then(res => {
-      let data = res.data[0];
-      let grandWinner = data.grand_prize_winner;
-      let grandPrizeToken = data.grand_prize_token;
-      let minorWinners = data.minor_prize_winners;
-      let minorPrizeTokens = data.minor_prize_tokens;
-      let winnerData = {} as IWinner;
-      if (address === grandWinner) {
-        winnerData = {
-          isGrand: true,
-          wallet: address,
-          tokenId: grandPrizeToken,
-        };
-      }
-      for (let i = 0; i < minorWinners.length; i ++) {
-        if (address === minorWinners[i]) {
-          winnerData = {
-            isGrand: false,
-            wallet: address,
-            tokenId: minorPrizeTokens[i],
-          };
-        }
-      }
-      setWinner(winnerData);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    axios.get(`http://localhost:8000/api/merkles/${address}/${id}`)
-    .then(res => {
-      let data = res.data[0];
-      let merkleProof = data.proof;
-      setProof(merkleProof);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }, [address])
+  }, [address]);
 
   useEffect(() => {
-    if (winner != undefined) {
+    let winnerData: Array<IWinner> = [];
+    if (items.length > 0) {
+      let data = items.filter(i => i.wallet == address);
+
+      for (let i = 0; i < data.length; i ++) {
+        winnerData.push(data[i]);
+      }
+      setWinner(winnerData);
+    }
+  }, [items, address]);
+
+  useEffect(() => {
+    if (winner.length > 0) {
       axios.get(`http://localhost:8000/api/giveaways-withdrawed/${address}/${id}`)
       .then(res => {
         let data = res.data[0];
         let withdrawedPrizeToken = data.token_id;
 
-        if (winner.tokenId === withdrawedPrizeToken) {
+        if (winner[0].tokenId === withdrawedPrizeToken) {
           setWithdrawDisabled(true);
         }
       })
       .catch(err => {
         console.log(err);
       })
+      axios.get(`http://localhost:8000/api/merkles/${address}/${id}`)
+      .then(res => {
+        let data = res.data[0];
+        let merkleProof = data.proof;
+        setProof(merkleProof);
+      })
+      .catch(err => {
+        console.log(err);
+      })
     }
-  }, [winner])
+  }, [winner]);
 
   return (
     <GiveDoneWinnersBlock>
@@ -237,10 +236,18 @@ const GiveWinners: FC<IGiveWinners> = ({ items, giveawayOwner }) => {
       {withdrawDisabled == true ? (
         <GiveDoneButtonInactive>Получить приз</GiveDoneButtonInactive>
       ) : (
-        <GiveDoneButton onClick={playerWithdraw}>Получить приз</GiveDoneButton>
+        <>
+        {winner.length > 0 ? (
+          <GiveDoneButton onClick={openWinnerModal}>Получить приз</GiveDoneButton>
+        ) : (
+          <GiveDoneButton onClick={openNoMoneyModal}>Получить приз</GiveDoneButton>
+        )}
+        </>
       )}
+      {winnerModal}
+      {noMoneyModal}
     </GiveDoneWinnersBlock>
   );
-};
+}
 
 export default GiveWinners;

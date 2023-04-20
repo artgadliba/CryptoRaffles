@@ -49,8 +49,8 @@ const WinnerModal: FC<IWinnerModal> = ({ onClose, playerWithdraw, winnerData }) 
       tokenPhrase = `токенa #${String(tokens)}`;
     }
     setPhrase(tokenPhrase);
-    setPrize(totalPrizeString)
-  }, [winnerData])
+    setPrize(totalPrizeString);
+  }, [winnerData]);
 
   return (
     <WinnerModalBlock onClick={onClose}>
@@ -69,6 +69,6 @@ const WinnerModal: FC<IWinnerModal> = ({ onClose, playerWithdraw, winnerData }) 
       </WinnerModalContent>
     </WinnerModalBlock>
   );
-};
+}
 
 export default WinnerModal;

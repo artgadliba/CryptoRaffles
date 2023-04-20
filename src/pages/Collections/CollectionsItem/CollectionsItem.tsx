@@ -56,6 +56,8 @@ interface ICollectionsItem {
     status: number;
     game_type: number;
     description: string;
+    lesser_prize_text: string;
+    lesser_prize_link: string;
   };
   isFake?: boolean;
 }
@@ -76,8 +78,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
 
   function handleConnectButtonClick() {
     const element = document.getElementsByClassName(
-      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6"
-    );
+      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6");
     const connectButtonRef: HTMLElement = element[0] as HTMLElement;
     connectButtonRef.click();
   };
@@ -96,7 +97,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
         console.log(err);
       })
     }
-  }, [])
+  }, []);
 
   if (isFake || !item) {
     return (
@@ -125,7 +126,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
       </CollectionsFakeItemBlock>
     );
   }
-  if (ethRate != undefined  && item.grand_prize != null) {
+  if (ethRate != undefined  && item.grand_prize != undefined) {
     var grandPrize = item.grand_prize;
     if (item.paytoken == "0x0000000000000000000000000000000000000000") {
       let eth = ethers.utils.formatEther(String(item.grand_prize));
@@ -227,6 +228,6 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
       </CollectionsItemBlock>
     );
   }
-};
+}
 
 export default CollectionsItem;

@@ -24,11 +24,11 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
     min-height: 100vh;
     background-color: white;
-    font-size: 16px;
+    font-size: 14.4px;
 
-    @media(max-width: 1350px) {
-      font-size: 15px;
-    }
+    // @media(max-width: 1350px) {
+    //   font-size: 15px;
+    // }
 
     @media(max-width: 1300px) {
       font-size: 13.5px;

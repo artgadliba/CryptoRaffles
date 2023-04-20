@@ -1,5 +1,15 @@
 import React, { FC, useState } from "react";
-import { IndexListBlock, IndexListItemArrow, IndexListItemArrowHorizontalLine, IndexListItemArrowVerticalLine, IndexListItemBlock, IndexListItemContent, IndexListItemHeader, IndexListItemText, IndexListItemTitle } from "./IndexListStyles";
+import {
+  IndexListBlock,
+  IndexListItemArrow,
+  IndexListItemArrowHorizontalLine,
+  IndexListItemArrowVerticalLine,
+  IndexListItemBlock,
+  IndexListItemContent,
+  IndexListItemHeader,
+  IndexListItemText,
+  IndexListItemTitle
+} from "./IndexListStyles";
 
 interface IIndexListItem {
   title: string;
@@ -26,7 +36,7 @@ const IndexListItem: FC<IIndexListItem> = ({ title, text, openHeight, openMobile
       <IndexListItemContent>{isOpen && <IndexListItemText>{text}</IndexListItemText>}</IndexListItemContent>
     </IndexListItemBlock>
   );
-};
+}
 
 const IndexList: FC<IIndexList> = ({ items }) => {
   return (
@@ -36,6 +46,6 @@ const IndexList: FC<IIndexList> = ({ items }) => {
       })}
     </IndexListBlock>
   );
-};
+}
 
 export default IndexList;

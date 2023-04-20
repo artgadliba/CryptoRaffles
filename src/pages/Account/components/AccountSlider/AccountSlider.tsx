@@ -63,7 +63,7 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
     openModal();
   }
 
-  if (!items.length) {
+  if (items == undefined) {
     return <></>;
   }
 
@@ -72,9 +72,9 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
     return (
       <AccountMobileSlider slidesPerView={"auto"} loop>
         {modal}
-        {items.map((item) => {
+        {items.map((item, idx) => {
           return (
-            <AccountMobileSliderSlide onClick={() => openPopUp(item.image)}>
+            <AccountMobileSliderSlide onClick={() => openPopUp(item.image)} key={idx}>
               <AccountSliderSlideImage alt="slide" src={item.image} />
             </AccountMobileSliderSlide>
           );
@@ -88,9 +88,9 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
     return (
       <AccountFakeSliderBlock>
         {modal}
-        {items.map((item) => {
+        {items.map((item, idx) => {
           return (
-            <AccountFakeSliderSlide onClick={() => openPopUp(item.image)}>
+            <AccountFakeSliderSlide onClick={() => openPopUp(item.image)} key={idx}>
               <AccountSliderSlideImage alt="slide" src={item.image} />
             </AccountFakeSliderSlide>
           );
@@ -109,9 +109,7 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
       <AccountSliderNextButton className="account-slider-next">
         <AccountSliderNextButtonImage alt="next" src="/images/arrow-right.png" />
       </AccountSliderNextButton>
-
       {modal}
-
       <AccountSliderBlockSlider
         modules={[Navigation]}
         allowTouchMove={false}
@@ -135,6 +133,6 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
       </AccountSliderBlockSlider>
     </AccountSliderBlock>
   );
-};
+}
 
 export default AccountSlider;

@@ -81,6 +81,6 @@ const DefaultHeader: FC<IDefaultHeader> = ({ isActive }) => {
       </Container>
     </DefaultHeaderBlock>
   );
-};
+}
 
 export default DefaultHeader;

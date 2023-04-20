@@ -69,6 +69,6 @@ const useCountdown = (targetDate) => {
   }, [seconds, minutes, hours, days]);
 
   return formattedResult;
-};
+}
 
 export { useCountdown };

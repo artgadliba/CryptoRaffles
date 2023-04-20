@@ -14,6 +14,6 @@ const Landing: FC<PropsWithChildren> = ({ children }) => {
       {/* <MoneyBoxes /> */}
     </LandingBlock>
   );
-};
+}
 
 export default Landing;

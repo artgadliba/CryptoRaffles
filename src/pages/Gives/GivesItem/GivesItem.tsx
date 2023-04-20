@@ -44,6 +44,7 @@ interface ITerm {
 interface IGivesItem {
   item?: {
     giveaway_id: string;
+    start_time: number;
     end_timestamp: number;
     image: string;
     paytoken: string;
@@ -58,6 +59,8 @@ interface IGivesItem {
     status: number;
     description: string;
     terms: Array<ITerm>;
+    lesser_prize_text: string;
+    lesser_prize_link: string;
   };
   isFake?: boolean;
 }
@@ -78,11 +81,10 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
 
   function handleConnectButtonClick() {
     const element = document.getElementsByClassName(
-      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6"
-    );
+      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6");
     const connectButtonRef: HTMLElement = element[0] as HTMLElement;
     connectButtonRef.click();
-  };
+  }
 
   function delayedConnectButton() {
     setTimeout(handleConnectButtonClick, 1500);
@@ -98,7 +100,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
         console.log(err);
       })
     }
-  }, [])
+  }, []);
 
   if (isFake || !item) {
     return (
@@ -127,7 +129,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
       </GivesFakeItemBlock>
     );
   }
-  if (ethRate != undefined && item.grand_prize != null) {
+  if (ethRate != undefined && item.grand_prize != undefined) {
     var grandPrize = item.grand_prize;
     if (item.paytoken == "0x0000000000000000000000000000000000000000") {
       let eth = ethers.utils.formatEther(String(item.grand_prize));
@@ -229,6 +231,6 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
       </GivesItemBlock>
     );
   }
-};
+}
 
 export default GivesItem;

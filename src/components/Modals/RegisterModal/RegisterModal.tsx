@@ -5,7 +5,7 @@ import {
   RegisterModalClose,
   RegisterModalCloseImage,
   RegisterModalContent,
-  RegisterModalHashInput,
+  RegisterModalHash,
   RegisterModalHashInputBlock,
   RegisterModalHashInputEtherium,
   RegisterModalReferenceInput,
@@ -20,11 +20,11 @@ interface IRegisterModal {
   giveaway_id: string;
 }
 
-export const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_id }) => {
+const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_id }) => {
 
   const [inputData, setInputData] = useState<string>();
 
-  const handleInput = event => {
+  const handleInput = (event) => {
     setInputData(event.target.value);
   }
 
@@ -55,7 +55,7 @@ export const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_i
         </RegisterModalClose>
         <RegisterModalTitle>Регистрация</RegisterModalTitle>
         <RegisterModalHashInputBlock>
-          <RegisterModalHashInput placeholder={truncateEthAddress(address)} />
+          <RegisterModalHash>{truncateEthAddress(address)}</RegisterModalHash>
           <RegisterModalHashInputEtherium alt="Ethereum" src="/images/ethereum-small-logo.svg" />
         </RegisterModalHashInputBlock>
         <RegisterModalReferenceInput placeholder="Ссылка на аккаунт в соц. сети (см. условия)" onChange={handleInput} />
@@ -63,6 +63,6 @@ export const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_i
       </RegisterModalContent>
     </RegisterModalBlock>
   );
-};
+}
 
 export default RegisterModal;

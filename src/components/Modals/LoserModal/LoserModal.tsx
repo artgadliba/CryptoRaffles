@@ -21,6 +21,6 @@ const LoserModal: FC<ILoserModal> = ({ onClose }) => {
       </LoserModalContent>
     </LoserModalBlock>
   );
-};
+}
 
 export default LoserModal;

@@ -7,6 +7,6 @@ interface IContainer {
 
 const Container: FC<PropsWithChildren<IContainer>> = ({ children, maxWidth }) => {
   return <ContainerBlock maxWidth={maxWidth}>{children}</ContainerBlock>;
-};
+}
 
 export default Container;

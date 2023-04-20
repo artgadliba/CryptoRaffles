@@ -11,6 +11,7 @@ interface ITerm {
 
 interface IGiveawayData {
   giveaway_id: string;
+  start_time: number;
   end_timestamp: number;
   image: string;
   paytoken: string;
@@ -25,6 +26,8 @@ interface IGiveawayData {
   status: number;
   description: string;
   terms: Array<ITerm>;
+  lesser_prize_text: string;
+  lesser_prize_link: string;
 }
 
 const giveaways: Array<IGiveawayData> = [];
@@ -42,9 +45,9 @@ function Gives() {
     .catch(err => {
       console.log(err);
     })
-  }, [])
+  }, []);
 
-  if(items === undefined)
+  if(items == undefined)
     return (
       <Default>
         <GivesBlock>

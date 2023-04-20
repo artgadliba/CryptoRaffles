@@ -13,7 +13,7 @@ const AccountListItemBlock = styled.div`
   border: ${pxIntoRem(1)} solid #746091;
   border-radius: ${pxIntoRem(2)};
   cursor: pointer;
-  
+
   &:first-of-type {
     margin-top: 0px;
   }
@@ -228,6 +228,172 @@ const AccountListItemStatusIndicator = styled.div<IAccountListItemStatusIndicato
   }
 `;
 
+const AccountListFakeItemBlock = styled(AccountListItemBlock)`
+  cursor: default;
+  padding: ${pxIntoRem(24)} ${pxIntoRem(34)} ${pxIntoRem(40)} ${pxIntoRem(28)};
+`;
+
+const AccountListFakeItemBackground = styled(AccountListItemBackground)`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const AccountListFakeItemUsername = styled.div`
+  padding: ${pxIntoRem(14.5)} ${pxIntoRem(23)};
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.43);
+  backdrop-filter: blur(${pxIntoRem(16.5)});
+  border-radius: ${pxIntoRem(59)};
+  width: fit-content;
+  & > div {
+    background-color: rgba(217, 217, 217, 0.51);
+    width: ${pxIntoRem(37)};
+    height: ${pxIntoRem(2)};
+  }
+`;
+
+const AccountListFakeItemClock = styled.img`
+  width: ${pxIntoRem(49.47)};
+  height: ${pxIntoRem(95.07)};
+  margin: 0 auto auto auto;
+  position: relative;
+  left: ${pxIntoRem(-15)};
+  z-index: 999;
+  @media (max-width: 500px) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: ${pxIntoRem(40)};
+    margin: 0 auto;
+  }
+`;
+
+const AccountListFakeItemContent = styled(AccountListItemContent)`
+  align-items: flex-start;
+  @media (max-width: 1200px) {
+    align-items: flex-end;
+  }
+  @media (max-width: 500px) {
+    align-items: center;
+    margin-top: ${pxIntoRem(86)};
+  }
+`;
+
+const AccountListFakeItemId = styled.div`
+  width: ${pxIntoRem(213)};
+  height: ${pxIntoRem(20)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  flex-shrink: 0;
+  @media (max-width: 1200px) {
+    position: relative;
+    top: ${pxIntoRem(-15)};
+  }
+  @media (max-width: 500px) {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
+  }
+`;
+
+const AccountListFakeItemSumm = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: ${pxIntoRem(35)};
+  flex-shrink: 0;
+  @media (max-width: 1450px) {
+    margin-left: ${pxIntoRem(35 * 0.3)};
+  }
+  @media (max-width: 500px) {
+    margin-left: 0px;
+    align-items: center;
+  }
+`;
+
+const AccountListFakeItemSummTitle = styled.div`
+  width: ${pxIntoRem(125)};
+  height: ${pxIntoRem(20)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  flex-shrink: 0;
+  @media (max-width: 500px) {
+    width: ${pxIntoRem(77)};
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
+  }
+`;
+
+const AccountListFakeItemSummText = styled.div`
+  width: ${pxIntoRem(170)};
+  height: ${pxIntoRem(7)};
+  margin-top: ${pxIntoRem(8)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  flex-shrink: 0;
+  @media (max-width: 500px) {
+    width: ${pxIntoRem(123)};
+    height: ${pxIntoRem(14)};
+    margin-top: ${pxIntoRem(5)};
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
+  }
+`;
+
+const AccountListFakeItemTimer = styled.div`
+  width: ${pxIntoRem(312)};
+  height: ${pxIntoRem(51)};
+  margin-left: ${pxIntoRem(77)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  flex-shrink: 0;
+  @media (max-width: 1450px) {
+    margin-left: ${pxIntoRem(77 * 0.3)};
+    width: ${pxIntoRem(312 * 0.9)};
+  }
+  @media (max-width: 500px) {
+    display: none;
+  }
+`;
+
+const AccountListFakeItemStatus = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`;
+
+const AccountListFakeItemStatusText = styled.div`
+  width: ${pxIntoRem(56)};
+  height: ${pxIntoRem(15)};
+  border-radius: ${pxIntoRem(2)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  flex-shrink: 0;
+  @media (max-width: 1000px) {
+    display: none;
+  }
+`;
+
+const AccountListFakeItemStatusButton = styled.div`
+  width: ${pxIntoRem(142)};
+  height: ${pxIntoRem(38)};
+  border-radius: ${pxIntoRem(2)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  flex-shrink: 0;
+  border-radius: ${pxIntoRem(33)};
+  margin-left: ${pxIntoRem(17)};
+`;
+
 export {
   AccountListItemBlock,
   AccountListItemBackground,
@@ -245,4 +411,17 @@ export {
   AccountListItemStatus,
   AccountListItemStatusText,
   AccountListItemStatusIndicator,
+  AccountListFakeItemBackground,
+  AccountListFakeItemBlock,
+  AccountListFakeItemClock,
+  AccountListFakeItemContent,
+  AccountListFakeItemId,
+  AccountListFakeItemSumm,
+  AccountListFakeItemSummText,
+  AccountListFakeItemSummTitle,
+  AccountListFakeItemTimer,
+  AccountListFakeItemUsername,
+  AccountListFakeItemStatus,
+  AccountListFakeItemStatusButton,
+  AccountListFakeItemStatusText,
 };

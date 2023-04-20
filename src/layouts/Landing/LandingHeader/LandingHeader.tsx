@@ -29,7 +29,7 @@ const LandingHeader: FC = () => {
           } else {
           window.scrollTo({top:0,left:0, behavior: "auto"})
           }
-  }, [location,])
+  }, [location,]);
 
   return (
     <LandingHeaderBlock>
@@ -84,6 +84,6 @@ const LandingHeader: FC = () => {
       </Container>
     </LandingHeaderBlock>
   );
-};
+}
 
 export default LandingHeader;

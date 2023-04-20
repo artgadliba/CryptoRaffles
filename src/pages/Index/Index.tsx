@@ -70,7 +70,6 @@ interface IIndexSlider {
 }
 
 function Index() {
-
   const [items, setItems] = useState<Array<IIndexSlider>>();
 
   useEffect(() => {
@@ -83,7 +82,7 @@ function Index() {
     .catch(err => {
       console.log(err);
     })
-  }, [])
+  }, []);
 
   return (
     <Landing>

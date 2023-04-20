@@ -38,7 +38,9 @@ import {
   GiveRegisterButtonInactive
 } from "./GiveStyles";
 import GiveWinners from "./components/GiveWinners/GiveWinners";
-import { RegisterModal } from "../../components/Modals/RegisterModal/RegisterModal";
+import GiveFakeWinners from "./components/GiveWinners/GiveFakeWinners";
+import RegisterModal from "../../components/Modals/RegisterModal/RegisterModal";
+import GiveCancelModal from "../../components/Modals/GiveCancelModal/GiveCancelModal";
 import { useCountdown } from "../../hooks/useCountdown";
 import useModal from "../../hooks/useModal";
 import axios from "axios";
@@ -47,15 +49,17 @@ import { getAccountBalance } from "../../utils/getAccountBalance";
 import { numberWithCommas } from "../../utils/numberWithCommas";
 import { getETHPrice } from "../../utils/getETHPrice";
 import { useAccount } from "wagmi";
+import { giveAbi } from "../../utils/getAccountBalance";
+import { prepareWriteContract, writeContract } from "@wagmi/core";
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 
 interface ITerm {
   condition: string,
 }
 
-interface ITerms extends Array<ITerm>{}
-
 interface IGiveawayData {
   giveaway_id: string;
+  start_time: number;
   end_timestamp: number;
   image: string;
   paytoken: string;
@@ -70,10 +74,11 @@ interface IGiveawayData {
   status: number;
   description: string;
   terms: Array<ITerm>;
+  lesser_prize_text: string;
+  lesser_prize_link: string;
 }
 
 interface IGiveWinners {
-  giveawayOwner: string;
   items: {
     isGrand: boolean;
     wallet: string;
@@ -82,6 +87,15 @@ interface IGiveWinners {
   }[];
 }
 
+interface IFakeWinner {
+  isGrand: boolean;
+  wallet: string;
+  tokens?: string;
+  tokenId: number;
+  prize: string;
+}
+
+const fakeWinnersList: Array<IFakeWinner> = [];
 var winnersList = {} as IGiveWinners;
 
 function Give() {
@@ -95,10 +109,9 @@ function Give() {
   const [statusText, setStatusText] = useState<string>("Открыт");
   const [grandPrize, setGrandPrize] = useState<number>(0);
   const [minorPrize, setMinorPrize] = useState<number>(0);
-  const [terms, setTerms] = useState<ITerms>();
+  const [terms, setTerms] = useState<Array<ITerm>>();
   const [registered, setRegistered] = useState<boolean>(false);
-
-  const { closeModal, openModal, modal } = useModal(RegisterModal, { address: address, giveaway_id: id });
+  const addRecentTransaction = useAddRecentTransaction();
 
   var {
     seconds,
@@ -111,6 +124,32 @@ function Give() {
     daysNoun
   } = useCountdown(item?.end_timestamp ?? Date.now());
 
+  const emergencyRaffleCancel = async () => {
+    const config = await prepareWriteContract({
+      address: id,
+      abi: giveAbi,
+      chainId: 11155111, // Sepolia network
+      functionName: "emergencyRaffleCancel",
+      args: [],
+    });
+    const { hash } = await writeContract(config);
+    addRecentTransaction({
+      hash: hash,
+      description: "Emeregency giveaway cancel by owner",
+    });
+  };
+
+  const {
+    closeModal: closeRegisterModal,
+    openModal: openRegisterModal,
+    modal: registerModal
+  } = useModal(RegisterModal, { address: address, giveaway_id: id });
+  const {
+    closeModal: closeGiveCancelModal,
+    openModal: openGiveCancelModal,
+    modal: giveCancelModal
+  } = useModal(GiveCancelModal, { emergencyRaffleCancel });
+
   useEffect(() => {
     let data_array;
     let data;
@@ -119,11 +158,12 @@ function Give() {
       data_array = res.data;
       data = data_array[0];
       setItem(data);
+      setOwner(data.owner_wallet);
     })
     .catch(err => {
       console.log(err);
     })
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (item != undefined) {
@@ -134,34 +174,35 @@ function Give() {
         setStatusColor("#08E2BD");
         setStatusText("Отменен");
       }
-      if (item.paytoken == "0x0000000000000000000000000000000000000000") {
-        getETHPrice()
-        .then(ethRate => {
-          let formatedGrandPrize = ethers.utils.formatEther(item.grand_prize);
-          let formatedMinorPrize = ethers.utils.formatEther(item.minor_prize);
-          let grandPrize = Math.round(Number(formatedGrandPrize) * ethRate);
-          let minorPrize = Math.round(Number(formatedMinorPrize) * ethRate);
+      if (item.grand_prize != undefined && item.minor_prize != undefined) {
+        if (item.paytoken == "0x0000000000000000000000000000000000000000") {
+          getETHPrice()
+          .then(ethRate => {
+            let formatedGrandPrize = ethers.utils.formatEther(item.grand_prize);
+            let formatedMinorPrize = ethers.utils.formatEther(item.minor_prize);
+            let grandPrize = Math.round(Number(formatedGrandPrize) * ethRate);
+            let minorPrize = Math.round(Number(formatedMinorPrize) * ethRate);
+            setGrandPrize(grandPrize);
+            setMinorPrize(minorPrize);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+        } else {
+          let grandPrize = Math.round(item.grand_prize / 10 ** 6);
+          let minorPrize = Math.round(item.minor_prize / 10 ** 6);
           setGrandPrize(grandPrize);
           setMinorPrize(minorPrize);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-      } else {
-        let grandPrize = Math.round(item.grand_prize / 10 ** 6);
-        let minorPrize = Math.round(item.minor_prize / 10 ** 6);
-        setGrandPrize(grandPrize);
-        setMinorPrize(minorPrize);
+        }
       }
     }
-  }, [item])
+  }, [item]);
 
   useEffect(() => {
     if (item != undefined) {
       if (item.grand_prize_winner != undefined && grandPrize != undefined) {
         let gPrize = "$" + numberWithCommas(grandPrize);
         winnersList = ({
-          giveawayOwner: owner,
           items: [{
             isGrand: true,
             wallet: item.grand_prize_winner,
@@ -185,9 +226,10 @@ function Give() {
         }
       }
     }
-  }, [item, grandPrize, minorPrize])
+  }, [item, grandPrize, minorPrize]);
 
-  if (item != undefined && winners != undefined) {
+
+  if (item != undefined) {
     return (
       <Default isHeaderActive>
         <>
@@ -268,13 +310,21 @@ function Give() {
                     })}
                   </GiveConditionsList>
                 </GiveConditions>
-                  <GiveRegisterButton onClick={openModal}>Регистрация</GiveRegisterButton>
+                {owner === address && Date.now() < item.start_time + 86400000 ? (
+                  <GiveRegisterButton onClick={openGiveCancelModal}>Отменить</GiveRegisterButton>
+                ) : (
+                  <GiveRegisterButton onClick={openRegisterModal}>Регистрация</GiveRegisterButton>
+                )}
               </GiveActive>
             ) : (
               <GiveDone>
                 <GiveDoneTitle>Победители</GiveDoneTitle>
                 <GiveDoneContent>
-                  <GiveWinners items={winnersList.items} giveawayOwner={winnersList.giveawayOwner} />
+                {winners != undefined ? (
+                  <GiveWinners items={winnersList.items} text={item.lesser_prize_text} link={item.lesser_prize_link} />
+                ) : (
+                  <GiveFakeWinners items={fakeWinnersList} />
+                )}
                   <GiveDoneLogoBlock>
                     <GiveDoneLogo alt="logo" src="/images/give-c-logo.svg" />
                     <GiveDoneLogoBackground alt="logo-background" src="/images/give-c-logo-background.svg" />
@@ -284,7 +334,8 @@ function Give() {
             )}
           </GiveBlock>
         </>
-        {modal}
+        {registerModal}
+        {giveCancelModal}
       </Default>
     );
   }
