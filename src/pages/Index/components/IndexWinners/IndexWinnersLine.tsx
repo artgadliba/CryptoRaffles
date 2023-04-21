@@ -23,7 +23,6 @@ interface IIndexWinners {
     tokens: string | number;
     wallet: string;
     price: string;
-    timerDate: string | number;
   }[];
 }
 

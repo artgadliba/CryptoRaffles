@@ -23,28 +23,20 @@ const CollectionDoneWinnersHeaderItem = styled.div`
   color: rgba(255, 255, 255, 0.74);
   &:nth-child(1) {
     padding-left: ${pxIntoRem(67)};
+    @media (max-width: 500px) {
+      padding-left: ${pxIntoRem(65)};
+    }
   }
 
   &:nth-child(2) {
     padding-left: ${pxIntoRem(92)};
+    @media (max-width: 500px) {
+      width: ${pxIntoRem(64)};
+    }
   }
 
   &:nth-child(3) {
     padding-left: ${pxIntoRem(50)};
-  }
-
-  @media (max-width: 500px) {
-    &:nth-child(1) {
-      padding-left: ${pxIntoRem(50)};
-    }
-
-    &:nth-child(2) {
-      padding-left: ${pxIntoRem(42)};
-    }
-
-    &:nth-child(3) {
-      padding-left: ${pxIntoRem(12)};
-    }
   }
 `;
 
@@ -63,34 +55,27 @@ const CollectionDoneWinnersRowItem = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
+  white-space: nowrap;
+
   &:nth-child(1) {
     padding-left: ${pxIntoRem(63)};
+    width: ${pxIntoRem(160)};
   }
 
   &:nth-child(2) {
-    padding-left: ${pxIntoRem(113)};
-    justify-content: center;
-    width: ${pxIntoRem(30)};
+    padding-left: ${pxIntoRem(80)};
+    width: ${pxIntoRem(160)};
+    @media (max-width: 500px) {
+      padding-left: ${pxIntoRem(50)};
+      width: ${pxIntoRem(120)};
+    }
   }
 
   &:nth-child(3) {
-    padding-left: ${pxIntoRem(90)};
-    padding-right: ${pxIntoRem(47)};
-    justify-content: flex-start;
-  }
-
-  @media (max-width: 500px) {
-    &:nth-child(1) {
-      padding-left: ${pxIntoRem(49)};
-    }
-
-    &:nth-child(2) {
-      padding-left: ${pxIntoRem(63)};
-    }
-
-    &:nth-child(3) {
-      padding-left: ${pxIntoRem(54)};
-      padding-right: ${pxIntoRem(15)};
+    width: ${pxIntoRem(140)};
+    @media (max-width: 500px) {
+      width: ${pxIntoRem(100)};
     }
   }
 `;
@@ -126,16 +111,13 @@ const CollectionDoneWinnersRowItemText = styled.span`
 const CollectionDoneWinnersFakeRow = styled.div`
   display: flex;
   align-items: center;
-  width: ${pxIntoRem(465)};
+  width: auto;
   height: ${pxIntoRem(45)};
   background: rgba(45, 11, 90, 0.3);
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.24);
   backdrop-filter: blur(${pxIntoRem(16.53)});
   border-radius: ${pxIntoRem(2)};
   margin-top: ${pxIntoRem(10)};
-  @media (max-width: 500px) {
-    width: ${pxIntoRem(332)};
-  }
 `;
 
 interface ICollectionDoneWinnersFakeRowMedal {
@@ -148,8 +130,9 @@ const CollectionDoneWinnersFakeRowMedal = styled.div<ICollectionDoneWinnersFakeR
   background: ${({ color }) => color};
   opacity: 0.25;
   border-radius: ${pxIntoRem(40)};
-  left: ${pxIntoRem(25)};
   position: absolute;
+  left: ${pxIntoRem(25)};
+
   @media (max-width: 500px) {
     left: ${pxIntoRem(12)};
   }
@@ -161,11 +144,6 @@ const CollectionDoneWinnersFakeRowWinner = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(114)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(62)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(48)};
-  }
 `;
 
 const CollectionDoneWinnersFakeRowTokens = styled.div`
@@ -174,11 +152,6 @@ const CollectionDoneWinnersFakeRowTokens = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(36)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(255)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(190)};
-  }
 `;
 
 const CollectionDoneWinnersFakeRowPrize = styled.div`
@@ -187,11 +160,6 @@ const CollectionDoneWinnersFakeRowPrize = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(56)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(360)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(260)};
-  }
 `;
 
 const CollectionDoneButton = styled.button`

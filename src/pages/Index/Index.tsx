@@ -132,19 +132,16 @@ function Index() {
                 tokens: "2",
                 wallet: "@ Nike",
                 price: "$9,445",
-                timerDate: Date.now(),
               },
               {
                 tokens: "2",
                 wallet: "@ Nike",
                 price: "$9,445",
-                timerDate: Date.now(),
               },
               {
                 tokens: "2",
                 wallet: "@ Nike",
                 price: "$9,445",
-                timerDate: Date.now(),
               },
             ]}
           />

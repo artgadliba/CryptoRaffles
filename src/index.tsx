@@ -82,11 +82,11 @@ const GlobalStyle = createGlobalStyle`
       font-size: 16px;
     }
 
-    @media(max-width: 350px) {
+    @media(max-width: 380px) {
       font-size: 13px;
     }
 
-    @media(max-width: 300px) {
+    @media(max-width: 340px) {
       font-size: 10px;
     }
   }

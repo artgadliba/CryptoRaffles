@@ -114,7 +114,7 @@ const LandingHeaderIconBlock = styled(Link)`
   }
 
   @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(27 * 0.5)};
+    margin-left: ${pxIntoRem(27)};
   }
 `;
 
@@ -127,13 +127,21 @@ const LandingHeaderIcon = styled.svg`
   fill: white;
 
   @media (max-width: 1000px) {
-    width: ${pxIntoRem(27 * 0.5)};
+    width: ${pxIntoRem(27)};
   }
 
   &:hover {
     fill: #08e2bd;
     transition: 0.5s;
   }
+`;
+
+const LandingHeaderButtonImage = styled.svg`
+  width: ${pxIntoRem(18)};
+  height: ${pxIntoRem(18)};
+  margin-left: ${pxIntoRem(13)};
+  fill: white;
+  transition: 1s;
 `;
 
 const LandingHeaderButton = styled(NavLink)`
@@ -153,22 +161,7 @@ const LandingHeaderButton = styled(NavLink)`
   grid-area: button;
   transition: 1s;
 
-  @media (max-width: 500px) {
-    justify-content: center;
-    width: 100%;
-  }
-`;
-
-const LandingHeaderButtonImage = styled.svg`
-  width: ${pxIntoRem(18)};
-  height: ${pxIntoRem(18)};
-  margin-left: ${pxIntoRem(13)};
-  fill: white;
-  transition: 1s;
-`;
-
-const LandingHeaderWrapper = styled.div`
-  &:hover ${LandingHeaderButton} {
+  &:hover {
     color: #08e2bd;
     transition: 0.2s;
     outline: 2px solid #3ff2d4;
@@ -180,6 +173,11 @@ const LandingHeaderWrapper = styled.div`
     fill: #08e2bd;
     transition: 0.5s;
   }
+
+  @media (max-width: 500px) {
+    justify-content: center;
+    width: 100%;
+  }
 `;
 
-export { LandingHeaderBlock, LandingHeaderBody, LandingHeaderLogo, LandingHeaderLogoBlock, LandingHeaderNavigation, LandingHeaderNavigationLink, LandingHeaderIcons, LandingHeaderIconBlock, LandingHeaderIcon, LandingHeaderButton, LandingHeaderButtonImage, LandingHeaderWrapper };
+export { LandingHeaderBlock, LandingHeaderBody, LandingHeaderLogo, LandingHeaderLogoBlock, LandingHeaderNavigation, LandingHeaderNavigationLink, LandingHeaderIcons, LandingHeaderIconBlock, LandingHeaderIcon, LandingHeaderButton, LandingHeaderButtonImage };

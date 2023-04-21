@@ -61,17 +61,7 @@ function Account() {
   const [balance, setBalance] = useState<number>();
 
   const [activeItems, setActiveItems] = useState([]);
-
-  const [doneItems, setDoneItems] = useState([
-    {
-      promo_name: "Raffle # 3da71c5",
-      owner: "@ Jango",
-      grand_prize: "$49,615",
-      paytoken: "0x0000000000000000000000000000000000000000",
-      end_timestamp: Date.now(),
-      status: false,
-    }
-  ]);
+  const [doneItems, setDoneItems] = useState([]);
 
   function handleConnectButtonClick() {
     const element = document.getElementsByClassName(
@@ -81,7 +71,8 @@ function Account() {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/wallet-games/${address}`)
+    let games = [];
+    axios.get(`http://localhost:8000/api/games/${address}`)
     .then(res => {
       let data_array = res.data;
       let games = [];
@@ -148,31 +139,34 @@ function Account() {
           })
         }
       }
-      const accountTokens: Array<IAccountToken> = [];
+      if (games.length == data_array.length) {
+        const accountTokens: Array<IAccountToken> = [];
 
-      alchemy.nft.getNftsForOwner(address, {
-        contractAddresses: games,
-      })
-      .then(res => {
-        let nfts = res.ownedNfts;
-        for (let n = 0; n < nfts.length; n++) {
-          let tokenId = Number(nfts[n].tokenId);
-          let media_array = nfts[n].media;
-          let media = media_array[0];
-          let imageUrl = media["gateway"];
+        alchemy.nft.getNftsForOwner(address, {
+          contractAddresses: games,
+        })
+        .then(res => {
+          let nfts = res.ownedNfts;
+          for (let n = 0; n < nfts.length; n++) {
+            let tokenId = Number(nfts[n].tokenId);
+            let media_array = nfts[n].media;
+            let media = media_array[0];
+            let imageUrl = media["gateway"];
 
-          let nftData: IAccountToken = {
-            tokenId:tokenId,
-            image: imageUrl
+            let nftData: IAccountToken = {
+              tokenId:tokenId,
+              image: imageUrl
+            }
+            accountTokens.push(nftData);
+            setTokens(accountTokens);
+            setBalance(nfts.length);
+            console.log(nfts.length)
           }
-          accountTokens.push(nftData);
-          setTokens(accountTokens);
-          setBalance(nfts.length);
-        }
-      })
-    })
-    .catch(err => {
-      console.log(err);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      }
     })
   }, [address]);
 
@@ -217,9 +211,19 @@ function Account() {
             <AccountItem>
               <AccountItemTitle>Завершенные раффлы / гивы:</AccountItemTitle>
               <AccountItemList>
+              {doneItems.length > 0 ? (
+                <>
                 {doneItems.map((item, idx) => {
                   return <AccountListItem item={item} key={idx} />;
                 })}
+                </>
+              ) : (
+                <>
+                {[...new Array(1)].map((_, idx) => (
+                <AccountListItem isFake={true} key={idx} />
+                ))}
+                </>
+              )}
               </AccountItemList>
             </AccountItem>
           </AccountItems>

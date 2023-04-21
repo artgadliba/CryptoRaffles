@@ -119,7 +119,7 @@ const DefaultHeaderIconBlock = styled(Link)`
   }
 
   @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(27 * 0.5)};
+    margin-left: ${pxIntoRem(27)};
   }
 `;
 
@@ -132,7 +132,7 @@ const DefaultHeaderIcon = styled.svg`
   fill: white;
 
   @media (max-width: 1000px) {
-    width: ${pxIntoRem(27 * 0.5)};
+    width: ${pxIntoRem(27)};
   }
 
   &:hover {

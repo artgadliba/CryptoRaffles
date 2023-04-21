@@ -169,6 +169,13 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items, collectionOwner, tex
     }
   }, [owner]);
 
+  const correctItems = useMemo(() => {
+    const grandItems = items.filter(({ isGrand }) => isGrand);
+    const simpleItems = items.filter(({ isGrand }) => !isGrand);
+
+    return [...grandItems, ...simpleItems];
+  }, [items]);
+
   return (
     <CollectionDoneWinnersBlock>
       <CollectionDoneWinnersHeader>
@@ -176,90 +183,124 @@ const CollectionWinners: FC<ICollectionWinners> = ({ items, collectionOwner, tex
         <CollectionDoneWinnersHeaderItem>Токенов</CollectionDoneWinnersHeaderItem>
         <CollectionDoneWinnersHeaderItem>Выигрыш</CollectionDoneWinnersHeaderItem>
       </CollectionDoneWinnersHeader>
-      {items.map((item, idx) => {
+      {correctItems.map((item, idx) => {
+        return (
+          <CollectionDoneWinnersRow key={idx * 10}>
+            <CollectionDoneWinnersRowItem>
+              {item.isGrand && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/1st-place-medal.png" />}
+              {!item.isGrand && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/2nd-place-medal.png" />}
+              {/*{item.isThird && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}*/}
+              <CollectionDoneWinnersRowItemHash>{truncateEthAddress(item.wallet)}</CollectionDoneWinnersRowItemHash>
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>{item.tokens ? <CollectionDoneWinnersRowItemText>{item.tokens}</CollectionDoneWinnersRowItemText> : <CollectionDoneWinnersFakeRowTokens />}</CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersRowItemText>{item.prize} </CollectionDoneWinnersRowItemText>
+            </CollectionDoneWinnersRowItem>
+          </CollectionDoneWinnersRow>
+        );
+      })}
+      {[...new Array(8 - items.length)].map((_, idx) => {
+        if (items.length === 0 && idx === 0) {
           return (
-            <CollectionDoneWinnersRow key={idx * 10}>
-              <CollectionDoneWinnersRowItem>
-                {item.isGrand && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/1st-place-medal.png" />}
-                {!item.isGrand && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/2nd-place-medal.png" />}
-                {/*{item.isThird && <CollectionDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}*/}
-                <CollectionDoneWinnersRowItemHash>{truncateEthAddress(item.wallet)}</CollectionDoneWinnersRowItemHash>
-              </CollectionDoneWinnersRowItem>
-              <CollectionDoneWinnersRowItem>
-                <CollectionDoneWinnersRowItemText>{item.tokens}</CollectionDoneWinnersRowItemText>
-              </CollectionDoneWinnersRowItem>
-              <CollectionDoneWinnersRowItem>
-                <CollectionDoneWinnersRowItemText>{item.prize} </CollectionDoneWinnersRowItemText>
-              </CollectionDoneWinnersRowItem>
-            </CollectionDoneWinnersRow>
-          );
-        })}
-        {[...new Array(8 - items.length)].map((_, idx) => {
-          if (items.length === 0 && idx === 0) {
-            return (
-              <CollectionDoneWinnersFakeRow key={idx}>
-                <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #FFD00E 0%, rgba(255, 208, 14, 0) 130%)" />
-                <CollectionDoneWinnersFakeRowWinner />
-                <CollectionDoneWinnersFakeRowTokens />
-                <CollectionDoneWinnersFakeRowPrize />
-              </CollectionDoneWinnersFakeRow>
-            );
-          }
+          <CollectionDoneWinnersFakeRow key={idx}>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowWinner />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowTokens />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowPrize />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #FFD00E 0%, rgba(255, 208, 14, 0) 130%)" />
+          </CollectionDoneWinnersFakeRow>
+        );
+      }
 
-          if (items.length === 0 && idx === 1) {
-            return (
-              <CollectionDoneWinnersFakeRow key={idx}>
-                <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
-                <CollectionDoneWinnersFakeRowWinner />
-                <CollectionDoneWinnersFakeRowTokens />
-                <CollectionDoneWinnersFakeRowPrize />
-              </CollectionDoneWinnersFakeRow>
-            );
-          }
+      if (items.length === 0 && idx === 1) {
+        return (
+          <CollectionDoneWinnersFakeRow key={idx}>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowWinner />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowTokens />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowPrize />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
+          </CollectionDoneWinnersFakeRow>
+        );
+      }
 
-          if (items.length === 0 && idx === 2) {
-            return (
-              <CollectionDoneWinnersFakeRow key={idx}>
-                <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-                <CollectionDoneWinnersFakeRowWinner />
-                <CollectionDoneWinnersFakeRowTokens />
-                <CollectionDoneWinnersFakeRowPrize />
-              </CollectionDoneWinnersFakeRow>
-            );
-          }
+      if (items.length === 0 && idx === 2) {
+        return (
+          <CollectionDoneWinnersFakeRow key={idx}>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowWinner />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowTokens />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowPrize />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
+          </CollectionDoneWinnersFakeRow>
+        );
+      }
 
-          if (items.length === 1 && idx === 0) {
-            return (
-              <CollectionDoneWinnersFakeRow key={idx}>
-                <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
-                <CollectionDoneWinnersFakeRowWinner />
-                <CollectionDoneWinnersFakeRowTokens />
-                <CollectionDoneWinnersFakeRowPrize />
-              </CollectionDoneWinnersFakeRow>
-            );
-          }
+      if (items.length === 1 && idx === 0) {
+        return (
+          <CollectionDoneWinnersFakeRow key={idx}>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowWinner />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowTokens />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowPrize />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
+          </CollectionDoneWinnersFakeRow>
+        );
+      }
 
-          if (items.length === 1 && idx === 1) {
-            return (
-              <CollectionDoneWinnersFakeRow key={idx}>
-                <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-                <CollectionDoneWinnersFakeRowWinner />
-                <CollectionDoneWinnersFakeRowTokens />
-                <CollectionDoneWinnersFakeRowPrize />
-              </CollectionDoneWinnersFakeRow>
-            );
-          }
+      if (items.length === 1 && idx === 1) {
+        return (
+          <CollectionDoneWinnersFakeRow key={idx}>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowWinner />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowTokens />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowPrize />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
+          </CollectionDoneWinnersFakeRow>
+        );
+      }
 
-          if (items.length === 2 && idx === 0) {
-            return (
-              <CollectionDoneWinnersFakeRow key={idx}>
-                <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-                <CollectionDoneWinnersFakeRowWinner />
-                <CollectionDoneWinnersFakeRowTokens />
-                <CollectionDoneWinnersFakeRowPrize />
-              </CollectionDoneWinnersFakeRow>
-            );
-          }
+      if (items.length === 2 && idx === 0) {
+        return (
+          <CollectionDoneWinnersFakeRow key={idx}>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowWinner />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowTokens />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersRowItem>
+              <CollectionDoneWinnersFakeRowPrize />
+            </CollectionDoneWinnersRowItem>
+            <CollectionDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
+          </CollectionDoneWinnersFakeRow>
+        );
+      }
 
           return (
             <CollectionDoneWinnersFakeRow key={idx}>

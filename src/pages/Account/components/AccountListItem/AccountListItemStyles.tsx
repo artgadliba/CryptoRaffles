@@ -269,6 +269,7 @@ const AccountListFakeItemClock = styled.img`
   position: relative;
   left: ${pxIntoRem(-15)};
   z-index: 999;
+
   @media (max-width: 500px) {
     position: absolute;
     left: 0;
@@ -283,6 +284,7 @@ const AccountListFakeItemContent = styled(AccountListItemContent)`
   @media (max-width: 1200px) {
     align-items: flex-end;
   }
+
   @media (max-width: 500px) {
     align-items: center;
     margin-top: ${pxIntoRem(86)};
@@ -300,6 +302,7 @@ const AccountListFakeItemId = styled.div`
     position: relative;
     top: ${pxIntoRem(-15)};
   }
+
   @media (max-width: 500px) {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
   }
@@ -310,9 +313,11 @@ const AccountListFakeItemSumm = styled.div`
   flex-direction: column;
   margin-left: ${pxIntoRem(35)};
   flex-shrink: 0;
+
   @media (max-width: 1450px) {
     margin-left: ${pxIntoRem(35 * 0.3)};
   }
+
   @media (max-width: 500px) {
     margin-left: 0px;
     align-items: center;
@@ -326,6 +331,7 @@ const AccountListFakeItemSummTitle = styled.div`
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
+
   @media (max-width: 500px) {
     width: ${pxIntoRem(77)};
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
@@ -340,6 +346,7 @@ const AccountListFakeItemSummText = styled.div`
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
+
   @media (max-width: 500px) {
     width: ${pxIntoRem(123)};
     height: ${pxIntoRem(14)};
@@ -356,10 +363,12 @@ const AccountListFakeItemTimer = styled.div`
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
+
   @media (max-width: 1450px) {
     margin-left: ${pxIntoRem(77 * 0.3)};
     width: ${pxIntoRem(312 * 0.9)};
   }
+
   @media (max-width: 500px) {
     display: none;
   }
@@ -378,6 +387,7 @@ const AccountListFakeItemStatusText = styled.div`
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   flex-shrink: 0;
+
   @media (max-width: 1000px) {
     display: none;
   }

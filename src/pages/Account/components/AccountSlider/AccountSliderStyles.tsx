@@ -50,6 +50,7 @@ const AccountSliderBlockSlider = styled(Swiper)`
 const AccountSliderSlideContent = styled.div`
   width: ${pxIntoRem(194.34)} !important;
   height: ${pxIntoRem(194.34)} !important;
+  flex-shrink: 0;
   background-color: transparent;
   filter: drop-shadow(0px ${pxIntoRem(10)} ${pxIntoRem(9)} rgba(0, 0, 0, 0.16));
   flex-shrink: 0;
@@ -91,11 +92,33 @@ const AccountSliderGroup = styled(SwiperSlide)`
 const AccountFakeSliderSlide = styled.div`
   display: flex;
   justify-content: center;
-  background-color: transparent;
   cursor: pointer;
+  width: ${pxIntoRem(194.34)} !important;
+  height: ${pxIntoRem(194.34)} !important;
   margin-left: ${pxIntoRem(25)};
+  background-color: transparent;
+  filter: drop-shadow(0px ${pxIntoRem(10)} ${pxIntoRem(9)} rgba(0, 0, 0, 0.16));
+  flex-shrink: 0;
+  border: ${pxIntoRem(1)} solid #746091;
+  border-radius: ${pxIntoRem(2)};
+  flex-shrink: 0;
   &:first-of-type {
     margin-left: 0px;
+  }
+
+  @media (max-width: 1420px) {
+   width: ${pxIntoRem(194.34 * 0.95)} !important;
+   height: ${pxIntoRem(194.34 * 0.95)} !important;
+  }
+
+  @media (max-width: 1380px) {
+   width: ${pxIntoRem(194.34 * 0.92)} !important;
+   height: ${pxIntoRem(194.34 * 0.92)} !important;
+  }
+
+  @media (max-width: 600px) {
+   width: ${pxIntoRem(194.34 * 0.9)} !important;
+   height: ${pxIntoRem(194.34 * 0.9)} !important;
   }
 `;
 
@@ -104,6 +127,7 @@ const AccountFakeSliderBlock = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  overflow: hidden;
   margin-top: ${pxIntoRem(58)};
   @media (max-width: 500px) {
     display: none;

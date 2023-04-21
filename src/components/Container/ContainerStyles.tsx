@@ -14,7 +14,7 @@ const ContainerBlock = styled.div<IContainerBlock>`
   margin: 0 auto;
   position: relative;
   @media (max-width: ${({ maxWidth }) => `${(maxWidth ?? 1290) + 60}px`}) {
-    padding: 0px ${pxIntoRem(25)};
+    padding: 0px ${pxIntoRem(50)};
   }
 
   @media (max-width: 500px) {
