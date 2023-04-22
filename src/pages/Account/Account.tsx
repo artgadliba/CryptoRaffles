@@ -152,7 +152,7 @@ function Account() {
     });
   }, [address]);
 
-  if (isConnected) {
+  if (!isConnected) {
     return (
       <Default>
         <AccountBlock>
@@ -168,7 +168,7 @@ function Account() {
               </AccountTitleTokens>
             )}
           </AccountTitle>
-          <AccountSlider items={tokens} />
+          <AccountSlider items={[{ tokenId: 1, image: "https://bafybeisemwkn6jyhykh5xm4543ztqizliki2asggykvklxoj2rerctouqg4.ipfs.nftstorage.link/tokenID_1.jpg" }]} />
           <AccountItems>
             <AccountItem>
               <AccountItemTitle>Активные раффлы / гивы:</AccountItemTitle>
