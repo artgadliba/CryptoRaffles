@@ -44,11 +44,11 @@ const LandingHeaderNavigation = styled.nav`
   margin-left: ${pxIntoRem(158)};
   margin-right: auto;
   @media (max-width: 1240px) {
-    margin-left: ${pxIntoRem(158 * 0.6)};
+    margin-left: ${pxIntoRem(158)};
   }
 
   @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(158 * 0.5)};
+    margin-left: ${pxIntoRem(158)};
   }
 
   @media (max-width: 500px) {
@@ -90,15 +90,8 @@ const LandingHeaderNavigationLink = styled(NavLink)`
 const LandingHeaderIcons = styled.div`
   display: flex;
   align-items: center;
-  margin-right: ${pxIntoRem(65)};
+  margin-right: ${pxIntoRem(80)};
   margin-left: auto;
-  @media (max-width: 1240px) {
-    margin-right: ${pxIntoRem(65 * 0.6)};
-  }
-
-  @media (max-width: 1000px) {
-    margin-right: ${pxIntoRem(65 * 0.5)};
-  }
 
   @media (max-width: 500px) {
     display: none;

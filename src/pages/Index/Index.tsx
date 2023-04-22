@@ -74,14 +74,15 @@ function Index() {
 
   useEffect(() => {
     let promoData;
-    axios.get("http://127.0.0.1:8000/api/promotions")
-    .then(res => {
-      promoData = res.data;
-      setItems(promoData);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+    axios
+      .get("http://127.0.0.1:8000/api/promotions")
+      .then((res) => {
+        promoData = res.data;
+        setItems(promoData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -103,7 +104,7 @@ function Index() {
                 <IndexGreetingBottomText>Каждый участник имеет реальную возможность выиграть, благодаря прозрачному и честному механизму работы. Каждый этап можно легко отследить и подтвердить его соответствие правилам.</IndexGreetingBottomText>
                 <IndexGreetingConnect to="/account">Подключиться</IndexGreetingConnect>
               </IndexGreetingContent>
-              <IndexSlider items={items}/>
+              <IndexSlider items={items} />
             </IndexGreetingBody>
           </Container>
         </IndexGreeting>
