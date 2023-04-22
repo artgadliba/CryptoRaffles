@@ -54,8 +54,6 @@ const AccountSliderSlideContent = styled.div`
   background-color: transparent;
   filter: drop-shadow(0px ${pxIntoRem(10)} ${pxIntoRem(9)} rgba(0, 0, 0, 0.16));
   flex-shrink: 0;
-  border: ${pxIntoRem(1)} solid #746091;
-  border-radius: ${pxIntoRem(2)};
   &:hover {
     scale: 1.1;
     transition: 0.1s;
@@ -99,26 +97,31 @@ const AccountFakeSliderSlide = styled.div`
   background-color: transparent;
   filter: drop-shadow(0px ${pxIntoRem(10)} ${pxIntoRem(9)} rgba(0, 0, 0, 0.16));
   flex-shrink: 0;
-  border: ${pxIntoRem(1)} solid #746091;
-  border-radius: ${pxIntoRem(2)};
+  // border: ${pxIntoRem(1)} solid #746091;
+  // border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
   &:first-of-type {
     margin-left: 0px;
   }
 
+  &:hover {
+    scale: 1.1;
+    transition: 0.1s;
+  }
+
   @media (max-width: 1420px) {
-   width: ${pxIntoRem(194.34 * 0.95)} !important;
-   height: ${pxIntoRem(194.34 * 0.95)} !important;
+    width: ${pxIntoRem(194.34 * 0.95)} !important;
+    height: ${pxIntoRem(194.34 * 0.95)} !important;
   }
 
   @media (max-width: 1380px) {
-   width: ${pxIntoRem(194.34 * 0.92)} !important;
-   height: ${pxIntoRem(194.34 * 0.92)} !important;
+    width: ${pxIntoRem(194.34 * 0.92)} !important;
+    height: ${pxIntoRem(194.34 * 0.92)} !important;
   }
 
   @media (max-width: 600px) {
-   width: ${pxIntoRem(194.34 * 0.9)} !important;
-   height: ${pxIntoRem(194.34 * 0.9)} !important;
+    width: ${pxIntoRem(194.34 * 0.9)} !important;
+    height: ${pxIntoRem(194.34 * 0.9)} !important;
   }
 `;
 
@@ -182,12 +185,12 @@ const AccountMobileSliderSlide = styled(SwiperSlide)`
 `;
 
 const AccountSliderSlideImage = styled.img`
-width: ${pxIntoRem(194.34)} !important;
-height: ${pxIntoRem(194.34)} !important;
-object-fit: cover;
-outline: 4px solid #746091;
-outline-offset: -4px;
-box-shadow: 12px 12px 14px 1px rgba(0, 0, 0, 0.23);
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  outline: 4px solid #746091;
+  outline-offset: -4px;
+  box-shadow: 12px 12px 14px 1px rgba(0, 0, 0, 0.23);
 `;
 
 export {

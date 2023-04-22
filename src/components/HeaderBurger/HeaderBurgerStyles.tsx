@@ -27,6 +27,9 @@ const HeaderBurgerLine = styled.div`
   height: ${pxIntoRem(2)};
   background-color: white;
   margin-top: ${pxIntoRem(5)};
+  &:first-of-type {
+    margin-top: 0px;
+  }
 `;
 
 const HeaderBurgerContent = styled.div`

@@ -155,6 +155,13 @@ const FooterIcon = styled.svg`
   }
 `;
 
+const FooterButtonImage = styled.svg`
+  width: ${pxIntoRem(18)};
+  height: ${pxIntoRem(18)};
+  margin-left: ${pxIntoRem(13)};
+  fill: white;
+`;
+
 const FooterButton = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -171,24 +178,7 @@ const FooterButton = styled(NavLink)`
   cursor: pointer;
   grid-area: button;
 
-  @media (max-width: 500px) {
-    justify-content: center;
-    margin-left: 0;
-    margin-top: ${pxIntoRem(27)};
-    width: 100%;
-  }
-`;
-
-const FooterButtonImage = styled.svg`
-  width: ${pxIntoRem(18)};
-  height: ${pxIntoRem(18)};
-  margin-left: ${pxIntoRem(13)};
-  fill: white;
-`;
-
-const FooterButtonWrapper = styled.div`
-  z-index: 9;
-  &:hover ${FooterButton} {
+  &:hover {
     color: #08e2bd;
     transition: 0.2s;
     outline: 2px solid #3ff2d4;
@@ -199,6 +189,13 @@ const FooterButtonWrapper = styled.div`
   &:hover ${FooterButtonImage} {
     fill: #08e2bd;
     transition: 0.5s;
+  }
+
+  @media (max-width: 500px) {
+    justify-content: center;
+    margin-left: 0;
+    margin-top: ${pxIntoRem(27)};
+    width: 100%;
   }
 `;
 
@@ -249,4 +246,4 @@ const FooterBlurredCircle = styled.div`
   }
 `;
 
-export { FooterBlock, FooterTop, FooterBody, FooterButton, FooterButtonImage, FooterIconBlock, FooterIcon, FooterIcons, FooterLogo, FooterLogoBlock, FooterNavigation, FooterNavigationLink, FooterBottom, FooterLink, FooterBlurredCircle, FooterButtonWrapper };
+export { FooterBlock, FooterTop, FooterBody, FooterButton, FooterButtonImage, FooterIconBlock, FooterIcon, FooterIcons, FooterLogo, FooterLogoBlock, FooterNavigation, FooterNavigationLink, FooterBottom, FooterLink, FooterBlurredCircle };
