@@ -67,6 +67,6 @@ const HeaderBurger: FC = () => {
       )}
     </>
   );
-};
+}
 
 export default HeaderBurger;

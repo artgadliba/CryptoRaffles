@@ -14,15 +14,16 @@ import {
   IndexWinnersRowItemHeader,
   IndexWinnersRowItemMoney,
   IndexWinnersRowItemText,
-  IndexWinnersRowItemTokens,
+  IndexWinnersRowItemGameName,
   IndexWinnersRowItemTransaction,
 } from "./IndexWinnersLineStyles";
 
 interface IIndexWinners {
   items: {
-    tokens: string | number;
     wallet: string;
-    price: string;
+    giveaway_name?: string;
+    raffle_name?: string;
+    prize: string;
   }[];
 }
 
@@ -42,9 +43,15 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
                     <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
                   </IndexWinnersRowItemHeader>
                   <IndexWinnersRowItemContent>
-                    <IndexWinnersRowItemText>
-                      выиграл <IndexWinnersRowItemMoney>{item.price}</IndexWinnersRowItemMoney> купив всего <IndexWinnersRowItemTokens>{item.tokens} токена</IndexWinnersRowItemTokens>
-                    </IndexWinnersRowItemText>
+                    {item.raffle_name != undefined ? (
+                      <IndexWinnersRowItemText>
+                        выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в раффле <IndexWinnersRowItemGameName>{item.raffle_name}</IndexWinnersRowItemGameName>
+                      </IndexWinnersRowItemText>
+                    ) : (
+                      <IndexWinnersRowItemText>
+                        выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в гиве <IndexWinnersRowItemGameName>{item.giveaway_name}</IndexWinnersRowItemGameName>
+                      </IndexWinnersRowItemText>
+                    )}
                   </IndexWinnersRowItemContent>
                 </IndexWinnersRowItem>
               );
@@ -75,9 +82,15 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
                   <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
                 </IndexWinnersRowItemHeader>
                 <IndexWinnersRowItemContent>
-                  <IndexWinnersRowItemText>
-                    выиграл <IndexWinnersRowItemMoney>{item.price}</IndexWinnersRowItemMoney> купив всего <IndexWinnersRowItemTokens>{item.tokens} токена</IndexWinnersRowItemTokens>
-                  </IndexWinnersRowItemText>
+                  {item.raffle_name != undefined ? (
+                    <IndexWinnersRowItemText>
+                      выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в раффле <IndexWinnersRowItemGameName>{item.raffle_name}</IndexWinnersRowItemGameName>
+                    </IndexWinnersRowItemText>
+                  ) : (
+                    <IndexWinnersRowItemText>
+                      выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в гиве <IndexWinnersRowItemGameName>{item.giveaway_name}</IndexWinnersRowItemGameName>
+                    </IndexWinnersRowItemText>
+                  )}
                 </IndexWinnersRowItemContent>
               </IndexWinnersRowItem>
             );
@@ -95,9 +108,15 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
                     <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
                   </IndexWinnersRowItemHeader>
                   <IndexWinnersRowItemContent>
-                    <IndexWinnersRowItemText>
-                      выиграл <IndexWinnersRowItemMoney>{item.price}</IndexWinnersRowItemMoney> купив всего <IndexWinnersRowItemTokens>{item.tokens} токена</IndexWinnersRowItemTokens>
-                    </IndexWinnersRowItemText>
+                    {item.raffle_name != undefined ? (
+                      <IndexWinnersRowItemText>
+                        выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в раффле <IndexWinnersRowItemGameName>{item.raffle_name}</IndexWinnersRowItemGameName>
+                      </IndexWinnersRowItemText>
+                    ) : (
+                      <IndexWinnersRowItemText>
+                        выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в гиве <IndexWinnersRowItemGameName>{item.giveaway_name}</IndexWinnersRowItemGameName>
+                      </IndexWinnersRowItemText>
+                    )}
                   </IndexWinnersRowItemContent>
                 </IndexWinnersRowItem>
               );
@@ -128,9 +147,15 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
                   <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
                 </IndexWinnersRowItemHeader>
                 <IndexWinnersRowItemContent>
-                  <IndexWinnersRowItemText>
-                    выиграл <IndexWinnersRowItemMoney>{item.price}</IndexWinnersRowItemMoney> купив всего <IndexWinnersRowItemTokens>{item.tokens} токена</IndexWinnersRowItemTokens>
-                  </IndexWinnersRowItemText>
+                  {item.raffle_name != undefined ? (
+                    <IndexWinnersRowItemText>
+                      выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в раффле <IndexWinnersRowItemGameName>{item.raffle_name}</IndexWinnersRowItemGameName>
+                    </IndexWinnersRowItemText>
+                  ) : (
+                    <IndexWinnersRowItemText>
+                      выиграл <IndexWinnersRowItemMoney>{item.prize}</IndexWinnersRowItemMoney> участвуя в гиве <IndexWinnersRowItemGameName>{item.giveaway_name}</IndexWinnersRowItemGameName>
+                    </IndexWinnersRowItemText>
+                  )}
                 </IndexWinnersRowItemContent>
               </IndexWinnersRowItem>
             );

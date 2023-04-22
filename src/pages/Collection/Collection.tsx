@@ -188,7 +188,6 @@ function Collection() {
   useEffect(() => {
     if (item != undefined) {
       if (item.grand_prize_winner != undefined && grandPrize != undefined) {
-        let gPrize = "$" + numberWithCommas(grandPrize);
         getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
         .then(res => {
           let balance = res.toString();
@@ -199,11 +198,10 @@ function Collection() {
               wallet: item.grand_prize_winner,
               tokens: balance,
               tokenId: item.grand_prize_token,
-              prize: gPrize
+              prize: "$" + numberWithCommas(grandPrize)
             }]
           });
           if (item.minor_prize_winners != undefined && grandPrize != undefined) {
-            let mPrize = "$" + numberWithCommas(minorPrize);
             for (let i = 0; i < item.minor_prize_winners.length; i++) {
               getAccountBalance(item.raffle_id, item.minor_prize_winners[i], true)
               .then(res => {
@@ -213,7 +211,7 @@ function Collection() {
                   wallet: item.minor_prize_winners[i],
                   tokens: balance,
                   tokenId: item.minor_prize_tokens[i],
-                  prize: mPrize
+                  prize: "$" + numberWithCommas(minorPrize)
                 });
                 if (i == item.minor_prize_winners.length - 1) {
                   setWinners(winnersList);

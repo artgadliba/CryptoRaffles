@@ -37,16 +37,18 @@ interface IAccountListItem {
   item?: {
     raffleID?: string;
     giveawayID?: string;
+    image: string;
     end_timestamp: number;
     grand_prize: string; //change to number
     paytoken: string;
     owner: string;
     promo_name: string;
-    status: boolean;
+    status: number;
   };
 }
 
 const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
+
   var {
     seconds,
     minutes,
@@ -84,7 +86,7 @@ const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
 
   return (
     <AccountListItemBlock>
-      <AccountListItemBackground alt="background" src="/images/account-first-item-background.png" />
+      <AccountListItemBackground alt="background" src={item.image} />
       <AccountListItemUsername>{item.owner}</AccountListItemUsername>
       <AccountListItemContent>
         <AccountListItemId>{item.promo_name}</AccountListItemId>
@@ -119,7 +121,7 @@ const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
             <AccountListItemTimerText>{secondsNoun}</AccountListItemTimerText>
           </AccountListItemTimerColumn>
         </AccountListItemTimer>
-        {item.status ? (
+        {item.status < 1 ? (
           <AccountListItemStatus>
             <AccountListItemStatusText>Статус:</AccountListItemStatusText>
             <AccountListItemStatusIndicator backgroundColor="#874dec" textColor="#ffffff">
@@ -130,7 +132,7 @@ const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
           <AccountListItemStatus>
             <AccountListItemStatusText>Статус:</AccountListItemStatusText>
             <AccountListItemStatusIndicator backgroundColor="#BDBDBD" textColor="#4F4F4F">
-              Разыграна
+              Разыгран
             </AccountListItemStatusIndicator>
           </AccountListItemStatus>
         )}

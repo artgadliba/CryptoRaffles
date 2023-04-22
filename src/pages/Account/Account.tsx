@@ -28,6 +28,9 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { getTokensMetadata } from "../../utils/getTokensMetadata";
 import axios from "axios";
 import { Network, Alchemy } from "alchemy-sdk";
+import { ethers } from "ethers";
+import { getETHPrice } from "../../utils/getETHPrice";
+import { numberWithCommas } from "../../utils/numberWithCommas";
 
 interface IAccountToken {
   tokenId: number;
@@ -37,16 +40,14 @@ interface IAccountToken {
 interface IAccountGame {
   raffle_name?: string;
   raffle_id?: string;
+  image: string;
   giveaway_name?: string;
   giveaway_id?: string;
   owner: string;
-  grand_prize: number;
+  grand_prize: string;
   end_timestamp: number;
   status: number;
 }
-
-const accountActiveGames: Array<IAccountGame> = [];
-const accountDoneGames: Array<IAccountGame> = [];
 
 const settings = {
   apiKey: process.env.REACT_APP_ALCHEMY_SEPOLIA_KEY, // Replace with your Alchemy API Key.
@@ -71,34 +72,44 @@ function Account() {
   };
 
   useEffect(() => {
-    let games = [];
+    let games: Array<string> = [];
+    let accountActiveGames: Array<IAccountGame> = [];
+    let accountDoneGames: Array<IAccountGame> = [];
+
     axios.get(`http://localhost:8000/api/games/${address}`)
     .then(res => {
       let data_array = res.data;
       let games = [];
       for (let i = 0; i < data_array.length; i++) {
-        if (data_array[i].raffle_id) {
+        if (data_array[i].raffle_id != undefined) {
           let raffleAddress = data_array[i].raffle_id;
           games.push(raffleAddress);
           axios.get(`http://localhost:8000/api/raffles/${raffleAddress}`)
           .then(res => {
             let data = res.data[0];
-            let raffleName = data.raffle_name;
-            let raffleId = data.raffle_id;
-            let raffleOwner = data.owner;
-            let raffleGrandPrize = data.grand_prize;
-            let raffleEndTimestamp = data.end_timestamp;
-            let raffleStatus = data.status;
-
-            let raffleData: IAccountGame = {
-              raffle_name: raffleName,
-              raffle_id: raffleId,
-              owner: raffleOwner,
-              grand_prize: raffleGrandPrize,
-              end_timestamp: raffleEndTimestamp,
-              status: raffleStatus
+            let grandPrize = 0;
+            if (data.paytoken == "0x0000000000000000000000000000000000000000") {
+              getETHPrice()
+              .then(ethRate => {
+                let formatedGrandPrize = ethers.utils.formatEther(String(data.grand_prize));
+                grandPrize = Math.round(Number(formatedGrandPrize) * ethRate);
+              })
+              .catch(err => {
+                console.log(err);
+              })
+            } else {
+              grandPrize = Math.round(data.grand_prize / 10 ** 6);
             }
-            if (raffleStatus == 0) {
+            let raffleData: IAccountGame = {
+              raffle_name: data.raffle_name,
+              raffle_id: data.raffle_id,
+              image: data.image,
+              owner: data.owner,
+              grand_prize: "$" + numberWithCommas(grandPrize),
+              end_timestamp: data.end_timestamp,
+              status: data.status
+            }
+            if (data.status == 0) {
               accountActiveGames.push(raffleData);
             } else {
               accountDoneGames.push(raffleData);
@@ -107,28 +118,36 @@ function Account() {
           .catch(err => {
             console.log(err);
           })
-        } else if (data_array[i].giveaway_id) {
+        } else if (data_array[i].giveaway_id != undefined) {
           let giveAddress = data_array[i].giveaway_id;
           games.push(giveAddress);
-          axios.get(`http://localhost:8000/api/raffles/${giveAddress}`)
+          axios.get(`http://localhost:8000/api/giveaways/${giveAddress}`)
           .then(res => {
             let data = res.data[0];
-            let giveName = data.giveaway_name;
-            let giveId = data.giveaway_id;
-            let giveOwner = data.owner;
-            let giveGrandPrize = data.grand_prize;
-            let giveEndTimestamp = data.end_timestamp;
-            let giveStatus = data.status;
+            let grandPrize = 0;
 
-            let giveData: IAccountGame = {
-              giveaway_name: giveName,
-              giveaway_id: giveId,
-              owner: giveOwner,
-              grand_prize: giveGrandPrize,
-              end_timestamp: giveEndTimestamp,
-              status: giveStatus
+            if (data.paytoken == "0x0000000000000000000000000000000000000000") {
+              getETHPrice()
+              .then(ethRate => {
+                let formatedGrandPrize = ethers.utils.formatEther(String(data.grand_prize));
+                grandPrize = Math.round(Number(formatedGrandPrize) * ethRate);
+              })
+              .catch(err => {
+                console.log(err);
+              })
+            } else {
+              grandPrize = Math.round(data.grand_prize / 10 ** 6);
             }
-            if (giveStatus == 0) {
+            let giveData: IAccountGame = {
+              giveaway_name: data.giveaway_name,
+              giveaway_id: data.giveaway_id,
+              image: data.image,
+              owner: data.owner,
+              grand_prize: "$" + numberWithCommas(grandPrize),
+              end_timestamp: data.end_timestamp,
+              status: data.status
+            }
+            if (data.status == 0) {
               accountActiveGames.push(giveData);
             } else {
               accountDoneGames.push(giveData);
@@ -154,18 +173,19 @@ function Account() {
             let imageUrl = media["gateway"];
 
             let nftData: IAccountToken = {
-              tokenId:tokenId,
+              tokenId: tokenId,
               image: imageUrl
             }
             accountTokens.push(nftData);
             setTokens(accountTokens);
             setBalance(nfts.length);
-            console.log(nfts.length)
           }
         })
         .catch(err => {
           console.log(err);
         })
+        setActiveItems(accountActiveGames);
+        setDoneItems(accountDoneGames);
       }
     })
   }, [address]);

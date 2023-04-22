@@ -58,6 +58,10 @@ import {
   IndexWinnersTitle,
 } from "./IndexStyles";
 import axios from "axios";
+import { ethers } from "ethers";
+import { getETHPrice } from "../../utils/getETHPrice";
+import { numberWithCommas } from "../../utils/numberWithCommas";
+import truncateEthAddress from "truncate-eth-address";
 
 interface IIndexSlider {
   raffleID?: string;
@@ -69,15 +73,65 @@ interface IIndexSlider {
   promo_name: string;
 }
 
+interface IWinnerData {
+  wallet: string;
+  giveaway_name?: string;
+  raffle_name?: string;
+  prize: string;
+}
+
 function Index() {
   const [items, setItems] = useState<Array<IIndexSlider>>();
+  const [winners, setWinners] = useState<Array<IWinnerData>>([]);
 
   useEffect(() => {
-    let promoData;
-    axios.get("http://127.0.0.1:8000/api/promotions")
+    axios.get("http://127.0.0.1:8000/api/promotions/")
     .then(res => {
-      promoData = res.data;
+      let promoData = res.data;
       setItems(promoData);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, []);
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/winners/")
+    .then(res => {
+      let data = res.data;
+      let paytoken = data.paytoken;
+      let winnersList: Array<IWinnerData> = []
+      for (let i = 0; i < data.length; i ++) {
+        let playerPrize = 0;
+        if (paytoken = "0x0000000000000000000000000000000000000000") {
+          getETHPrice()
+          .then(ethRate => {
+            let formatedPrize = ethers.utils.formatEther(String(data[i].prize));
+            playerPrize = Math.round(Number(formatedPrize) * ethRate);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+        } else {
+          playerPrize = Math.round(data[i].prize / 10 ** 6);
+        }
+        if (data[i].raffle_name != undefined) {
+          winnersList.push({
+            wallet: truncateEthAddress(data[i].wallet),
+            raffle_name: data[i].raffle_name,
+            prize: "$" + numberWithCommas(playerPrize)
+          })
+        } else if (data[i].giveaway_name != undefined) {
+          winnersList.push({
+            wallet: truncateEthAddress(data[i].wallet),
+            giveaway_name: data[i].giveaway_name,
+            prize: "$" + numberWithCommas(playerPrize)
+          })
+        }
+      }
+      if (winnersList.length === data.length) {
+        setWinners(winnersList);
+      }
     })
     .catch(err => {
       console.log(err);
@@ -126,25 +180,7 @@ function Index() {
               <IndexWinnersTitle>Счастливые победители:</IndexWinnersTitle>
             </IndexWinnersBody>
           </Container>
-          <IndexWinnersLine
-            items={[
-              {
-                tokens: "2",
-                wallet: "@ Nike",
-                price: "$9,445",
-              },
-              {
-                tokens: "2",
-                wallet: "@ Nike",
-                price: "$9,445",
-              },
-              {
-                tokens: "2",
-                wallet: "@ Nike",
-                price: "$9,445",
-              },
-            ]}
-          />
+          <IndexWinnersLine items={winners} />
         </IndexWinners>
         <IndexHow id="how">
           <IndexHowBlurredCircle />

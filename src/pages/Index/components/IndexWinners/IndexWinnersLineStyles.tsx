@@ -109,7 +109,7 @@ const IndexWinnersRowItemMoney = styled.span`
   }
 `;
 
-const IndexWinnersRowItemTokens = styled.span`
+const IndexWinnersRowItemGameName = styled.span`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -191,7 +191,7 @@ export {
   IndexWinnersRowItemHeader,
   IndexWinnersRowItemMoney,
   IndexWinnersRowItemText,
-  IndexWinnersRowItemTokens,
+  IndexWinnersRowItemGameName,
   IndexWinnersRowItemTransaction,
   IndexWinnersFakeRowItem,
   IndexWinnersFakeRowItemEmoji,
