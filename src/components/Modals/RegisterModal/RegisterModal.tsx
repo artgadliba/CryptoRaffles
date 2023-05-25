@@ -11,40 +11,24 @@ import {
   RegisterModalReferenceInput,
   RegisterModalTitle,
 } from "./RegisterModalStyles";
+import { useAccount } from "wagmi";
+import MessageModal from "../MessageModal/MessageModal";
+import useModal from "../../../hooks/useModal";
 import truncateEthAddress from "truncate-eth-address";
 import axios from "axios";
 
 interface IRegisterModal {
   onClose(): any;
-  address: string;
-  giveaway_id: string;
+  handleRegistration(e: React.MouseEvent<HTMLButtonElement>, inputData: string): any;
+  giveaway_id?: string;
 }
 
-const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_id }) => {
-
+const RegisterModal: FC<IRegisterModal> = ({ onClose, handleRegistration }) => {
+  const { address, isConnecting, isDisconnected } = useAccount();
   const [inputData, setInputData] = useState<string>();
 
   const handleInput = (event) => {
     setInputData(event.target.value);
-  }
-
-  const handleRegistration = () => {
-    if (inputData) {
-      axios.post('http://localhost:8000/api/giveaways-registry/', {
-        wallet_giveaway: [address, giveaway_id],
-        wallet: address,
-        giveaway_id: giveaway_id,
-        social_link: inputData
-      })
-      .then(res => {
-
-      })
-      .catch(err => {
-        console.log("Your account hasn't meet the required conditions.")
-      })
-    } else {
-      console.log("No input data provided")
-    }
   }
 
   return (
@@ -59,7 +43,7 @@ const RegisterModal: FC<IRegisterModal> = ({ onClose, address, giveaway_id }) =>
           <RegisterModalHashInputEtherium alt="Ethereum" src="/images/ethereum-small-logo.svg" />
         </RegisterModalHashInputBlock>
         <RegisterModalReferenceInput placeholder="Ссылка на аккаунт в соц. сети (см. условия)" onChange={handleInput} />
-        <RegisterModalButton onClick={handleRegistration}>Отправить</RegisterModalButton>
+        <RegisterModalButton onClick={(e) => handleRegistration(e, inputData)}>Отправить</RegisterModalButton>
       </RegisterModalContent>
     </RegisterModalBlock>
   );

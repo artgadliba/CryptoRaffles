@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { raffleAbi } from "./getAccountBalance";
+import { raffleAbi } from "./abiStorage";
 
 const alchemyLinkSepolia = process.env.REACT_APP_ALCHEMY_SEPOLIA_LINK;
 

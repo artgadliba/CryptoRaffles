@@ -65,6 +65,34 @@ const IndexSlider: FC<IIndexSlider> = ({ items }) => {
         </IndexSliderSlider>
       </IndexSliderBlock>
     );
+  } else {
+    return (
+      <IndexSliderBlock>
+        <IndexSliderBorderLeft alt="border" src="/images/greeting-card-left-border.svg" />
+        <IndexSliderBorderRight alt="border" src="/images/greeting-card-right-border.svg" />
+        <IndexSliderLightning alt="lightning" src="/images/greeting-card-lightning.png" />
+        <IndexSliderLines alt="lines" src="/images/greeting-card-lines.svg" />
+        <IndexSliderPrev className="swiper-prev" />
+        <IndexSliderNext className="swiper-next" />
+        <IndexSliderPrevTop className="swiper-prev" />
+        <IndexSliderNextTop className="swiper-next" />
+        <IndexSliderSlider
+          modules={[Navigation, Autoplay]}
+          navigation={{
+            prevEl: ".swiper-prev",
+            nextEl: ".swiper-next",
+          }}
+          autoplay={{
+            delay: 10000,
+            disableOnInteraction: false,
+          }}
+          direction={"horizontal"}
+          allowTouchMove={false}
+          loop={true}
+        >
+        </IndexSliderSlider>
+      </IndexSliderBlock>
+    );
   }
 }
 

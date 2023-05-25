@@ -30,12 +30,18 @@ import {
   GivesFakeItemUsername,
   GivesFakeItemTimer,
   GivesFakeItemClock,
+  GiveFakeItemButtonsWrapper,
   GivesFakeItemFakeButton,
 } from "./GivesItemStyles";
 import axios from "axios";
 import { getETHPrice } from "../../../utils/getETHPrice";
 import { numberWithCommas } from "../../../utils/numberWithCommas";
 import { ethers } from "ethers";
+import {
+  useConnectModal,
+  useAccountModal,
+  useChainModal,
+} from "@rainbow-me/rainbowkit";
 
 interface ITerm {
   condition: string,
@@ -44,28 +50,21 @@ interface ITerm {
 interface IGivesItem {
   item?: {
     giveaway_id: string;
-    start_time: number;
     end_timestamp: number;
     image: string;
     paytoken: string;
     grand_prize: number;
-    grand_prize_token?: number;
-    grand_prize_winner?: string;
-    minor_prize: number;
-    minor_prize_tokens?: Array<number>;
-    minor_prize_winners?: Array<string>;
     owner: string;
     giveaway_name: string;
-    status: number;
-    description: string;
-    terms: Array<ITerm>;
-    lesser_prize_text: string;
-    lesser_prize_link: string;
   };
   isFake?: boolean;
 }
 
 const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
+  const { openConnectModal } = useConnectModal();
+  const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
+
   const [ethRate, setEthRate] = useState<number>();
 
   var {
@@ -79,15 +78,9 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
     daysNoun
   } = useCountdown(item?.end_timestamp ?? Date.now());
 
-  function handleConnectButtonClick() {
-    const element = document.getElementsByClassName(
-      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6");
-    const connectButtonRef: HTMLElement = element[0] as HTMLElement;
-    connectButtonRef.click();
-  }
 
-  function delayedConnectButton() {
-    setTimeout(handleConnectButtonClick, 1500);
+  function delayedConnectWallet() {
+    setTimeout(openConnectModal, 1500);
   }
 
   useEffect(() => {
@@ -117,13 +110,15 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
             <GivesFakeItemSummText />
           </GivesFakeItemSumm>
           <GivesFakeItemTimer />
+            <GiveFakeItemButtonsWrapper>
+              <GivesFakeItemFakeButton />
+              <GivesFakeItemFakeButton />
+              <GivesFakeItemFakeButton />
+              <GivesFakeItemFakeButton />
+            </GiveFakeItemButtonsWrapper>
           <GivesFakeItemButtons>
             <GivesFakeItemButtonMore />
             <GivesFakeItemButtonConnect />
-            <GivesFakeItemFakeButton />
-            <GivesFakeItemFakeButton />
-            <GivesFakeItemFakeButton />
-            <GivesFakeItemFakeButton />
           </GivesFakeItemButtons>
         </GivesFakeItemContent>
       </GivesFakeItemBlock>
@@ -133,7 +128,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
     var grandPrize = item.grand_prize;
     if (item.paytoken == "0x0000000000000000000000000000000000000000") {
       let eth = ethers.utils.formatEther(String(item.grand_prize));
-      grandPrize = Number(eth)  * Number(ethRate);
+      grandPrize = Math.floor(Number(eth)  * ethRate);
     } else {
       grandPrize = Math.round(item.grand_prize / 10 ** 6);
     }
@@ -144,10 +139,10 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
         <GivesItemContent>
           <GivesItemId>{item.giveaway_name}</GivesItemId>
           <GivesItemSumm>
-          {grandPrize > 5000 ? (
-            <GivesItemSummTitle>{`$${numberWithCommas(grandPrize)}`}</GivesItemSummTitle>
+          {grandPrize > 100 ? (
+            <GivesItemSummTitle>{`$ ${numberWithCommas(grandPrize)}`}</GivesItemSummTitle>
           ) : (
-            <GivesItemSummTitle>$$$$$$</GivesItemSummTitle>
+            <GivesItemSummTitle>$$$</GivesItemSummTitle>
           )}
             <GivesItemSummText>Сумма розыгрыша</GivesItemSummText>
           </GivesItemSumm>
@@ -156,21 +151,21 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
               <GivesItemTimerNumber>{days}</GivesItemTimerNumber>
               <GivesItemTimerText>{daysNoun}</GivesItemTimerText>
             </GivesItemTimerColumn>
-            <GivesItemTimerSplitter marginLeft={25} marginRight={19}>
+            <GivesItemTimerSplitter marginLeft={25} marginRight={18}>
               :
             </GivesItemTimerSplitter>
             <GivesItemTimerColumn>
               <GivesItemTimerNumber>{hours}</GivesItemTimerNumber>
               <GivesItemTimerText>{hoursNoun}</GivesItemTimerText>
             </GivesItemTimerColumn>
-            <GivesItemTimerSplitter marginLeft={18} marginRight={22}>
+            <GivesItemTimerSplitter marginLeft={18} marginRight={20}>
               :
             </GivesItemTimerSplitter>
             <GivesItemTimerColumn>
               <GivesItemTimerNumber>{minutes}</GivesItemTimerNumber>
               <GivesItemTimerText>{minutesNoun}</GivesItemTimerText>
             </GivesItemTimerColumn>
-            <GivesItemTimerSplitter marginLeft={22} marginRight={15}>
+            <GivesItemTimerSplitter marginLeft={20} marginRight={12}>
               :
             </GivesItemTimerSplitter>
             <GivesItemTimerColumn>
@@ -180,7 +175,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
           </GivesItemTimer>
           <GivesItemButtons>
             <GivesItemButtonMore to={`/giveaways/${item.giveaway_id}`}>Подробнее</GivesItemButtonMore>
-            <GivesItemButtonConnect to={`/giveaways/${item.giveaway_id}`} onClick={delayedConnectButton}>Подключиться</GivesItemButtonConnect>
+            <GivesItemButtonConnect to={`/giveaways/${item.giveaway_id}`} onClick={delayedConnectWallet}>Подключиться</GivesItemButtonConnect>
           </GivesItemButtons>
         </GivesItemContent>
       </GivesItemBlock>
@@ -193,7 +188,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
         <GivesItemContent>
           <GivesItemId>{item.giveaway_name}</GivesItemId>
           <GivesItemSumm>
-            <GivesItemSummTitle>$$$$$$</GivesItemSummTitle>
+            <GivesItemSummTitle>$$$</GivesItemSummTitle>
             <GivesItemSummText>Сумма розыгрыша</GivesItemSummText>
           </GivesItemSumm>
           <GivesItemTimer>
@@ -201,21 +196,21 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
               <GivesItemTimerNumber>{days}</GivesItemTimerNumber>
               <GivesItemTimerText>{daysNoun}</GivesItemTimerText>
             </GivesItemTimerColumn>
-            <GivesItemTimerSplitter marginLeft={25} marginRight={19}>
+            <GivesItemTimerSplitter marginLeft={25} marginRight={18}>
               :
             </GivesItemTimerSplitter>
             <GivesItemTimerColumn>
               <GivesItemTimerNumber>{hours}</GivesItemTimerNumber>
               <GivesItemTimerText>{hoursNoun}</GivesItemTimerText>
             </GivesItemTimerColumn>
-            <GivesItemTimerSplitter marginLeft={18} marginRight={22}>
+            <GivesItemTimerSplitter marginLeft={18} marginRight={20}>
               :
             </GivesItemTimerSplitter>
             <GivesItemTimerColumn>
               <GivesItemTimerNumber>{minutes}</GivesItemTimerNumber>
               <GivesItemTimerText>{minutesNoun}</GivesItemTimerText>
             </GivesItemTimerColumn>
-            <GivesItemTimerSplitter marginLeft={22} marginRight={15}>
+            <GivesItemTimerSplitter marginLeft={20} marginRight={12}>
               :
             </GivesItemTimerSplitter>
             <GivesItemTimerColumn>
@@ -225,7 +220,7 @@ const GivesItem: FC<IGivesItem> = ({ item, isFake }) => {
           </GivesItemTimer>
           <GivesItemButtons>
             <GivesItemButtonMore to={`/giveaways/${item.giveaway_id}`}>Подробнее</GivesItemButtonMore>
-            <GivesItemButtonConnect to={`/giveaways/${item.giveaway_id}`} onClick={delayedConnectButton}>Подключиться</GivesItemButtonConnect>
+            <GivesItemButtonConnect to={`/giveaways/${item.giveaway_id}`} onClick={delayedConnectWallet}>Подключиться</GivesItemButtonConnect>
           </GivesItemButtons>
         </GivesItemContent>
       </GivesItemBlock>

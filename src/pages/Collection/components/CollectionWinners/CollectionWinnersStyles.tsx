@@ -91,6 +91,8 @@ const CollectionDoneWinnersRowItemImage = styled.img`
 `;
 
 const CollectionDoneWinnersRowItemHash = styled.span`
+  position: relative;
+  top: 1.5px;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -100,11 +102,14 @@ const CollectionDoneWinnersRowItemHash = styled.span`
 `;
 
 const CollectionDoneWinnersRowItemText = styled.span`
+  position: relative;
+  top: 1.5px;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
   font-size: ${pxIntoRem(16)};
   line-height: 172.52%;
+  margin-right: ${pxIntoRem(3)};
   color: #ffffff;
 `;
 
@@ -163,6 +168,8 @@ const CollectionDoneWinnersFakeRowPrize = styled.div`
 `;
 
 const CollectionDoneButton = styled.button`
+  display: flex;
+  justify-content: center;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -191,6 +198,8 @@ const CollectionDoneButton = styled.button`
 `;
 
 const CollectionDoneButtonInactive = styled.button`
+  display: flex;
+  justify-content: center;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;

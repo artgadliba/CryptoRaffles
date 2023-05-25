@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useCountdown } from "../../../../hooks/useCountdown";
 import {
   AccountListItemBlock,
@@ -34,12 +34,12 @@ import {
 
 interface IAccountListItem {
   isFake?: boolean
-  item?: {
-    raffleID?: string;
-    giveawayID?: string;
+  item: {
+    raffle_id?: string;
+    giveaway_id?: string;
     image: string;
     end_timestamp: number;
-    grand_prize: string; //change to number
+    grand_prize: string;
     paytoken: string;
     owner: string;
     promo_name: string;
@@ -48,7 +48,7 @@ interface IAccountListItem {
 }
 
 const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
-
+  const [game, setGame] = useState<string>();
   var {
     seconds,
     minutes,
@@ -58,87 +58,73 @@ const AccountListItem: FC<IAccountListItem> = ({ item, isFake }) => {
     minutesNoun,
     hoursNoun,
     daysNoun
-  } = useCountdown(item?.end_timestamp ?? Date.now());
+  } = useCountdown(item.end_timestamp ?? Date.now());
 
-  if (isFake || !item) {
+  useEffect(() => {
+    if (item.raffle_id != undefined) {
+      setGame(`/raffles/${item.raffle_id}`);
+    } else if (item.giveaway_id != undefined) {
+      setGame(`/giveaways/${item.giveaway_id}`);
+    }
+  }, [item]);
+
+  if (game != undefined) {
     return (
-      <AccountListFakeItemBlock>
-        <AccountListFakeItemBackground alt="background" src="/images/give-loading-background.png" />
-        <AccountListFakeItemUsername>
-          <div />
-        </AccountListFakeItemUsername>
-        <AccountListFakeItemClock alt="clock" src="/images/clock.svg" />
-        <AccountListFakeItemContent>
-          <AccountListFakeItemId />
-          <AccountListFakeItemSumm>
-            <AccountListFakeItemSummTitle />
-            <AccountListFakeItemSummText />
-          </AccountListFakeItemSumm>
-          <AccountListFakeItemTimer />
-          <AccountListFakeItemStatus>
-            <AccountListFakeItemStatusText />
-            <AccountListFakeItemStatusButton />
-          </AccountListFakeItemStatus>
-        </AccountListFakeItemContent>
-      </AccountListFakeItemBlock>
+      <AccountListItemBlock to={game}>
+        <AccountListItemBackground alt="background" src={item.image} />
+        <AccountListItemUsername>{item.owner}</AccountListItemUsername>
+        <AccountListItemContent>
+          <AccountListItemId>{item.promo_name}</AccountListItemId>
+          <AccountListItemSumm>
+            <AccountListItemSummTitle>{item.grand_prize}</AccountListItemSummTitle>
+            <AccountListItemSummText>Сумма розыгрыша</AccountListItemSummText>
+          </AccountListItemSumm>
+          <AccountListItemTimer>
+            <AccountListItemTimerColumn>
+              <AccountListItemTimerNumber>{days}</AccountListItemTimerNumber>
+              <AccountListItemTimerText>{daysNoun}</AccountListItemTimerText>
+            </AccountListItemTimerColumn>
+            <AccountListItemTimerSplitter marginLeft={25} marginRight={18}>
+              :
+            </AccountListItemTimerSplitter>
+            <AccountListItemTimerColumn>
+              <AccountListItemTimerNumber>{hours}</AccountListItemTimerNumber>
+              <AccountListItemTimerText>{hoursNoun}</AccountListItemTimerText>
+            </AccountListItemTimerColumn>
+            <AccountListItemTimerSplitter marginLeft={18} marginRight={20}>
+              :
+            </AccountListItemTimerSplitter>
+            <AccountListItemTimerColumn>
+              <AccountListItemTimerNumber>{minutes}</AccountListItemTimerNumber>
+              <AccountListItemTimerText>{minutesNoun}</AccountListItemTimerText>
+            </AccountListItemTimerColumn>
+            <AccountListItemTimerSplitter marginLeft={20} marginRight={12}>
+              :
+            </AccountListItemTimerSplitter>
+            <AccountListItemTimerColumn>
+              <AccountListItemTimerNumber>{seconds}</AccountListItemTimerNumber>
+              <AccountListItemTimerText>{secondsNoun}</AccountListItemTimerText>
+            </AccountListItemTimerColumn>
+          </AccountListItemTimer>
+          {item.status < 1 ? (
+            <AccountListItemStatus>
+              <AccountListItemStatusText>Статус:</AccountListItemStatusText>
+              <AccountListItemStatusIndicator backgroundColor="#874dec" textColor="#ffffff">
+                Открыт
+              </AccountListItemStatusIndicator>
+            </AccountListItemStatus>
+          ) : (
+            <AccountListItemStatus>
+              <AccountListItemStatusText>Статус:</AccountListItemStatusText>
+              <AccountListItemStatusIndicator backgroundColor="#BDBDBD" textColor="#4F4F4F">
+                Разыгран
+              </AccountListItemStatusIndicator>
+            </AccountListItemStatus>
+          )}
+        </AccountListItemContent>
+      </AccountListItemBlock>
     );
   }
-
-  return (
-    <AccountListItemBlock>
-      <AccountListItemBackground alt="background" src={item.image} />
-      <AccountListItemUsername>{item.owner}</AccountListItemUsername>
-      <AccountListItemContent>
-        <AccountListItemId>{item.promo_name}</AccountListItemId>
-        <AccountListItemSumm>
-          <AccountListItemSummTitle>{item.grand_prize}</AccountListItemSummTitle>
-          <AccountListItemSummText>Сумма розыгрыша</AccountListItemSummText>
-        </AccountListItemSumm>
-        <AccountListItemTimer>
-          <AccountListItemTimerColumn>
-            <AccountListItemTimerNumber>{days}</AccountListItemTimerNumber>
-            <AccountListItemTimerText>{daysNoun}</AccountListItemTimerText>
-          </AccountListItemTimerColumn>
-          <AccountListItemTimerSplitter marginLeft={25} marginRight={19}>
-            :
-          </AccountListItemTimerSplitter>
-          <AccountListItemTimerColumn>
-            <AccountListItemTimerNumber>{hours}</AccountListItemTimerNumber>
-            <AccountListItemTimerText>{hoursNoun}</AccountListItemTimerText>
-          </AccountListItemTimerColumn>
-          <AccountListItemTimerSplitter marginLeft={18} marginRight={22}>
-            :
-          </AccountListItemTimerSplitter>
-          <AccountListItemTimerColumn>
-            <AccountListItemTimerNumber>{minutes}</AccountListItemTimerNumber>
-            <AccountListItemTimerText>{minutesNoun}</AccountListItemTimerText>
-          </AccountListItemTimerColumn>
-          <AccountListItemTimerSplitter marginLeft={22} marginRight={15}>
-            :
-          </AccountListItemTimerSplitter>
-          <AccountListItemTimerColumn>
-            <AccountListItemTimerNumber>{seconds}</AccountListItemTimerNumber>
-            <AccountListItemTimerText>{secondsNoun}</AccountListItemTimerText>
-          </AccountListItemTimerColumn>
-        </AccountListItemTimer>
-        {item.status < 1 ? (
-          <AccountListItemStatus>
-            <AccountListItemStatusText>Статус:</AccountListItemStatusText>
-            <AccountListItemStatusIndicator backgroundColor="#874dec" textColor="#ffffff">
-              Открыт
-            </AccountListItemStatusIndicator>
-          </AccountListItemStatus>
-        ) : (
-          <AccountListItemStatus>
-            <AccountListItemStatusText>Статус:</AccountListItemStatusText>
-            <AccountListItemStatusIndicator backgroundColor="#BDBDBD" textColor="#4F4F4F">
-              Разыгран
-            </AccountListItemStatusIndicator>
-          </AccountListItemStatus>
-        )}
-      </AccountListItemContent>
-    </AccountListItemBlock>
-  );
 }
 
 export default AccountListItem;

@@ -49,11 +49,12 @@ const RegisterModalClose = styled.button`
 `;
 
 const RegisterModalCloseImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
 `;
 
 const RegisterModalTitle = styled.h2`
+  margin-top: ${pxIntoRem(30)};
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -62,7 +63,7 @@ const RegisterModalTitle = styled.h2`
   text-align: center;
   color: #ffffff;
   z-index: 999;
-  margin-top: ${pxIntoRem(50)};
+  // margin-top: ${pxIntoRem(50)};
 
   @media (max-width: 500px) {
     font-size: ${pxIntoRem(28)};

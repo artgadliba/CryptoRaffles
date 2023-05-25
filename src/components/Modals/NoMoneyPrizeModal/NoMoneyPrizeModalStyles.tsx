@@ -53,8 +53,8 @@ const NoMoneyPrizeModalClose = styled.button`
 `;
 
 const NoMoneyPrizeModalCloseImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
 `;
 
 const NoMoneyPrizeModalSumm = styled.h2`
@@ -74,18 +74,6 @@ const NoMoneyPrizeModalSumm = styled.h2`
   }
 `;
 
-const NoMoneyPrizeModalLine = styled.div`
-  width: ${pxIntoRem(253)};
-  height: ${pxIntoRem(2)};
-  background-color: #ffffff;
-  margin-top: ${pxIntoRem(8)};
-  z-index: 999;
-  flex-shrink: 0;
-  @media (max-width: 500px) {
-    width: ${pxIntoRem(190)};
-  }
-`;
-
 const NoMoneyPrizeModalText = styled.p`
   font-family: "Gilroy";
   font-style: normal;
@@ -94,7 +82,7 @@ const NoMoneyPrizeModalText = styled.p`
   line-height: 111.5%;
   text-align: center;
   color: #ffffff;
-  margin-top: ${pxIntoRem(54)};
+  margin-top: ${pxIntoRem(1)};
   max-width: ${pxIntoRem(338)};
   z-index: 999;
 
@@ -102,7 +90,6 @@ const NoMoneyPrizeModalText = styled.p`
     font-family: inherit;
     color: #08e2bd;
   }
-
   @media (max-width: 500px) {
     font-size: ${pxIntoRem(17.48)};
     margin-top: ${pxIntoRem(14)};
@@ -125,6 +112,12 @@ const NoMoneyPrizeModalButton = styled(Link)`
   border-radius: ${pxIntoRem(2)};
   margin-top: ${pxIntoRem(35)};
   z-index: 999;
+  transition: 1s;
+
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
+  }
   @media (max-width: 500px) {
     font-size: ${pxIntoRem(15.73)};
     line-height: ${pxIntoRem(19)};
@@ -162,4 +155,4 @@ const NoMoneyPrizeModalHoliday = styled.img`
   }
 `;
 
-export { NoMoneyPrizeModalBlock, NoMoneyPrizeModalClose, NoMoneyPrizeModalContent, NoMoneyPrizeModalCloseImage, NoMoneyPrizeModalButton, NoMoneyPrizeModalLine, NoMoneyPrizeModalSumm, NoMoneyPrizeModalText, NoMoneyPrizeModalLines, NoMoneyPrizeModalHoliday };
+export { NoMoneyPrizeModalBlock, NoMoneyPrizeModalClose, NoMoneyPrizeModalContent, NoMoneyPrizeModalCloseImage, NoMoneyPrizeModalButton, NoMoneyPrizeModalSumm, NoMoneyPrizeModalText, NoMoneyPrizeModalLines, NoMoneyPrizeModalHoliday };

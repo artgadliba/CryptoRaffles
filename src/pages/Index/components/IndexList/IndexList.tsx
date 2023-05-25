@@ -16,16 +16,18 @@ interface IIndexListItem {
   text: string;
   openHeight?: number;
   openMobileHeight?: number;
+  openMobileHeightSmall?: number;
 }
 
 interface IIndexList {
   items: IIndexListItem[];
 }
 
-const IndexListItem: FC<IIndexListItem> = ({ title, text, openHeight, openMobileHeight }) => {
+const IndexListItem: FC<IIndexListItem> = ({ title, text, openHeight, openMobileHeight, openMobileHeightSmall }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <IndexListItemBlock isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} openHeight={openHeight} openMobileHeight={openMobileHeight}>
+    <IndexListItemBlock isOpen={isOpen} onClick={() => setIsOpen((prev) => !prev)} openHeight={openHeight} openMobileHeight={openMobileHeight} openMobileHeightSmall={openMobileHeightSmall}>
       <IndexListItemHeader isOpen={isOpen}>
         <IndexListItemTitle>{title}</IndexListItemTitle>
         <IndexListItemArrow isOpen={isOpen}>
@@ -42,7 +44,7 @@ const IndexList: FC<IIndexList> = ({ items }) => {
   return (
     <IndexListBlock>
       {items.map((item, idx) => {
-        return <IndexListItem title={item.title} text={item.text} key={idx} openHeight={item.openHeight} openMobileHeight={item.openMobileHeight} />;
+        return <IndexListItem title={item.title} text={item.text} key={idx} openHeight={item.openHeight} openMobileHeight={item.openMobileHeight} openMobileHeightSmall={item.openMobileHeightSmall} />;
       })}
     </IndexListBlock>
   );

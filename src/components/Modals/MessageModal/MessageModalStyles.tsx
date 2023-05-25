@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import pxIntoRem from "../../../utils/pxIntoRem";
 
-const GiveCancelModalBlock = styled.div`
+const MessageModalBlock = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
@@ -15,7 +16,7 @@ const GiveCancelModalBlock = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
 `;
 
-const GiveCancelModalContent = styled.div`
+const MessageModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,7 +37,7 @@ const GiveCancelModalContent = styled.div`
   }
 `;
 
-const GiveCancelModalClose = styled.button`
+const MessageModalClose = styled.button`
   position: absolute;
   right: ${pxIntoRem(16)};
   top: ${pxIntoRem(20)};
@@ -51,12 +52,12 @@ const GiveCancelModalClose = styled.button`
   }
 `;
 
-const GiveCancelModalCloseImage = styled.img`
+const MessageModalCloseImage = styled.img`
   width: 70%;
   height: 70%;
 `;
 
-const GiveCancelModalSumm = styled.h2`
+const MessageModalSumm = styled.h2`
   font-family: "TT Firs Neue";
   font-style: normal;
   font-weight: 600;
@@ -73,11 +74,11 @@ const GiveCancelModalSumm = styled.h2`
   }
 `;
 
-const GiveCancelModalText = styled.p`
+const MessageModalText = styled.p`
   font-family: "Gilroy";
-  font-style: normal;
+  font-style: light;
   font-weight: 600;
-  font-size: ${pxIntoRem(20)};
+  font-size: ${pxIntoRem(18)};
   line-height: 111.5%;
   text-align: center;
   color: #ffffff;
@@ -97,7 +98,7 @@ const GiveCancelModalText = styled.p`
   }
 `;
 
-const GiveCancelModalButton = styled.button`
+const MessageModalButton = styled.button`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -126,7 +127,7 @@ const GiveCancelModalButton = styled.button`
   }
 `;
 
-const GiveCancelModalLines = styled.img`
+const MessageModalLines = styled.img`
   width: ${pxIntoRem(270)};
   height: ${pxIntoRem(210)};
   position: absolute;
@@ -141,12 +142,12 @@ const GiveCancelModalLines = styled.img`
   }
 `;
 
-const GiveCancelModalHoliday = styled.img`
+const MessageModalHoliday = styled.img`
   position: absolute;
-  top: ${pxIntoRem(72)};
-  right: ${pxIntoRem(37)};
-  width: ${pxIntoRem(367)};
-  height: ${pxIntoRem(348)};
+  top: ${pxIntoRem(50)};
+  right: ${pxIntoRem(27)};
+  width: ${pxIntoRem(217)};
+  height: ${pxIntoRem(208)};
   @media (max-width: 500px) {
     width: ${pxIntoRem(200)};
     height: ${pxIntoRem(190)};
@@ -155,4 +156,4 @@ const GiveCancelModalHoliday = styled.img`
   }
 `;
 
-export { GiveCancelModalBlock, GiveCancelModalClose, GiveCancelModalContent, GiveCancelModalCloseImage, GiveCancelModalButton, GiveCancelModalSumm, GiveCancelModalText, GiveCancelModalLines, GiveCancelModalHoliday };
+export { MessageModalBlock, MessageModalClose, MessageModalContent, MessageModalCloseImage, MessageModalButton, MessageModalSumm, MessageModalText, MessageModalLines, MessageModalHoliday };

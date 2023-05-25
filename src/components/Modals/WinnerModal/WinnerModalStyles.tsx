@@ -49,8 +49,8 @@ const WinnerModalClose = styled.button`
 `;
 
 const WinnerModalCloseImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
 `;
 
 const WinnerModalSumm = styled.h2`
@@ -66,7 +66,7 @@ const WinnerModalSumm = styled.h2`
   z-index: 999;
   @media (max-width: 500px) {
     font-size: ${pxIntoRem(44.58)};
-    margin-top: ${pxIntoRem(151)};
+    margin-top: ${pxIntoRem(110)};
   }
 `;
 

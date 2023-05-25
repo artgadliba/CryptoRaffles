@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import pxIntoRem from "../../utils/pxIntoRem";
 
@@ -77,10 +78,21 @@ const AccountNonConnectButton = styled.button`
   background: #08e2bd;
   border-radius: ${pxIntoRem(2)};
   margin-top: ${pxIntoRem(28)};
+  transition: 1s;
+  
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
+  }
   @media (max-width: 500px) {
-    width: ${pxIntoRem(330)};
+    width: 100%;
     height: ${pxIntoRem(68)};
     margin-top: 0px;
+
+    &:active {
+      background-color: #23f7d3;
+      box-shadow: 0 0 10px #23f7d3;
+    }
   }
 `;
 
@@ -90,7 +102,7 @@ const AccountNonConnectButtonImage = styled.img`
   margin-left: ${pxIntoRem(10)};
 `;
 
-const AccountNonConnectWhat = styled.button`
+const AccountNonConnectWhat = styled(Link)`
   display: flex;
   align-items: center;
   background-color: transparent;

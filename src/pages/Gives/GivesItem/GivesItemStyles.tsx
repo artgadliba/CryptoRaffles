@@ -18,11 +18,10 @@ const GivesItemBlock = styled.div`
   &:first-of-type {
     margin-top: 0px;
   }
-
   @media (max-width: 500px) {
     padding: ${pxIntoRem(24)} ${pxIntoRem(20)} ${pxIntoRem(40)} ${pxIntoRem(20)};
     justify-content: flex-start;
-    height: ${pxIntoRem(429)};
+    height: ${pxIntoRem(460)};
     margin-top: ${pxIntoRem(31)};
   }
 `;
@@ -41,10 +40,9 @@ const GivesItemUsername = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.06);
-  border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.43);
   backdrop-filter: blur(${pxIntoRem(16.5)});
   border-radius: ${pxIntoRem(59)};
-  width: fit-content;
+  width: ${pxIntoRem(170)};
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 500;
@@ -52,10 +50,12 @@ const GivesItemUsername = styled.div`
   line-height: 111.5%;
   color: #ffffff;
   padding: ${pxIntoRem(6)} ${pxIntoRem(17)};
+  position: absolute;
+  top: 7%;
+  left: 3%;
 
   @media (max-width: 500px) {
-    margin-left: ${pxIntoRem(13)};
-    padding: ${pxIntoRem(5)} ${pxIntoRem(17)};
+    left: 7%;
   }
 `;
 
@@ -82,33 +82,27 @@ const GivesItemId = styled.h3`
   font-size: ${pxIntoRem(24)};
   line-height: 111.5%;
   color: #ffffff;
-  top: ${pxIntoRem(-7)};
-  position: relative;
-  @media (max-width: 1200px) {
-    top: ${pxIntoRem(-15)};
-  }
+  position: absolute;
+  bottom: 16%;
+  left: 4%;
 
   @media (max-width: 500px) {
     position: static;
+    margin-top: ${pxIntoRem(20)};
   }
 `;
 
 const GivesItemSumm = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: ${pxIntoRem(65)};
-
-  @media (max-width: 1450px) {
-    margin-left: ${pxIntoRem(65 * 0.6)};
-  }
-
-  @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(65 * 0.3)};
-  }
+  position: absolute;
+  bottom: 11.4%;
+  left: 25%;
 
   @media (max-width: 500px) {
     flex-direction: column;
     align-items: center;
+    position: static;
     margin-top: ${pxIntoRem(20)};
     margin-left: 0;
   }
@@ -136,16 +130,14 @@ const GivesItemSummText = styled.span`
 const GivesItemTimer = styled.div`
   display: flex;
   align-items: center;
-  margin-left: ${pxIntoRem(130)};
-  @media (max-width: 1450px) {
-    margin-left: ${pxIntoRem(130 * 0.6)};
-  }
-
-  @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(130 * 0.3)};
-  }
+  position: absolute;
+  bottom: 11.4%;
+  left: 41%;
 
   @media (max-width: 500px) {
+    flex-direction: row;
+    align-items: center;
+    position: static;
     margin-left: 0;
     margin-top: ${pxIntoRem(22)};
   }
@@ -205,14 +197,17 @@ const GivesItemButtons = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
+  position: absolute;
+  bottom: 10.7%;
+  right: 4%;
+
   @media (max-width: 1200px) {
     flex-direction: column;
   }
-
   @media (max-width: 500px) {
-    margin-top: ${pxIntoRem(27)};
-    margin-left: 0;
-    width: 100%;
+    position: absolute;
+    left: 90%;
+    width: 92%;
   }
 `;
 
@@ -224,13 +219,14 @@ const GivesItemButtonMore = styled(Link)`
   font-style: normal;
   font-weight: 600;
   font-size: ${pxIntoRem(15)};
-  line-height: ${pxIntoRem(18.5)};
+  line-height: ${pxIntoRem(18)};
   display: flex;
   align-items: center;
   text-align: center;
   color: #ffffff;
   padding: ${pxIntoRem(17)} ${pxIntoRem(37)};
   border: ${pxIntoRem(1)} solid #ffffff;
+  outline-offset: ${pxIntoRem(1)};
   background-color: transparent;
   border-radius: ${pxIntoRem(2)};
   margin-right: ${pxIntoRem(12)};
@@ -278,7 +274,6 @@ const GivesItemButtonConnect = styled(Link)`
     background-color: #23f7d3;
     box-shadow: 0 0 10px #23f7d3;
   }
-
   @media (max-width: 1200px) {
     width: 100%;
   }
@@ -286,7 +281,7 @@ const GivesItemButtonConnect = styled(Link)`
 
 const GivesFakeItemBlock = styled(GivesItemBlock)`
   cursor: default;
-  padding: ${pxIntoRem(24)} ${pxIntoRem(34)} ${pxIntoRem(40)} ${pxIntoRem(28)};
+  padding: ${pxIntoRem(34)} ${pxIntoRem(34)} ${pxIntoRem(34)} ${pxIntoRem(34)};
 `;
 
 const GivesFakeItemBackground = styled(GivesItemBackground)`
@@ -305,16 +300,17 @@ const GivesFakeItemBackground = styled(GivesItemBackground)`
 `;
 
 const GivesFakeItemUsername = styled.div`
-  padding: ${pxIntoRem(14.5)} ${pxIntoRem(23)};
+  padding: ${pxIntoRem(15)} ${pxIntoRem(23)};
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.43);
   backdrop-filter: blur(${pxIntoRem(16.5)});
   border-radius: ${pxIntoRem(59)};
-  width: fit-content;
-  & > div {
-    background-color: rgba(217, 217, 217, 0.51);
-    width: ${pxIntoRem(37)};
-    height: ${pxIntoRem(2)};
+  width: ${pxIntoRem(170)};
+  position: absolute;
+  top: 7%;
+  left: 3%;
+
+  @media (max-width: 500px) {
+    left: 7%;
   }
 `;
 
@@ -349,18 +345,20 @@ const GivesFakeItemContent = styled(GivesItemContent)`
 
 const GivesFakeItemId = styled.div`
   width: ${pxIntoRem(213)};
-  height: ${pxIntoRem(20)};
+  height: ${pxIntoRem(27)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
-  @media (max-width: 1200px) {
-    position: relative;
-    top: ${pxIntoRem(-15)};
-  }
+  position: absolute;
+  bottom: 19%;
+  left: 3%;
 
   @media (max-width: 500px) {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
+      position: static;
+      margin-top: ${pxIntoRem(-16)};
+    }
   }
 `;
 
@@ -369,20 +367,22 @@ const GivesFakeItemSumm = styled.div`
   flex-direction: column;
   margin-left: ${pxIntoRem(35)};
   flex-shrink: 0;
-
-  @media (max-width: 1450px) {
-    margin-left: ${pxIntoRem(35 * 0.3)};
-  }
+  position: absolute;
+  bottom: 15.8%;
+  left: 22.5%;
 
   @media (max-width: 500px) {
-    margin-left: 0px;
+    flex-direction: column;
     align-items: center;
+    position: static;
+    margin-top: ${pxIntoRem(20)};
+    margin-left: 0;
   }
 `;
 
 const GivesFakeItemSummTitle = styled.div`
   width: ${pxIntoRem(125)};
-  height: ${pxIntoRem(20)};
+  height: ${pxIntoRem(27)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
@@ -390,14 +390,15 @@ const GivesFakeItemSummTitle = styled.div`
 
   @media (max-width: 500px) {
     width: ${pxIntoRem(77)};
+    height: ${pxIntoRem(22)};
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
   }
 `;
 
 const GivesFakeItemSummText = styled.div`
-  width: ${pxIntoRem(170)};
-  height: ${pxIntoRem(7)};
-  margin-top: ${pxIntoRem(8)};
+  width: ${pxIntoRem(150)};
+  height: ${pxIntoRem(6)};
+  margin-top: ${pxIntoRem(4)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
@@ -412,19 +413,19 @@ const GivesFakeItemSummText = styled.div`
 `;
 
 const GivesFakeItemTimer = styled.div`
-  width: ${pxIntoRem(312)};
-  height: ${pxIntoRem(51)};
-  margin-left: ${pxIntoRem(77)};
+  width: ${pxIntoRem(276)};
+  height: ${pxIntoRem(53)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
+  position: absolute;
+  bottom: 10.6%;
+  left: 41%;
 
   @media (max-width: 1450px) {
-    margin-left: ${pxIntoRem(77 * 0.3)};
-    width: ${pxIntoRem(312 * 0.9)};
+    width: ${pxIntoRem(231)};
   }
-
   @media (max-width: 500px) {
     display: none;
   }
@@ -433,11 +434,13 @@ const GivesFakeItemTimer = styled.div`
 const GivesFakeItemButtons = styled.div`
   display: flex;
   align-items: center;
-  margin-left: auto;
+  position: absolute;
+  bottom: 10.6%;
+  right: 4%;
+
   @media (max-width: 1200px) {
     flex-direction: column;
   }
-
   @media (max-width: 500px) {
     flex-direction: row;
     margin-left: 0;
@@ -446,10 +449,10 @@ const GivesFakeItemButtons = styled.div`
 `;
 
 const GivesFakeItemButtonMore = styled.div`
-  width: ${pxIntoRem(155)};
-  height: ${pxIntoRem(51)};
+  width: ${pxIntoRem(156)};
+  height: ${pxIntoRem(53)};
   border-radius: ${pxIntoRem(2)};
-  margin-right: ${pxIntoRem(12)};
+  margin-right: ${pxIntoRem(13)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
@@ -469,7 +472,7 @@ const GivesFakeItemButtonMore = styled.div`
 
 const GivesFakeItemButtonConnect = styled.div`
   width: ${pxIntoRem(176)};
-  height: ${pxIntoRem(51)};
+  height: ${pxIntoRem(53)};
   border-radius: ${pxIntoRem(2)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
@@ -486,18 +489,30 @@ const GivesFakeItemButtonConnect = styled.div`
   }
 `;
 
+const GiveFakeItemButtonsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 500px) {
+    flex-direction: row;
+    margin-left: 0;
+    margin-top: ${pxIntoRem(24)};
+  }
+`;
+
 const GivesFakeItemFakeButton = styled.div`
   display: none;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(37)};
-  height: ${pxIntoRem(44)};
+  height: ${pxIntoRem(41)};
   margin-right: ${pxIntoRem(23)};
+
   @media (max-width: 500px) {
+    margin-top: ${pxIntoRem(-2)};
     display: block;
   }
-
   &:last-of-type {
     margin-right: 0;
   }
@@ -533,5 +548,6 @@ export {
   GivesFakeItemUsername,
   GivesFakeItemTimer,
   GivesFakeItemClock,
+  GiveFakeItemButtonsWrapper,
   GivesFakeItemFakeButton,
 };

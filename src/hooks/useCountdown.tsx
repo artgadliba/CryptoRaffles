@@ -51,8 +51,8 @@ const useCountdown = (targetDate) => {
     const formattedHours = formatValue(hours);
     const formattedDays = formatValue(days);
 
-    const secondsNoun = getNoun(seconds, "секунду", "секунды", "секунд");
-    const minutesNoun = getNoun(minutes, "минуту", "минуты", "минут");
+    const secondsNoun = getNoun(seconds, "секунда", "секунды", "секунд");
+    const minutesNoun = getNoun(minutes, "минута", "минуты", "минут");
     const hoursNoun = getNoun(hours, "час", "часа", "часов");
     const daysNoun = getNoun(days, "день", "дня", "дней");
 

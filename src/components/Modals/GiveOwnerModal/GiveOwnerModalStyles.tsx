@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import pxIntoRem from "../../../utils/pxIntoRem";
 
-const GiveCancelModalBlock = styled.div`
+const GiveOwnerModalBlock = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
@@ -15,13 +15,13 @@ const GiveCancelModalBlock = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
 `;
 
-const GiveCancelModalContent = styled.div`
+const GiveOwnerModalContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${pxIntoRem(412)};
-  height: ${pxIntoRem(479)};
+  width: ${pxIntoRem(512)};
+  height: ${pxIntoRem(659)};
   padding: ${pxIntoRem(20)} ${pxIntoRem(16)};
   background-color: #391964;
   border-radius: ${pxIntoRem(15)};
@@ -36,7 +36,7 @@ const GiveCancelModalContent = styled.div`
   }
 `;
 
-const GiveCancelModalClose = styled.button`
+const GiveOwnerModalClose = styled.button`
   position: absolute;
   right: ${pxIntoRem(16)};
   top: ${pxIntoRem(20)};
@@ -51,12 +51,12 @@ const GiveCancelModalClose = styled.button`
   }
 `;
 
-const GiveCancelModalCloseImage = styled.img`
+const GiveOwnerModalCloseImage = styled.img`
   width: 70%;
   height: 70%;
 `;
 
-const GiveCancelModalSumm = styled.h2`
+const GiveOwnerModalSumm = styled.h2`
   font-family: "TT Firs Neue";
   font-style: normal;
   font-weight: 600;
@@ -73,15 +73,15 @@ const GiveCancelModalSumm = styled.h2`
   }
 `;
 
-const GiveCancelModalText = styled.p`
+const GiveOwnerModalText = styled.p`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
-  font-size: ${pxIntoRem(20)};
+  font-size: ${pxIntoRem(17)};
   line-height: 111.5%;
   text-align: center;
   color: #ffffff;
-  margin-top: ${pxIntoRem(1)};
+  margin-top: ${pxIntoRem(15)};
   max-width: ${pxIntoRem(338)};
   z-index: 999;
 
@@ -97,7 +97,7 @@ const GiveCancelModalText = styled.p`
   }
 `;
 
-const GiveCancelModalButton = styled.button`
+const GiveOwnerModalButton = styled.button`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -110,7 +110,8 @@ const GiveCancelModalButton = styled.button`
   padding: ${pxIntoRem(24)} ${pxIntoRem(96)};
   background-color: #08e2bd;
   border-radius: ${pxIntoRem(2)};
-  margin-top: ${pxIntoRem(35)};
+  margin-top: ${pxIntoRem(20)};
+  margin-bottom: ${pxIntoRem(20)};
   z-index: 999;
   transition: 1s;
 
@@ -126,7 +127,7 @@ const GiveCancelModalButton = styled.button`
   }
 `;
 
-const GiveCancelModalLines = styled.img`
+const GiveOwnerModalLines = styled.img`
   width: ${pxIntoRem(270)};
   height: ${pxIntoRem(210)};
   position: absolute;
@@ -141,7 +142,7 @@ const GiveCancelModalLines = styled.img`
   }
 `;
 
-const GiveCancelModalHoliday = styled.img`
+const GiveOwnerModalHoliday = styled.img`
   position: absolute;
   top: ${pxIntoRem(72)};
   right: ${pxIntoRem(37)};
@@ -155,4 +156,41 @@ const GiveCancelModalHoliday = styled.img`
   }
 `;
 
-export { GiveCancelModalBlock, GiveCancelModalClose, GiveCancelModalContent, GiveCancelModalCloseImage, GiveCancelModalButton, GiveCancelModalSumm, GiveCancelModalText, GiveCancelModalLines, GiveCancelModalHoliday };
+const GiveOwnerModalHashInputBlock = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-top: ${pxIntoRem(34)};
+  width: 100%;
+  max-width: ${pxIntoRem(437)};
+  @media (max-width: 500px) {
+    margin-top: ${pxIntoRem(49)};
+    max-width: ${pxIntoRem(277)};
+  }
+`;
+
+const GiveOwnerModalReferenceInput = styled.input`
+  font-family: "Gilroy";
+  font-style: normal;
+  font-weight: 300;
+  font-size: ${pxIntoRem(16)};
+  line-height: 172.52%;
+  color: rgba(255, 255, 255, 0.66);
+  padding: ${pxIntoRem(20)} ${pxIntoRem(10)} ${pxIntoRem(20)} ${pxIntoRem(27)};
+  margin-top: ${pxIntoRem(23)};
+  background-color: transparent;
+  width: 100%;
+  max-width: ${pxIntoRem(437)};
+  border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(${pxIntoRem(16.53)});
+  border-radius: ${pxIntoRem(2)};
+  text-overflow: ellipsis;
+  overflow: hidden;
+  @media (max-width: 500px) {
+    margin-top: ${pxIntoRem(15)};
+    max-width: ${pxIntoRem(277)};
+    padding: ${pxIntoRem(20)} ${pxIntoRem(45)} ${pxIntoRem(20)} ${pxIntoRem(27)};
+  }
+`;
+
+export { GiveOwnerModalBlock, GiveOwnerModalClose, GiveOwnerModalContent, GiveOwnerModalCloseImage, GiveOwnerModalButton, GiveOwnerModalSumm, GiveOwnerModalText, GiveOwnerModalLines, GiveOwnerModalHoliday, GiveOwnerModalReferenceInput };

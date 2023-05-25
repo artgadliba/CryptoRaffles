@@ -11,6 +11,7 @@ import {
   IndexWinnersRowItem,
   IndexWinnersRowItemContent,
   IndexWinnersRowItemEmoji,
+  IndexWinnersRowItemEmojiLine,
   IndexWinnersRowItemHeader,
   IndexWinnersRowItemMoney,
   IndexWinnersRowItemText,
@@ -24,6 +25,9 @@ interface IIndexWinners {
     giveaway_name?: string;
     raffle_name?: string;
     prize: string;
+    emojiFirst: string;
+    emojiSecond: string;
+    emojiThird: string;
   }[];
 }
 
@@ -40,7 +44,11 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
                 <IndexWinnersRowItem key={idx}>
                   <IndexWinnersRowItemHeader>
                     <IndexWinnersRowItemTransaction>{item.wallet}</IndexWinnersRowItemTransaction>
-                    <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
+                    <IndexWinnersRowItemEmojiLine>
+                      <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiFirst} />
+                      <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiSecond} />
+                      <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiThird} />
+                    </IndexWinnersRowItemEmojiLine>
                   </IndexWinnersRowItemHeader>
                   <IndexWinnersRowItemContent>
                     {item.raffle_name != undefined ? (
@@ -79,7 +87,11 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
               <IndexWinnersRowItem key={idx}>
                 <IndexWinnersRowItemHeader>
                   <IndexWinnersRowItemTransaction>{item.wallet}</IndexWinnersRowItemTransaction>
-                  <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
+                  <IndexWinnersRowItemEmojiLine>
+                    <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiFirst} />
+                    <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiSecond} />
+                    <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiThird} />
+                  </IndexWinnersRowItemEmojiLine>
                 </IndexWinnersRowItemHeader>
                 <IndexWinnersRowItemContent>
                   {item.raffle_name != undefined ? (
@@ -105,7 +117,11 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
                 <IndexWinnersRowItem key={idx}>
                   <IndexWinnersRowItemHeader>
                     <IndexWinnersRowItemTransaction>{item.wallet}</IndexWinnersRowItemTransaction>
-                    <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
+                    <IndexWinnersRowItemEmojiLine>
+                      <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiFirst} />
+                      <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiSecond} />
+                      <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiThird} />
+                    </IndexWinnersRowItemEmojiLine>
                   </IndexWinnersRowItemHeader>
                   <IndexWinnersRowItemContent>
                     {item.raffle_name != undefined ? (
@@ -144,7 +160,11 @@ const IndexWinnersLine: FC<IIndexWinners> = ({ items }) => {
               <IndexWinnersRowItem key={idx}>
                 <IndexWinnersRowItemHeader>
                   <IndexWinnersRowItemTransaction>{item.wallet}</IndexWinnersRowItemTransaction>
-                  <IndexWinnersRowItemEmoji alt="emoji" src="/images/emoji-line.png" />
+                  <IndexWinnersRowItemEmojiLine>
+                    <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiFirst} />
+                    <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiSecond} />
+                    <IndexWinnersRowItemEmoji alt="emoji" src={item.emojiThird} />
+                  </IndexWinnersRowItemEmojiLine>
                 </IndexWinnersRowItemHeader>
                 <IndexWinnersRowItemContent>
                   {item.raffle_name != undefined ? (

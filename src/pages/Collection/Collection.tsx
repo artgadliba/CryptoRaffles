@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useCountdown } from "../../hooks/useCountdown";
 import Default from "../../layouts/Default/Default";
@@ -51,11 +51,15 @@ import CollectionFakeWinners from "./components/CollectionWinners/CollectionFake
 import axios from "axios";
 import { ethers } from "ethers";
 import { getETHPrice } from "../../utils/getETHPrice";
-import { getAccountBalance, raffleAbi } from "../../utils/getAccountBalance";
+import { getAccountBalance } from "../../utils/getAccountBalance";
+import { raffleAbi, erc20Abi } from "../../utils/abiStorage";
 import { numberWithCommas } from "../../utils/numberWithCommas";
-import { prepareWriteContract, writeContract } from "@wagmi/core";
+import { prepareWriteContract, writeContract, readContract, waitForTransaction } from "@wagmi/core";
 import { useAccount } from "wagmi";
-import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
+import MessageModal from "../../components/Modals/MessageModal/MessageModal";
+import GiveOwnerModal from "../../components/Modals/GiveOwnerModal/GiveOwnerModal";
+import useModal from "../../hooks/useModal";
 
 interface ICollectionData {
   raffle_id: string;
@@ -70,23 +74,22 @@ interface ICollectionData {
   minor_prize_tokens?: Array<number>;
   minor_prize_winners?: Array<string>;
   owner: string;
+  owner_charged: boolean;
+  owner_withdrawed: boolean;
   raffle_name: string;
   status: number;
-  game_type: number;
+  treasury_type: number;
   description: string;
   lesser_prize_text: string;
   lesser_prize_link: string;
 }
 
 interface ICollectionWinners {
-  collectionOwner: string;
-  items: {
-    isGrand: boolean;
-    wallet: string;
-    tokens?: string;
-    tokenId: number;
-    prize: string;
-  }[];
+  isGrand: boolean;
+  wallet: string;
+  tokens?: string;
+  tokenId: number;
+  prize: string;
 }
 
 interface IFakeWinner {
@@ -97,23 +100,26 @@ interface IFakeWinner {
   prize: string;
 }
 
-const nullSignature = [
-  0,
-  "0x0000000000000000000000000000000000000000000000000000000000000000"
-];
+interface BigNumber {
+  _hex: string;
+  _isBigNumber: boolean;
+}
 
 const fakeWinnersList: Array<IFakeWinner> = [];
-var winnersList = {} as ICollectionWinners;
+const winnersList: Array<ICollectionWinners> = [];
+
+const factoryAddress = "0x62fe3F4939c1bCDC1122F4d6586Dd67985B8E2d8"; // VALUE MUST BE CHANGED TO ACTUAL IN PROD
 
 function Collection() {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
   const [item, setItem] = useState<ICollectionData>();
-  const [winners, setWinners] = useState<ICollectionWinners>();
+  const [winners, setWinners] = useState<Array<ICollectionWinners>>([]);
   const [owner, setOwner] = useState<string>();
   const [statusColor, setStatusColor] = useState<string>("#ffffff");
   const [statusText, setStatusText] = useState<string>("Открыт");
+  const [hashState, setHashState] = useState<string>("");
   const [grandPrize, setGrandPrize] = useState<number>();
   const [minorPrize, setMinorPrize] = useState<number>();
   const [tokensCounter, setTokensCounter] = useState<number>(1);
@@ -130,6 +136,32 @@ function Collection() {
   ]);
   const addRecentTransaction = useAddRecentTransaction();
 
+  function getNoun(number: number, one: string, two: string, plural: string) {
+    let n = Math.abs(number);
+    n %= 100;
+    if (n >= 5 && n <= 20) {
+      return plural;
+    }
+    n %= 10;
+    if (n === 1) {
+      return one;
+    }
+    if (n >= 2 && n <= 4) {
+      return two;
+    }
+    return plural;
+  }
+
+  const formattedBalance = useMemo(() => {
+    const balanceNoun = getNoun(tokensCounter, "токен", "токена", "токенов");
+    return balanceNoun;
+  }, [tokensCounter]);
+
+  const approveModalText = 'Для оплаты токенами ERC20 необходимо предоставить разрешение смарт контракту. <br></br>Если вы используете Metamask, в интерфейсе кошелька выберите "использовать значения по умолчанию". <br></br>Более подробно об этой транзакции можно прочитать в разделе <a href="/#faq"><span style="color: #40E0D0">FAQ</span></a>.'
+  const approveAwaitModalText = `Транзакция успешно отправлена. Статус вы можете отслеживать по ссылке: <a href="https://sepolia.etherscan.io/tx/${hashState}" target="_blank"><span style="color: #40E0D0">${hashState.slice(0, 4)+'...'+hashState.slice(-4)}</span></a><br>Ожидайте подтверждения, после чего вы сможете приобрести токены для участия в раффле.`
+  const mintAwaitModalText = `Транзакция успешно отправлена. Статус вы можете отслеживать по ссылке: <a href="https://sepolia.etherscan.io/tx/${hashState}" target="_blank"><span style="color: #40E0D0">${hashState.slice(0, 4)+'...'+hashState.slice(-4)}</span></a><br>Ожидайте подтверждения.`
+  const mintReadyModalText = 'Смарт контракт получил разрешение на управление токенами для совершения покупки. <br>Для продолжения нажмите кнопку "Купить токены".'
+
   var {
     seconds,
     minutes,
@@ -145,7 +177,7 @@ function Collection() {
     axios.get(`http://localhost:8000/api/raffles/${id}`)
     .then(res => {
       let data = res.data[0];
-      let owner = data.owner;
+      let owner = data.owner_wallet;
       setOwner(owner);
       setItem(data);
     })
@@ -191,29 +223,26 @@ function Collection() {
         getAccountBalance(item.raffle_id, item.grand_prize_winner, true)
         .then(res => {
           let balance = res.toString();
-          winnersList = ({
-            collectionOwner: owner,
-            items: [{
-              isGrand: true,
-              wallet: item.grand_prize_winner,
-              tokens: balance,
-              tokenId: item.grand_prize_token,
-              prize: "$" + numberWithCommas(grandPrize)
-            }]
+          winnersList.push({
+            isGrand: true,
+            wallet: item.grand_prize_winner,
+            tokens: balance,
+            tokenId: item.grand_prize_token,
+            prize: "$" + numberWithCommas(grandPrize)
           });
           if (item.minor_prize_winners != undefined && grandPrize != undefined) {
             for (let i = 0; i < item.minor_prize_winners.length; i++) {
               getAccountBalance(item.raffle_id, item.minor_prize_winners[i], true)
               .then(res => {
                 let balance = res.toString();
-                winnersList.items.push({
+                winnersList.push({
                   isGrand: false,
                   wallet: item.minor_prize_winners[i],
                   tokens: balance,
                   tokenId: item.minor_prize_tokens[i],
                   prize: "$" + numberWithCommas(minorPrize)
                 });
-                if (i == item.minor_prize_winners.length - 1) {
+                if (winnersList.length === item.minor_prize_winners.length + 1) {
                   setWinners(winnersList);
                 }
               })
@@ -230,22 +259,195 @@ function Collection() {
     }
   }, [item, grandPrize, minorPrize]);
 
-  const publicMint = async () => {
+  const approveTokenMint = async () => {
+    const config = await prepareWriteContract({
+      address: item.paytoken,
+      abi: erc20Abi,
+      chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
+      functionName: "approve",
+      args: [factoryAddress, tokensCounter * item.entry_fee],
+    });
+    const { hash } = await writeContract(config);
+    setHashState(hash);
+
+    let formatedValue = Math.round((tokensCounter * item.entry_fee) / 10 ** 6);
+    let value = `$ ${numberWithCommas(formatedValue)}`;
+
+    addRecentTransaction({
+      hash: hash,
+      description: `Approving raffle contract to spend ${value} to mint token(s) on your behalf.`,
+      confirmations: 3,
+    });
+    if (hashState != undefined) {
+      closeApproveModal();
+      openApproveAwaitModal();
+    }
+    const data = await waitForTransaction({
+      hash: hash,
+    })
+    if (data != undefined) {
+      closeApproveAwaitModal();
+      openMintReadyERCModal();
+    }
+  }
+
+  const approveTokenOwner = async (e: React.MouseEvent<HTMLButtonElement>, inputData: string) => {
+    const config = await prepareWriteContract({
+      address: item.paytoken,
+      abi: erc20Abi,
+      chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
+      functionName: "approve",
+      args: [factoryAddress, Number(inputData) * 10 ** 6],
+    });
+    const { hash } = await writeContract(config);
+    setHashState(hash);
+    let value = `$ ${numberWithCommas(Number(inputData))}`;
+    addRecentTransaction({
+      hash: hash,
+      description: `Approving raffle contract to manage ${value} tokens on your behalf.`,
+      confirmations: 3,
+    });
+    closeGiveOwnerERCModal();
+    openMintAwaitModal();
+    const data = await waitForTransaction({
+      hash: hash,
+    })
+    if (data != undefined) {
+      closeMintAwaitModal();
+      openGiveOwnerERCModal();
+    }
+  }
+
+  const publicMintETH = async () => {
     const config = await prepareWriteContract({
       address: id,
       abi: raffleAbi,
-      chainId: 11155111,
+      chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
       functionName: "publicMint",
-      args: [item.paytoken, 0, tokensCounter, nullSignature[0], nullSignature[1], nullSignature[1]],
+      args: [item.paytoken, 0, tokensCounter],
       overrides: {
         value: tokensCounter * item.entry_fee,
       },
     });
     const { hash } = await writeContract(config);
+    setHashState(hash);
     addRecentTransaction({
       hash: hash,
       description: `Public minting of ${tokensCounter} token(s).`,
+      confirmations: 3,
     });
+    if (hashState != undefined) {
+      openMintAwaitModal();
+    }
+  }
+
+  const publicMintERC = async () => {
+    closeMintReadyERCModal();
+    const config = await prepareWriteContract({
+      address: id,
+      abi: raffleAbi,
+      chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
+      functionName: "publicMint",
+      args: [item.paytoken, tokensCounter * item.entry_fee, tokensCounter],
+    });
+    const { hash } = await writeContract(config);
+    setHashState(hash);
+    addRecentTransaction({
+      hash: hash,
+      description: `Public minting of ${tokensCounter} token(s).`,
+      confirmations: 3,
+    });
+    if (hashState != undefined) {
+      openMintAwaitModal();
+    }
+  }
+
+  const ownerChargeTreasuryETH = async (e: React.MouseEvent<HTMLButtonElement>, inputData: string) => {
+    const config = await prepareWriteContract({
+      address: id,
+      abi: raffleAbi,
+      chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
+      functionName: "ownerChargeTreasury",
+      args: [item.paytoken, 0],
+      overrides: {
+        value: ethers.utils.parseEther(inputData),
+      }
+    });
+    const { hash } = await writeContract(config);
+    setHashState(hash);
+    closeGiveOwnerETHModal();
+    openMintAwaitModal();
+    addRecentTransaction({
+      hash: hash,
+      description: `Charging raffle treasury by owner for ${String(inputData)} ETH`,
+    });
+  };
+
+  const ownerChargeTreasuryERC = async (e: React.MouseEvent<HTMLButtonElement>, inputData: string) => {
+    const config = await prepareWriteContract({
+      address: id,
+      abi: raffleAbi,
+      chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
+      functionName: "ownerChargeTreasury",
+      args: [item.paytoken, Number(inputData) * 10 ** 6],
+    });
+    const { hash } = await writeContract(config);
+    let value = `$ ${numberWithCommas(Number(inputData))}`;
+    setHashState(hash);
+    closeGiveOwnerERCModal();
+    openMintAwaitModal();
+    addRecentTransaction({
+      hash: hash,
+      description: `Charging raffle treasury by owner for ${value}`,
+    });
+  };
+
+  const {
+    closeModal: closeApproveModal,
+    openModal: openApproveModal,
+    modal: approveModal
+  } = useModal(MessageModal, { approveTokenMint, modalText: approveModalText, mintState: "approveModalState", success: false });
+  const {
+    closeModal: closeApproveAwaitModal,
+    openModal: openApproveAwaitModal,
+    modal: approveAwaitModal
+  } = useModal(MessageModal, { modalText: approveAwaitModalText, mintState: "approveAwaitModalState", success: false });
+  const {
+    closeModal: closeMintAwaitModal,
+    openModal: openMintAwaitModal,
+    modal: mintAwaitModal
+  } = useModal(MessageModal, { modalText: mintAwaitModalText, mintState: "mintAwaitState", success: false });
+  const {
+    closeModal: closeMintReadyERCModal,
+    openModal: openMintReadyERCModal,
+    modal: mintReadyERCModal
+  } = useModal(MessageModal, { publicMintERC, modalText: mintReadyModalText, mintState: "mintReadyStateERC", success: false });
+  const {
+    closeModal: closeGiveOwnerETHModal,
+    openModal: openGiveOwnerETHModal,
+    modal: giveOwnerETHModal
+  } = useModal(GiveOwnerModal, { raffle: true, ownerChargeTreasuryETH });
+  const {
+    closeModal: closeGiveOwnerERCModal,
+    openModal: openGiveOwnerERCModal,
+    modal: giveOwnerERCModal
+  } = useModal(GiveOwnerModal, { raffle: true, approveTokenOwner, ownerChargeTreasuryERC });
+
+
+  const handleOpenModal = async () => {
+    const amount = await readContract({
+      address: item.paytoken,
+      abi: erc20Abi,
+      functionName: 'allowance',
+      args: [address, factoryAddress],
+    });
+    const convertedAmount = Number(amount.toString());
+    console.log(convertedAmount)
+    if (convertedAmount >= tokensCounter * item.entry_fee) {
+      openMintReadyERCModal();
+    } else {
+      openApproveModal();
+    }
   }
 
   const handleNextValue = () => {
@@ -289,7 +491,7 @@ function Collection() {
                   </CollectionInfoSummValue>
                 ) : (
                   <CollectionInfoSummValue>
-                    <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> $$$$$$
+                    <CollectionInfoSummValueImage alt="treasure" src="/images/treasure.svg" /> $$$
                   </CollectionInfoSummValue>
                 )}
               </CollectionInfoSumm>
@@ -363,11 +565,63 @@ function Collection() {
                       </CollectionBuyTokensControl>
                     </CollectionBuyTokensControllWrapper>
                   </CollectionBuyTokensControls>
-                    <CollectionBuyTokensButton onClick={() => {
-                      publicMint();
-                    }}>
-                      Купить токены
-                    </CollectionBuyTokensButton>
+                    {owner === address ? (
+                      <>
+                      {item.treasury_type === 4 ? (
+                        <>
+                        {item.paytoken === "0x0000000000000000000000000000000000000000" ? (
+                          <>
+                          {item.owner_charged === true? (
+                            <CollectionBuyTokensButtonInactive>
+                              Раффл активирован
+                            </CollectionBuyTokensButtonInactive>
+                          ) : (
+                            <CollectionBuyTokensButton onClick={openGiveOwnerETHModal}>
+                              Внести депозит
+                            </CollectionBuyTokensButton>
+                          )}
+                          </>
+                        ) : (
+                          <>
+                          {item.owner_charged === true? (
+                            <CollectionBuyTokensButtonInactive>
+                              Раффл активирован
+                            </CollectionBuyTokensButtonInactive>
+                          ) : (
+                            <CollectionBuyTokensButton onClick={openGiveOwnerERCModal}>
+                              Внести депозит
+                            </CollectionBuyTokensButton>
+                          )}
+                          </>
+                        )}
+                        </>
+                      ) : (
+                        <CollectionBuyTokensButtonInactive>
+                          Раффл активирован
+                        </CollectionBuyTokensButtonInactive>
+                      )}
+                      </>
+                    ) : (
+                      <>
+                      {seconds === "00" && minutes === "00" && hours === "00" && days === "00" ? (
+                        <CollectionBuyTokensButtonInactive>
+                          Купить токены
+                        </CollectionBuyTokensButtonInactive>
+                      ) : (
+                        <>
+                        {item.paytoken === "0x0000000000000000000000000000000000000000" ? (
+                          <CollectionBuyTokensButton onClick={publicMintETH}>
+                            Купить токены
+                          </CollectionBuyTokensButton>
+                        ) : (
+                          <CollectionBuyTokensButton onClick={handleOpenModal}>
+                            Купить токены
+                          </CollectionBuyTokensButton>
+                        )}
+                        </>
+                      )}
+                      </>
+                    )}
                 </CollectionBuyTokensButtons>
               </CollectionBuyTokens>
             </CollectionActive>
@@ -375,10 +629,10 @@ function Collection() {
             <CollectionDone>
               <CollectionDoneTitle>Победители</CollectionDoneTitle>
               <CollectionDoneContent>
-                {winners != undefined ? (
-                  <CollectionWinners items={winnersList.items} collectionOwner={winnersList.collectionOwner} text={item.lesser_prize_text} link={item.lesser_prize_link} />
+                {winners.length > 0 ? (
+                  <CollectionWinners items={winners} collectionOwner={owner} text={item.lesser_prize_text} link={item.lesser_prize_link} />
                 ) : (
-                  <CollectionFakeWinners items={fakeWinnersList}/>
+                  <CollectionFakeWinners items={fakeWinnersList} status={item.status} />
                 )}
                 <CollectionDoneLogoBlock>
                   <CollectionDoneLogo alt="logo" src="/images/give-c-logo.svg" />
@@ -388,6 +642,12 @@ function Collection() {
             </CollectionDone>
           )}
         </CollectionBlock>
+        {approveModal}
+        {approveAwaitModal}
+        {mintAwaitModal}
+        {mintReadyERCModal}
+        {giveOwnerERCModal}
+        {giveOwnerETHModal}
       </Default>
     );
   }

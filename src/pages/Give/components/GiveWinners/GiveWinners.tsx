@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
   GiveDoneWinnersHeader,
@@ -18,9 +18,9 @@ import {
   GiveDoneButtonInactive,
 } from "./GiveWinnersStyles";
 import truncateEthAddress from "truncate-eth-address";
-import { giveAbi } from "../../../../utils/getAccountBalance";
+import { giveAbi } from "../../../../utils/abiStorage";
 import { prepareWriteContract, writeContract } from "@wagmi/core";
-import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
+import { useAddRecentTransaction } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import axios from "axios";
 import WinnerModal from "../../../../components/Modals/WinnerModal/WinnerModal";
@@ -30,6 +30,7 @@ import useModal from "../../../../hooks/useModal";
 interface IGiveWinners {
   text?: string;
   link: string;
+  status: number;
   items: {
     isGrand: boolean;
     wallet: string;
@@ -45,7 +46,7 @@ interface IWinner {
   prize: string;
 }
 
-const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
+const GiveWinners: FC<IGiveWinners> = ({ items, text, link, status }) => {
   const { id } = useParams();
   const { address, isConnecting, isDisconnected } = useAccount();
 
@@ -60,7 +61,7 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
       const config = await prepareWriteContract({
         address: id,
         abi: giveAbi,
-        chainId: 11155111, // Sepolia network
+        chainId: 11155111, // VALUE MUST BE CHANGED TO ACTUAL IN PROD
         functionName: "withdrawPrize",
         args: [currentWinner.tokenId, proof],
       });
@@ -70,6 +71,8 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         description: `Prize withdrawal by participant # ${currentWinner.tokenId.toString()}.`,
       });
       setWithdrawDisabled(true);
+      closeWinnerModal();
+      closeNoMoneyModal();
     }
   }
 
@@ -85,19 +88,9 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
   } = useModal(NoMoneyPrizeModal, {modalText: text, modalLink: link });
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/giveaways-registry/${address}/${id}/`)
-    .then(res => {
-      setWithdrawDisabled(false);
-    })
-    .catch(err => {
-      setWithdrawDisabled(true);
-    })
-  }, [address]);
-
-  useEffect(() => {
     let winnerData: Array<IWinner> = [];
     if (items.length > 0) {
-      let data = items.filter(i => i.wallet == address);
+      let data = items.filter(i => i.wallet === address);
 
       for (let i = 0; i < data.length; i ++) {
         winnerData.push(data[i]);
@@ -107,30 +100,44 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
   }, [items, address]);
 
   useEffect(() => {
+    setWithdrawDisabled(false);
     if (winner.length > 0) {
       axios.get(`http://localhost:8000/api/giveaways-withdrawed/${address}/${id}`)
       .then(res => {
-        let data = res.data[0];
-        let withdrawedPrizeToken = data.token_id;
+        if (res.data.length > 0) {
+          let data = res.data[0];
+          let withdrawedWallet = data.wallet;
 
-        if (winner[0].tokenId === withdrawedPrizeToken) {
-          setWithdrawDisabled(true);
+          if (winner[0].wallet === withdrawedWallet) {
+            setWithdrawDisabled(true);
+          }
         }
       })
       .catch(err => {
         console.log(err);
       })
-      axios.get(`http://localhost:8000/api/merkles/${address}/${id}`)
-      .then(res => {
-        let data = res.data[0];
-        let merkleProof = data.proof;
-        setProof(merkleProof);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      if (status == 1) {
+        axios.get(`http://localhost:8000/api/merkles/${address}/${id}`)
+        .then(res => {
+          let data = res.data[0];
+          let merkleProof = data.proof;
+          setProof(merkleProof);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      }
+    } else {
+      setWithdrawDisabled(true);
     }
-  }, [winner]);
+  }, [address, winner]);
+
+  const correctItems = useMemo(() => {
+    const grandItems = items.filter(({ isGrand }) => isGrand);
+    const simpleItems = items.filter(({ isGrand }) => !isGrand);
+
+    return [...grandItems, ...simpleItems];
+  }, [items]);
 
   return (
     <GiveDoneWinnersBlock>
@@ -139,7 +146,7 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         <GiveDoneWinnersHeaderItem>Токенов</GiveDoneWinnersHeaderItem>
         <GiveDoneWinnersHeaderItem>Выигрыш</GiveDoneWinnersHeaderItem>
       </GiveDoneWinnersHeader>
-      {items.map((item, idx) => {
+      {correctItems.map((item, idx) => {
         return (
           <GiveDoneWinnersRow key={idx}>
             <GiveDoneWinnersRowItem>
@@ -148,9 +155,9 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
               {/*{item.isThird && <GiveDoneWinnersRowItemImage alt="medal" src="/images/3rd-place-medal.png" />}*/}
               <GiveDoneWinnersRowItemHash>{truncateEthAddress(item.wallet)}</GiveDoneWinnersRowItemHash>
             </GiveDoneWinnersRowItem>
-            <GiveDoneWinnersRowItem>
-              <GiveDoneWinnersRowItemText />
-            </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
             <GiveDoneWinnersRowItem>
               <GiveDoneWinnersRowItemText>{item.prize} </GiveDoneWinnersRowItemText>
             </GiveDoneWinnersRowItem>
@@ -161,10 +168,16 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         if (items.length === 0 && idx === 0) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #FFD00E 0%, rgba(255, 208, 14, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -172,10 +185,16 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         if (items.length === 0 && idx === 1) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -183,10 +202,16 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         if (items.length === 0 && idx === 2) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -194,10 +219,16 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         if (items.length === 1 && idx === 0) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -205,10 +236,16 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         if (items.length === 1 && idx === 1) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -216,33 +253,38 @@ const GiveWinners: FC<IGiveWinners> = ({ items, text, link }) => {
         if (items.length === 2 && idx === 0) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
 
         return (
           <GiveDoneWinnersFakeRow key={idx}>
-            {/* <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #FFD00E 0%, rgba(255, 208, 14, 0) 130%)" /> */}
-            <GiveDoneWinnersFakeRowWinner />
-            <GiveDoneWinnersFakeRowTokens />
-            <GiveDoneWinnersFakeRowPrize />
+            <GiveDoneWinnersRowItem>
+              <GiveDoneWinnersFakeRowWinner />
+            </GiveDoneWinnersRowItem>
+            <GiveDoneWinnersRowItem>
+              <GiveDoneWinnersFakeRowTokens />
+            </GiveDoneWinnersRowItem>
+            <GiveDoneWinnersRowItem>
+              <GiveDoneWinnersFakeRowPrize />
+            </GiveDoneWinnersRowItem>
           </GiveDoneWinnersFakeRow>
         );
       })}
       {withdrawDisabled == true ? (
         <GiveDoneButtonInactive>Получить приз</GiveDoneButtonInactive>
       ) : (
-        <>
-        {winner.length > 0 ? (
-          <GiveDoneButton onClick={openWinnerModal}>Получить приз</GiveDoneButton>
-        ) : (
-          <GiveDoneButton onClick={openNoMoneyModal}>Получить приз</GiveDoneButton>
-        )}
-        </>
+        <GiveDoneButton onClick={openWinnerModal}>Получить приз</GiveDoneButton>
       )}
       {winnerModal}
       {noMoneyModal}

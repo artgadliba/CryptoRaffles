@@ -93,10 +93,14 @@ const IndexGreetingTitle = styled.h1`
   }
 
   @media (max-width: 500px) {
-    font-size: ${pxIntoRem(33)};
+    // font-size: ${pxIntoRem(33)};
+    font-size: 9.05vw;
+    display: block;
+    width: 100%;
     span {
       font-family: inherit;
-      font-size: ${pxIntoRem(56)};
+      // font-size: ${pxIntoRem(66)};
+      font-size: 15.7vw;
       line-height: ${pxIntoRem(45)};
     }
   }
@@ -342,7 +346,7 @@ const IndexHowText = styled.p`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 300;
-  font-size: ${pxIntoRem(15)};
+  font-size: ${pxIntoRem(17)};
   line-height: 172.52%;
   color: #ffffff;
   margin-top: ${pxIntoRem(20)};
@@ -512,7 +516,8 @@ const IndexHowNeedsItemImageBlock = styled.div`
 
   @media (max-width: 500px) {
     margin-left: ${pxIntoRem(45)};
-    width: ${pxIntoRem(282)};
+    justify-content: center;
+    width: 77.7%;
     margin-top: ${pxIntoRem(16)};
   }
 `;
@@ -551,8 +556,16 @@ const IndexHowNeedsItemImageFirst = styled.img`
   @media (max-width: 500px) {
     width: ${pxIntoRem(196)};
     height: ${pxIntoRem(149)};
-    top: ${pxIntoRem(15)};
-    left: ${pxIntoRem(42)};
+    display: flex;
+    margin-left: 2.5%;
+    margin-top: 2%;
+  }
+  @media (max-width: 450px) {
+    width: ${pxIntoRem(196 * 0.9)};
+    height: ${pxIntoRem(149 * 0.9)};
+    display: flex;
+    margin-left: 2.5%;
+    margin-top: 2%;
   }
 `;
 
@@ -566,8 +579,16 @@ const IndexHowNeedsItemImageSecond = styled.img`
   @media (max-width: 500px) {
     width: ${pxIntoRem(252)};
     height: ${pxIntoRem(112)};
-    top: ${pxIntoRem(35)};
-    left: ${pxIntoRem(14)};
+    display: flex;
+    margin-left: 2.5%;
+    margin-top: 2%;
+  }
+  @media (max-width: 450px) {
+    width: ${pxIntoRem(252 * 0.9)};
+    height: ${pxIntoRem(112 * 0.9)};
+    display: flex;
+    margin-left: 2.5%;
+    margin-top: 2%;
   }
 `;
 
@@ -581,8 +602,16 @@ const IndexHowNeedsItemImageThird = styled.img`
   @media (max-width: 500px) {
     width: ${pxIntoRem(248)};
     height: ${pxIntoRem(77)};
-    left: ${pxIntoRem(14)};
-    top: ${pxIntoRem(38)};
+    display: flex;
+    margin-left: 10%;
+    margin-top: 3%;
+  }
+  @media (max-width: 450px) {
+    width: ${pxIntoRem(248 * 0.9)};
+    height: ${pxIntoRem(77 * 0.9)};
+    display: flex;
+    margin-left: 5%;
+    margin-top: 3%;
   }
 `;
 
@@ -592,11 +621,13 @@ const IndexHowNeedsItemImageThirdWatch = styled.img`
   top: ${pxIntoRem(20)};
   width: ${pxIntoRem(30)};
   height: ${pxIntoRem(37)};
+
   @media (max-width: 500px) {
     width: ${pxIntoRem(32)};
     height: ${pxIntoRem(39)};
-    left: ${pxIntoRem(58)};
-    top: ${pxIntoRem(18)};
+    display: block;
+    margin-left: 3.5%;
+    margin-top: 2%;
   }
 `;
 
@@ -606,11 +637,19 @@ const IndexHowNeedsItemImageForth = styled.img`
   top: ${pxIntoRem(3)};
   width: ${pxIntoRem(279)};
   height: ${pxIntoRem(179)};
+
   @media (max-width: 500px) {
     width: ${pxIntoRem(279)};
     height: ${pxIntoRem(178)};
-    right: ${pxIntoRem(-15)};
-    top: ${pxIntoRem(3)};
+    display: flex;
+    margin-right: 6%;
+  }
+  @media (max-width: 450px) {
+    width: ${pxIntoRem(279 * 0.8)};
+    height: ${pxIntoRem(178 * 0.8)};
+    display: flex;
+    margin-right: 12%;
+    margin-top: 3%;
   }
 `;
 

@@ -44,7 +44,7 @@ const WinnerModal: FC<IWinnerModal> = ({ onClose, playerWithdraw, winnerData }) 
 
     let tokenPhrase;
     if (tokens.length > 1) {
-      tokenPhrase = `токенов #${String(tokens)}`;
+      tokenPhrase = `токенов #${String(tokens.sort())}`;
     } else {
       tokenPhrase = `токенa #${String(tokens)}`;
     }

@@ -6,7 +6,6 @@ import {
   NoMoneyPrizeModalCloseImage,
   NoMoneyPrizeModalContent,
   NoMoneyPrizeModalHoliday,
-  NoMoneyPrizeModalLine,
   NoMoneyPrizeModalLines,
   NoMoneyPrizeModalSumm,
   NoMoneyPrizeModalText,
@@ -25,7 +24,6 @@ const NoMoneyPrizeModal: FC<INoMoneyPrizeModal> = ({ onClose, modalText, modalLi
         <NoMoneyPrizeModalClose onClick={onClose}>
           <NoMoneyPrizeModalCloseImage alt="close" src="/images/modal-close.svg" />
         </NoMoneyPrizeModalClose>
-        <NoMoneyPrizeModalLine />
         {!modalText ? (
           <NoMoneyPrizeModalText>Поздравляем вы выиграли утешительный приз</NoMoneyPrizeModalText>
         ) : (

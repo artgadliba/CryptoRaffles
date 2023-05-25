@@ -31,12 +31,18 @@ import {
   CollectionsFakeItemUsername,
   CollectionsFakeItemTimer,
   CollectionsFakeItemClock,
-  CollectionsFakeItemFakeButton,
+  CollectionsFakeItemButtonsWrapper,
+  CollectionsFakeItemFakeButton
 } from "./CollectionsItemStyles";
 import axios from "axios";
 import { ethers } from "ethers";
 import { getETHPrice } from "../../../utils/getETHPrice";
 import { numberWithCommas } from "../../../utils/numberWithCommas";
+import {
+  useConnectModal,
+  useAccountModal,
+  useChainModal,
+} from "@rainbow-me/rainbowkit";
 
 interface ICollectionsItem {
   item?: {
@@ -44,25 +50,18 @@ interface ICollectionsItem {
     end_timestamp: number;
     image: string;
     paytoken: string;
-    entry_fee: number;
     grand_prize: number;
-    grand_prize_token?: number;
-    grand_prize_winner?: string;
-    minor_prize: number;
-    minor_prize_tokens?: Array<number>;
-    minor_prize_winners?: Array<string>;
     owner: string;
     raffle_name: string;
-    status: number;
-    game_type: number;
-    description: string;
-    lesser_prize_text: string;
-    lesser_prize_link: string;
   };
   isFake?: boolean;
 }
 
 const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
+  const { openConnectModal } = useConnectModal();
+  const { openAccountModal } = useAccountModal();
+  const { openChainModal } = useChainModal();
+
   const [ethRate, setEthRate] = useState<number>();
 
   var {
@@ -76,15 +75,8 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
     daysNoun
   } = useCountdown(item?.end_timestamp ?? Date.now());
 
-  function handleConnectButtonClick() {
-    const element = document.getElementsByClassName(
-      "iekbcc0 iekbcc9 ju367v71 ju367v7m ju367v9c ju367vn ju367vec ju367vex ju367v11 ju367v1a ju367v27 ju367v8o _12cbo8i3 ju367v8m _12cbo8i4 _12cbo8i6");
-    const connectButtonRef: HTMLElement = element[0] as HTMLElement;
-    connectButtonRef.click();
-  };
-
-  function delayedConnectButton() {
-    setTimeout(handleConnectButtonClick, 1500);
+  function delayedConnectWallet() {
+    setTimeout(openConnectModal, 1500);
   }
 
   useEffect(() => {
@@ -114,13 +106,15 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
             <CollectionsFakeItemSummText />
           </CollectionsFakeItemSumm>
           <CollectionsFakeItemTimer />
+            <CollectionsFakeItemButtonsWrapper>
+              <CollectionsFakeItemFakeButton />
+              <CollectionsFakeItemFakeButton />
+              <CollectionsFakeItemFakeButton />
+              <CollectionsFakeItemFakeButton />
+            </CollectionsFakeItemButtonsWrapper>
           <CollectionsFakeItemButtons>
             <CollectionsFakeItemButtonMore />
             <CollectionsFakeItemButtonConnect />
-            <CollectionsFakeItemFakeButton />
-            <CollectionsFakeItemFakeButton />
-            <CollectionsFakeItemFakeButton />
-            <CollectionsFakeItemFakeButton />
           </CollectionsFakeItemButtons>
         </CollectionsFakeItemContent>
       </CollectionsFakeItemBlock>
@@ -144,7 +138,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
           {grandPrize > 5000 ? (
             <CollectionsItemSummTitle>{`$${numberWithCommas(grandPrize)}`}</CollectionsItemSummTitle>
           ) : (
-            <CollectionsItemSummTitle>$$$$$$</CollectionsItemSummTitle>
+            <CollectionsItemSummTitle>$$$</CollectionsItemSummTitle>
           )}
             <CollectionsItemSummText>Сумма розыгрыша</CollectionsItemSummText>
           </CollectionsItemSumm>
@@ -153,21 +147,21 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
               <CollectionsItemTimerNumber>{days}</CollectionsItemTimerNumber>
               <CollectionsItemTimerText>{daysNoun}</CollectionsItemTimerText>
             </CollectionsItemTimerColumn>
-            <CollectionsItemTimerSplitter marginLeft={25} marginRight={19}>
+            <CollectionsItemTimerSplitter marginLeft={25} marginRight={18}>
               :
             </CollectionsItemTimerSplitter>
             <CollectionsItemTimerColumn>
               <CollectionsItemTimerNumber>{hours}</CollectionsItemTimerNumber>
               <CollectionsItemTimerText>{hoursNoun}</CollectionsItemTimerText>
             </CollectionsItemTimerColumn>
-            <CollectionsItemTimerSplitter marginLeft={18} marginRight={22}>
+            <CollectionsItemTimerSplitter marginLeft={18} marginRight={20}>
               :
             </CollectionsItemTimerSplitter>
             <CollectionsItemTimerColumn>
               <CollectionsItemTimerNumber>{minutes}</CollectionsItemTimerNumber>
               <CollectionsItemTimerText>{minutesNoun}</CollectionsItemTimerText>
             </CollectionsItemTimerColumn>
-            <CollectionsItemTimerSplitter marginLeft={22} marginRight={15}>
+            <CollectionsItemTimerSplitter marginLeft={20} marginRight={12}>
               :
             </CollectionsItemTimerSplitter>
             <CollectionsItemTimerColumn>
@@ -177,7 +171,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
           </CollectionsItemTimer>
           <CollectionsItemButtons>
             <CollectionsItemButtonMore to={`/raffles/${item.raffle_id}`}>Подробнее</CollectionsItemButtonMore>
-            <CollectionsItemButtonConnect to={`/raffles/${item.raffle_id}`} onClick={delayedConnectButton}>Подключиться</CollectionsItemButtonConnect>
+            <CollectionsItemButtonConnect to={`/raffles/${item.raffle_id}`} onClick={delayedConnectWallet}>Подключиться</CollectionsItemButtonConnect>
           </CollectionsItemButtons>
         </CollectionsItemContent>
       </CollectionsItemBlock>
@@ -190,7 +184,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
         <CollectionsItemContent>
           <CollectionsItemId>{item.raffle_name}</CollectionsItemId>
           <CollectionsItemSumm>
-            <CollectionsItemSummTitle>$$$$$$</CollectionsItemSummTitle>
+            <CollectionsItemSummTitle>$$$</CollectionsItemSummTitle>
             <CollectionsItemSummText>Сумма розыгрыша</CollectionsItemSummText>
           </CollectionsItemSumm>
           <CollectionsItemTimer>
@@ -222,7 +216,7 @@ const CollectionsItem: FC<ICollectionsItem> = ({ item, isFake }) => {
           </CollectionsItemTimer>
           <CollectionsItemButtons>
             <CollectionsItemButtonMore to={`/raffles/${item.raffle_id}`}>Подробнее</CollectionsItemButtonMore>
-            <CollectionsItemButtonConnect to={`/raffles/${item.raffle_id}`} onClick={delayedConnectButton}>Подключиться</CollectionsItemButtonConnect>
+            <CollectionsItemButtonConnect to={`/raffles/${item.raffle_id}`} onClick={delayedConnectWallet}>Подключиться</CollectionsItemButtonConnect>
           </CollectionsItemButtons>
         </CollectionsItemContent>
       </CollectionsItemBlock>

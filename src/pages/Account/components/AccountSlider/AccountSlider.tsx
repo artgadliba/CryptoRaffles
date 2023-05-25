@@ -103,11 +103,11 @@ const AccountSlider: FC<IAccountSlider> = ({ items }) => {
   return (
     <AccountSliderBlock>
       <AccountSliderPrevButton className="account-slider-prev">
-        <AccountSliderPrevButtonImage alt="prev" src="/images/arrow-left.png" />
+        <AccountSliderPrevButtonImage alt="prev" src="/images/left-arrow.svg" />
       </AccountSliderPrevButton>
 
       <AccountSliderNextButton className="account-slider-next">
-        <AccountSliderNextButtonImage alt="next" src="/images/arrow-right.png" />
+        <AccountSliderNextButtonImage alt="next" src="/images/right-arrow.svg" />
       </AccountSliderNextButton>
       {modal}
       <AccountSliderBlockSlider

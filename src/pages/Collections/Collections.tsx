@@ -9,26 +9,14 @@ interface ICollectionData {
   end_timestamp: number;
   image: string;
   paytoken: string;
-  entry_fee: number;
   grand_prize: number;
-  grand_prize_token?: number;
-  grand_prize_winner?: string;
-  minor_prize: number;
-  minor_prize_tokens?: Array<number>;
-  minor_prize_winners?: Array<string>;
   owner: string;
   raffle_name: string;
-  status: number;
-  game_type: number;
-  description: string;
-  lesser_prize_text: string;
-  lesser_prize_link: string;
 }
 
 export const collections: Array<ICollectionData> = [];
 
 function Collections() {
-
   const [items, setItems] = useState(collections);
 
   useEffect(() => {

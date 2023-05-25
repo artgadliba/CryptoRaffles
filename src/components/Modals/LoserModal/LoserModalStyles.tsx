@@ -49,8 +49,8 @@ const LoserModalClose = styled.button`
 `;
 
 const LoserModalCloseImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 70%;
+  height: 70%;
 `;
 
 const LoserModalSumm = styled.h2`
@@ -121,6 +121,12 @@ const LoserModalButton = styled.button`
   border-radius: ${pxIntoRem(2)};
   margin-top: ${pxIntoRem(35)};
   z-index: 999;
+  transition: 1s;
+
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
+  }
   @media (max-width: 500px) {
     font-size: ${pxIntoRem(15.73)};
     line-height: ${pxIntoRem(19)};

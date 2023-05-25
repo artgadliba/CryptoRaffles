@@ -155,6 +155,14 @@ const FooterIcon = styled.svg`
   }
 `;
 
+const FooterButtonImage = styled.svg`
+  width: ${pxIntoRem(18)};
+  height: ${pxIntoRem(18)};
+  margin-left: ${pxIntoRem(13)};
+  fill: white;
+  transition: 1s;
+`;
+
 const FooterButton = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -170,35 +178,29 @@ const FooterButton = styled(NavLink)`
   color: #ffffff;
   cursor: pointer;
   grid-area: button;
+  transition: 1s;
 
+  &:hover {
+    box-shadow: 0 0 15px 5px #5d0de0;
+  }
   @media (max-width: 500px) {
     justify-content: center;
     margin-left: 0;
     margin-top: ${pxIntoRem(27)};
     width: 100%;
-  }
-`;
 
-const FooterButtonImage = styled.svg`
-  width: ${pxIntoRem(18)};
-  height: ${pxIntoRem(18)};
-  margin-left: ${pxIntoRem(13)};
-  fill: white;
-`;
+    &:active {
+      color: #08e2bd;
+      transition: 0.2s;
+      outline: 2px solid #3ff2d4;
+      outline-offset: -2px;
+      border-color: #08e2bd;
+    }
 
-const FooterButtonWrapper = styled.div`
-  z-index: 9;
-  &:hover ${FooterButton} {
-    color: #08e2bd;
-    transition: 0.2s;
-    outline: 2px solid #3ff2d4;
-    outline-offset: -2px;
-    border-color: #08e2bd;
-  }
-
-  &:hover ${FooterButtonImage} {
-    fill: #08e2bd;
-    transition: 0.5s;
+    &:active ${FooterButtonImage} {
+      fill: #08e2bd;
+      transition: 0.5s;
+    }
   }
 `;
 
@@ -249,4 +251,4 @@ const FooterBlurredCircle = styled.div`
   }
 `;
 
-export { FooterBlock, FooterTop, FooterBody, FooterButton, FooterButtonImage, FooterIconBlock, FooterIcon, FooterIcons, FooterLogo, FooterLogoBlock, FooterNavigation, FooterNavigationLink, FooterBottom, FooterLink, FooterBlurredCircle, FooterButtonWrapper };
+export { FooterBlock, FooterTop, FooterBody, FooterButton, FooterButtonImage, FooterIconBlock, FooterIcon, FooterIcons, FooterLogo, FooterLogoBlock, FooterNavigation, FooterNavigationLink, FooterBottom, FooterLink, FooterBlurredCircle };

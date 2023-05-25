@@ -27,6 +27,9 @@ const HeaderBurgerLine = styled.div`
   height: ${pxIntoRem(2)};
   background-color: white;
   margin-top: ${pxIntoRem(5)};
+  &:first-of-type {
+    margin-top: 0px;
+  }
 `;
 
 const HeaderBurgerContent = styled.div`
@@ -80,7 +83,14 @@ const HeaderBurgerContentCloseImage = styled.img`
   height: ${pxIntoRem(15.68)};
 `;
 
-const HeaderBurgerContentButton = styled.button`
+const HeaderBurgerContentButtonImage = styled.svg`
+  width: ${pxIntoRem(18)};
+  height: ${pxIntoRem(18)};
+  margin-left: ${pxIntoRem(13)};
+  fill: white;
+`;
+
+const HeaderBurgerContentButton = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,12 +106,29 @@ const HeaderBurgerContentButton = styled.button`
   line-height: ${pxIntoRem(20)};
   color: #ffffff;
   cursor: pointer;
-`;
 
-const HeaderBurgerContentButtonImage = styled.img`
-  width: ${pxIntoRem(18)};
-  height: ${pxIntoRem(18)};
-  margin-left: ${pxIntoRem(13)};
+  &:hover {
+    color: #08e2bd;
+    transition: 0.2s;
+    outline: 2px solid #3ff2d4;
+    outline-offset: -2px;
+    border-color: #08e2bd;
+  }
+  &:hover ${HeaderBurgerContentButtonImage} {
+    fill: #08e2bd;
+    transition: 0.2s;
+  }
+  &:active {
+    color: #08e2bd;
+    transition: 0.2s;
+    outline: 2px solid #3ff2d4;
+    outline-offset: -2px;
+    border-color: #08e2bd;
+  }
+  &:active ${HeaderBurgerContentButtonImage} {
+    fill: #08e2bd;
+    transition: 0.2s;
+  }
 `;
 
 const HeaderBurgerContentNavigation = styled.nav`
@@ -123,9 +150,13 @@ const HeaderBurgerContentNavigationLink = styled(NavLink)`
   &:first-of-type {
     margin-top: 0px;
   }
-
-  &.active {
+  &:hover {
     color: #08e2bd;
+    transition: 0.5s;
+  }
+  &:active {
+    fill: #08e2bd;
+    transition: 0.2s;
   }
 `;
 
@@ -144,12 +175,17 @@ const HeaderBurgerContentIconBlock = styled(Link)`
   }
 `;
 
-interface IHeaderBurgerContentIcon {
-  width: number;
-}
-
-const HeaderBurgerContentIcon = styled.img<IHeaderBurgerContentIcon>`
-  width: ${({ width }) => pxIntoRem(width)};
+const HeaderBurgerContentIcon = styled.svg`
+  width: ${pxIntoRem(27)};
+  fill: white;
+  &:hover {
+    fill: #08e2bd;
+    transition: 0.5s;
+  }
+  &:active {
+    fill: #08e2bd;
+    transition: 0.2s;
+  }
 `;
 
 const HeaderBurgerContentLinks = styled.div`

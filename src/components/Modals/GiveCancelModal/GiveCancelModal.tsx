@@ -6,7 +6,6 @@ import {
   GiveCancelModalCloseImage,
   GiveCancelModalContent,
   GiveCancelModalHoliday,
-  GiveCancelModalLine,
   GiveCancelModalLines,
   GiveCancelModalSumm,
   GiveCancelModalText,
@@ -24,14 +23,12 @@ const GiveCancelModal: FC<IGiveCancelModal> = ({ onClose, emergencyRaffleCancel 
         <GiveCancelModalClose onClick={onClose}>
           <GiveCancelModalCloseImage alt="close" src="/images/modal-close.svg" />
         </GiveCancelModalClose>
-        <GiveCancelModalLine />
           <GiveCancelModalText>
-            Вы действительно хотите экстренно отменить проведение гива? Это действие нельзя отменить.<br /><br />
-            Отмена возможна в течение суток с момента запуска.
+            Вы действительно хотите экстренно отменить проведение гива? Все записи о зарегистрированных участниках будут удалены.<br /><br />
+            Отмена возможна в течение 24 часов с момента запуска.
           </GiveCancelModalText>
-        <GiveCancelModalButton>Отменить</GiveCancelModalButton>
+        <GiveCancelModalButton onClick={emergencyRaffleCancel}>Отменить</GiveCancelModalButton>
         <GiveCancelModalLines alt="lines" src="/images/modal-lines.svg" />
-        <GiveCancelModalHoliday alt="holiday" src="/images/modal-holiday.svg" />
       </GiveCancelModalContent>
     </GiveCancelModalBlock>
   );

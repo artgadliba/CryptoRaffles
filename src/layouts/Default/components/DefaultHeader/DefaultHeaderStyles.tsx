@@ -2,7 +2,6 @@ import { FC, PropsWithChildren } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import pxIntoRem from "../../../../utils/pxIntoRem";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const DefaultHeaderBlock = styled.header`
   width: 100%;
@@ -42,13 +41,15 @@ const DefaultHeaderLogo = styled.img`
 const DefaultHeaderNavigation = styled.nav`
   display: flex;
   align-items: center;
-  margin-left: ${pxIntoRem(92)};
+  margin-left: auto;
+  padding-left: ${pxIntoRem(90)};
+
   @media (max-width: 1240px) {
-    margin-left: ${pxIntoRem(158 * 0.6)};
+    padding-left: ${pxIntoRem(90 * 0.6)};
   }
 
   @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(158 * 0.5)};
+    padding-left: ${pxIntoRem(90 * 0.5)};
   }
 
   @media (max-width: 500px) {
@@ -79,6 +80,7 @@ const DefaultHeaderNavigationLink = styled(NavLink)`
 
   &:first-of-type {
     margin-left: 0px;
+    margin-top: 0px;
   }
 
   &:hover {
@@ -94,15 +96,14 @@ interface IDefaultHeaderIcons {
 const DefaultHeaderIcons = styled.div<IDefaultHeaderIcons>`
   display: flex;
   align-items: center;
-  margin-left: auto;
-  margin-right: ${({ isActive }) => (isActive ? pxIntoRem(73) : pxIntoRem(65))};
-
+  margin-right: auto;
+  margin-left: ${pxIntoRem(124)};
   @media (max-width: 1240px) {
-    margin-right: ${({ isActive }) => (isActive ? pxIntoRem(73 * 0.6) : pxIntoRem(65 * 0.6))};
+    margin-left: ${pxIntoRem(124 * 0.6)};
   }
 
   @media (max-width: 1000px) {
-    margin-right: ${({ isActive }) => (isActive ? pxIntoRem(73 * 0.5) : pxIntoRem(65 * 0.5))};
+    margin-left: ${pxIntoRem(124 * 0.5)};
   }
 
   @media (max-width: 500px) {
@@ -119,13 +120,9 @@ const DefaultHeaderIconBlock = styled(Link)`
   }
 
   @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(27)};
+    margin-left: ${pxIntoRem(27 * 0.5)};
   }
 `;
-
-interface IDefaultHeaderIcon {
-  width: number;
-}
 
 const DefaultHeaderIcon = styled.svg`
   width: ${pxIntoRem(27)};
@@ -157,16 +154,20 @@ const DefaultHeaderButton = styled.button`
   cursor: pointer;
   grid-area: button;
 
+  &:hover {
+    box-shadow: 0 0 15px 5px #5d0de0;
+  }
   @media (max-width: 500px) {
     justify-content: center;
     width: 100%;
   }
 `;
 
-const DefaultHeaderButtonImage = styled.img`
+const DefaultHeaderButtonImage = styled.svg`
   width: ${pxIntoRem(18)};
   height: ${pxIntoRem(18)};
   margin-left: ${pxIntoRem(13)};
+  fill: white;
 `;
 
 const DefaultHeaderUser = styled.div`
@@ -190,9 +191,10 @@ const DefaultHeaderUserName = styled.span`
 `;
 
 const DefaultHeaderUserNameImage = styled.img`
+  margin-top: ${pxIntoRem(-3)};
   margin-right: ${pxIntoRem(12.46)};
-  width: ${pxIntoRem(28.54)};
-  height: ${pxIntoRem(28.54)};
+  width: ${pxIntoRem(40)};
+  height: ${pxIntoRem(40)};
   object-fit: cover;
   border-radius: 100%;
 `;
@@ -201,9 +203,14 @@ const DefaultHeaderUserNameText = styled.span`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
-  font-size: ${pxIntoRem(18)};
+  font-size: ${pxIntoRem(20)};
   line-height: 172.52%;
   color: #08e2bd;
+
+  &:hover {
+    color: white;
+    transition: 0.3s;
+  }
 `;
 
 const DefaultHeaderUserHash = styled.span`
@@ -213,9 +220,10 @@ const DefaultHeaderUserHash = styled.span`
 `;
 
 const DefaultHeaderUserHashImage = styled.img`
+  margin-top: ${pxIntoRem(-3)};
   margin-right: ${pxIntoRem(12)};
-  width: ${pxIntoRem(28)};
-  height: ${pxIntoRem(28)};
+  width: ${pxIntoRem(40)};
+  height: ${pxIntoRem(40)};
   object-fit: cover;
   border-radius: 100%;
 `;
@@ -224,16 +232,14 @@ const DefaultHeaderUserHashText = styled.span`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
-  font-size: ${pxIntoRem(18)};
+  font-size: ${pxIntoRem(20)};
   line-height: 172.52%;
   color: #8e52f1;
-`;
 
-const StyledConnectButton = styled(ConnectButton)`
-  position: relative;
-  top: -10px;
-  background-color: red;
-  outline: solid 2px red;
+  &:hover {
+    color: white;
+    transition: 0.3s;
+  }
 `;
 
 export {
@@ -255,5 +261,4 @@ export {
   DefaultHeaderUserNameImage,
   DefaultHeaderUserNameText,
   DefaultHeaderUserHashText,
-  StyledConnectButton,
 };

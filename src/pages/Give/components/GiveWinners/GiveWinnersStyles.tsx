@@ -23,28 +23,20 @@ const GiveDoneWinnersHeaderItem = styled.div`
   color: rgba(255, 255, 255, 0.74);
   &:nth-child(1) {
     padding-left: ${pxIntoRem(67)};
+    @media (max-width: 500px) {
+      padding-left: ${pxIntoRem(65)};
+    }
   }
 
   &:nth-child(2) {
     padding-left: ${pxIntoRem(92)};
+    @media (max-width: 500px) {
+      width: ${pxIntoRem(64)};
+    }
   }
 
   &:nth-child(3) {
     padding-left: ${pxIntoRem(50)};
-  }
-
-  @media (max-width: 500px) {
-    &:nth-child(1) {
-      padding-left: ${pxIntoRem(50)};
-    }
-
-    &:nth-child(2) {
-      padding-left: ${pxIntoRem(42)};
-    }
-
-    &:nth-child(3) {
-      padding-left: ${pxIntoRem(12)};
-    }
   }
 `;
 
@@ -63,34 +55,27 @@ const GiveDoneWinnersRowItem = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
+  flex-shrink: 0;
+  white-space: nowrap;
+
   &:nth-child(1) {
     padding-left: ${pxIntoRem(63)};
+    width: ${pxIntoRem(160)};
   }
 
   &:nth-child(2) {
-    padding-left: ${pxIntoRem(113)};
-    justify-content: center;
-    width: ${pxIntoRem(30)};
+    padding-left: ${pxIntoRem(80)};
+    width: ${pxIntoRem(160)};
+    @media (max-width: 500px) {
+      padding-left: ${pxIntoRem(50)};
+      width: ${pxIntoRem(120)};
+    }
   }
 
   &:nth-child(3) {
-    padding-left: ${pxIntoRem(90)};
-    padding-right: ${pxIntoRem(47)};
-    justify-content: flex-start;
-  }
-
-  @media (max-width: 500px) {
-    &:nth-child(1) {
-      padding-left: ${pxIntoRem(49)};
-    }
-
-    &:nth-child(2) {
-      padding-left: ${pxIntoRem(63)};
-    }
-
-    &:nth-child(3) {
-      padding-left: ${pxIntoRem(54)};
-      padding-right: ${pxIntoRem(15)};
+    width: ${pxIntoRem(140)};
+    @media (max-width: 500px) {
+      width: ${pxIntoRem(100)};
     }
   }
 `;
@@ -106,6 +91,8 @@ const GiveDoneWinnersRowItemImage = styled.img`
 `;
 
 const GiveDoneWinnersRowItemHash = styled.span`
+  position: relative;
+  top: 1.5px;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -115,27 +102,27 @@ const GiveDoneWinnersRowItemHash = styled.span`
 `;
 
 const GiveDoneWinnersRowItemText = styled.span`
+  position: relative;
+  top: 1.5px;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
   font-size: ${pxIntoRem(16)};
   line-height: 172.52%;
+  margin-right: ${pxIntoRem(3)};
   color: #ffffff;
 `;
 
 const GiveDoneWinnersFakeRow = styled.div`
   display: flex;
   align-items: center;
-  width: ${pxIntoRem(465)};
+  width: auto;
   height: ${pxIntoRem(45)};
   background: rgba(45, 11, 90, 0.3);
   border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.24);
   backdrop-filter: blur(${pxIntoRem(16.53)});
   border-radius: ${pxIntoRem(2)};
   margin-top: ${pxIntoRem(10)};
-  @media (max-width: 500px) {
-    width: ${pxIntoRem(332)};
-  }
 `;
 
 interface IGiveDoneWinnersFakeRowMedal {
@@ -148,8 +135,9 @@ const GiveDoneWinnersFakeRowMedal = styled.div<IGiveDoneWinnersFakeRowMedal>`
   background: ${({ color }) => color};
   opacity: 0.25;
   border-radius: ${pxIntoRem(40)};
-  left: ${pxIntoRem(25)};
   position: absolute;
+  left: ${pxIntoRem(25)};
+
   @media (max-width: 500px) {
     left: ${pxIntoRem(12)};
   }
@@ -161,11 +149,6 @@ const GiveDoneWinnersFakeRowWinner = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(114)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(62)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(48)};
-  }
 `;
 
 const GiveDoneWinnersFakeRowTokens = styled.div`
@@ -174,11 +157,6 @@ const GiveDoneWinnersFakeRowTokens = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(36)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(255)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(190)};
-  }
 `;
 
 const GiveDoneWinnersFakeRowPrize = styled.div`
@@ -187,14 +165,11 @@ const GiveDoneWinnersFakeRowPrize = styled.div`
   border-radius: ${pxIntoRem(2)};
   width: ${pxIntoRem(56)};
   height: ${pxIntoRem(16)};
-  position: absolute;
-  left: ${pxIntoRem(360)};
-  @media (max-width: 500px) {
-    left: ${pxIntoRem(260)};
-  }
 `;
 
 const GiveDoneButton = styled.button`
+  display: flex;
+  justify-content: center;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;
@@ -210,7 +185,12 @@ const GiveDoneButton = styled.button`
   width: fit-content;
   margin-top: ${pxIntoRem(30)};
   cursor: pointer;
+  transition: 1s;
 
+  &:hover {
+    background-color: #23f7d3;
+    box-shadow: 0 0 10px #23f7d3;
+  }
   @media (max-width: 500px) {
     width: 100%;
     margin-top: ${pxIntoRem(10)};
@@ -218,6 +198,8 @@ const GiveDoneButton = styled.button`
 `;
 
 const GiveDoneButtonInactive = styled.button`
+  display: flex;
+  justify-content: center;
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 600;

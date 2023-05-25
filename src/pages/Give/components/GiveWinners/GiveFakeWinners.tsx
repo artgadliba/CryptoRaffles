@@ -59,10 +59,16 @@ const GiveWinners: FC<IGiveFakeWinners> = ({ items }) => {
         if (items.length === 0 && idx === 0) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #FFD00E 0%, rgba(255, 208, 14, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -70,10 +76,16 @@ const GiveWinners: FC<IGiveFakeWinners> = ({ items }) => {
         if (items.length === 0 && idx === 1) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -81,10 +93,16 @@ const GiveWinners: FC<IGiveFakeWinners> = ({ items }) => {
         if (items.length === 0 && idx === 2) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -92,10 +110,16 @@ const GiveWinners: FC<IGiveFakeWinners> = ({ items }) => {
         if (items.length === 1 && idx === 0) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B5B5B5 0%, rgba(187, 187, 187, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -103,10 +127,16 @@ const GiveWinners: FC<IGiveFakeWinners> = ({ items }) => {
         if (items.length === 1 && idx === 1) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
@@ -114,20 +144,31 @@ const GiveWinners: FC<IGiveFakeWinners> = ({ items }) => {
         if (items.length === 2 && idx === 0) {
           return (
             <GiveDoneWinnersFakeRow key={idx}>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowWinner />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowTokens />
+              </GiveDoneWinnersRowItem>
+              <GiveDoneWinnersRowItem>
+                <GiveDoneWinnersFakeRowPrize />
+              </GiveDoneWinnersRowItem>
               <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #B76327 0%, rgba(171, 88, 31, 0) 130%)" />
-              <GiveDoneWinnersFakeRowWinner />
-              <GiveDoneWinnersFakeRowTokens />
-              <GiveDoneWinnersFakeRowPrize />
             </GiveDoneWinnersFakeRow>
           );
         }
 
         return (
           <GiveDoneWinnersFakeRow key={idx}>
-            {/* <GiveDoneWinnersFakeRowMedal color="linear-gradient(90deg, #FFD00E 0%, rgba(255, 208, 14, 0) 130%)" /> */}
-            <GiveDoneWinnersFakeRowWinner />
-            <GiveDoneWinnersFakeRowTokens />
-            <GiveDoneWinnersFakeRowPrize />
+            <GiveDoneWinnersRowItem>
+              <GiveDoneWinnersFakeRowWinner />
+            </GiveDoneWinnersRowItem>
+            <GiveDoneWinnersRowItem>
+              <GiveDoneWinnersFakeRowTokens />
+            </GiveDoneWinnersRowItem>
+            <GiveDoneWinnersRowItem>
+              <GiveDoneWinnersFakeRowPrize />
+            </GiveDoneWinnersRowItem>
           </GiveDoneWinnersFakeRow>
         );
       })}

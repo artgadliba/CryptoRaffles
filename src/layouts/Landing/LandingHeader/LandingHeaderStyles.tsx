@@ -44,11 +44,11 @@ const LandingHeaderNavigation = styled.nav`
   margin-left: ${pxIntoRem(158)};
   margin-right: auto;
   @media (max-width: 1240px) {
-    margin-left: ${pxIntoRem(158 * 0.6)};
+    margin-left: ${pxIntoRem(230)};
   }
 
   @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(158 * 0.5)};
+    margin-left: ${pxIntoRem(258)};
   }
 
   @media (max-width: 500px) {
@@ -90,15 +90,8 @@ const LandingHeaderNavigationLink = styled(NavLink)`
 const LandingHeaderIcons = styled.div`
   display: flex;
   align-items: center;
-  margin-right: ${pxIntoRem(65)};
+  margin-right: ${pxIntoRem(80)};
   margin-left: auto;
-  @media (max-width: 1240px) {
-    margin-right: ${pxIntoRem(65 * 0.6)};
-  }
-
-  @media (max-width: 1000px) {
-    margin-right: ${pxIntoRem(65 * 0.5)};
-  }
 
   @media (max-width: 500px) {
     display: none;
@@ -162,18 +155,8 @@ const LandingHeaderButton = styled(NavLink)`
   transition: 1s;
 
   &:hover {
-    color: #08e2bd;
-    transition: 0.2s;
-    outline: 2px solid #3ff2d4;
-    outline-offset: -2px;
-    border-color: #08e2bd;
+    box-shadow: 0 0 15px 5px #5d0de0;
   }
-
-  &:hover ${LandingHeaderButtonImage} {
-    fill: #08e2bd;
-    transition: 0.5s;
-  }
-
   @media (max-width: 500px) {
     justify-content: center;
     width: 100%;

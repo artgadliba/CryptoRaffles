@@ -15,6 +15,7 @@ interface IIndexListItemBlock {
   isOpen: boolean;
   openHeight?: number;
   openMobileHeight?: number;
+  openMobileHeightSmall?: number;
 }
 
 const IndexListItemBlock = styled.li<IIndexListItemBlock>`
@@ -37,6 +38,13 @@ const IndexListItemBlock = styled.li<IIndexListItemBlock>`
     font-size: ${pxIntoRem(17)};
     margin-top: ${pxIntoRem(5)};
     height: ${({ isOpen, openMobileHeight }) => (isOpen ? pxIntoRem(openMobileHeight || 315) : pxIntoRem(103))};
+    padding: ${pxIntoRem(0)} ${pxIntoRem(15)} ${pxIntoRem(0)} ${pxIntoRem(18)};
+  }
+  @media (max-width: 400px) {
+    font-weight: 500;
+    font-size: ${pxIntoRem(17)};
+    margin-top: ${pxIntoRem(5)};
+    height: ${({ isOpen, openMobileHeightSmall }) => (isOpen ? pxIntoRem(openMobileHeightSmall || 315) : pxIntoRem(103))};
     padding: ${pxIntoRem(0)} ${pxIntoRem(15)} ${pxIntoRem(0)} ${pxIntoRem(18)};
   }
 `;
@@ -119,7 +127,7 @@ const IndexListItemText = styled.p`
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 400;
-  font-size: ${pxIntoRem(15)};
+  font-size: ${pxIntoRem(17)};
   line-height: 172.52%;
   color: #ffffff;
   @media (max-width: 500px) {

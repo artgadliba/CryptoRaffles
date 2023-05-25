@@ -10,8 +10,8 @@ const IndexSliderBlock = styled.div`
   display: flex;
   flex-direction: column;
   @media (max-width: 500px) {
-    width: ${pxIntoRem(330)};
-    height: ${pxIntoRem(434)};
+    justify-content: center;
+    width: 100%;
     margin-top: ${pxIntoRem(50)};
   }
 `; // greeting-card-left-border.png

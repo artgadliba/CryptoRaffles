@@ -2,14 +2,14 @@ import styled from "styled-components";
 import pxIntoRem from "../../../../utils/pxIntoRem";
 import { Link } from "react-router-dom";
 
-const AccountListItemBlock = styled.div`
+const AccountListItemBlock = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   height: ${pxIntoRem(316)};
   width: 100%;
-  padding: ${pxIntoRem(22)} ${pxIntoRem(34)} ${pxIntoRem(40)} ${pxIntoRem(42)};
+  padding: ${pxIntoRem(22)} ${pxIntoRem(34)} ${pxIntoRem(34)} ${pxIntoRem(40)};
   margin-top: ${pxIntoRem(35)};
   border: ${pxIntoRem(1)} solid #746091;
   border-radius: ${pxIntoRem(2)};
@@ -18,11 +18,11 @@ const AccountListItemBlock = styled.div`
   &:first-of-type {
     margin-top: 0px;
   }
-
   @media (max-width: 500px) {
-    padding: ${pxIntoRem(22)} ${pxIntoRem(28)} ${pxIntoRem(40)} ${pxIntoRem(30)};
+    padding: ${pxIntoRem(24)} ${pxIntoRem(20)} ${pxIntoRem(40)} ${pxIntoRem(20)};
+    // padding: ${pxIntoRem(22)} ${pxIntoRem(28)} ${pxIntoRem(40)} ${pxIntoRem(30)};
     justify-content: flex-start;
-    height: ${pxIntoRem(429)};
+    height: ${pxIntoRem(460)};
     margin-top: ${pxIntoRem(31)};
   }
 `;
@@ -41,10 +41,9 @@ const AccountListItemUsername = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.06);
-  border: ${pxIntoRem(1)} solid rgba(255, 255, 255, 0.43);
   backdrop-filter: blur(${pxIntoRem(16.5)});
   border-radius: ${pxIntoRem(59)};
-  width: fit-content;
+  width: ${pxIntoRem(170)};
   font-family: "Gilroy";
   font-style: normal;
   font-weight: 500;
@@ -52,13 +51,24 @@ const AccountListItemUsername = styled.div`
   line-height: 111.5%;
   color: #ffffff;
   padding: ${pxIntoRem(6)} ${pxIntoRem(17)};
+  position: absolute;
+  top: 7%;
+  left: 3%;
+
+  @media (max-width: 500px) {
+    left: 7%;
+  }
 `;
 
 const AccountListItemContent = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
   z-index: 99;
+
+  @media (max-width: 1200px) {
+    align-items: flex-end;
+  }
   @media (max-width: 500px) {
     flex-direction: column;
     align-items: center;
@@ -73,25 +83,29 @@ const AccountListItemId = styled.h3`
   font-size: ${pxIntoRem(24)};
   line-height: 111.5%;
   color: #ffffff;
+  position: absolute;
+  bottom: 16%;
+  left: 4%;
+
+  @media (max-width: 500px) {
+    position: static;
+    margin-top: ${pxIntoRem(60)};
+  }
 `;
 
 const AccountListItemSumm = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: ${pxIntoRem(65)};
-
-  @media (max-width: 1200px) {
-    margin-left: ${pxIntoRem(65 * 0.6)};
-  }
-
-  @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(65 * 0.3)};
-  }
+  position: absolute;
+  bottom: 11.4%;
+  left: 25%;
 
   @media (max-width: 500px) {
+    flex-direction: column;
     align-items: center;
+    position: static;
     margin-top: ${pxIntoRem(20)};
-    margin-left: 0px;
+    margin-left: 0;
   }
 `;
 
@@ -117,18 +131,16 @@ const AccountListItemSummText = styled.span`
 const AccountListItemTimer = styled.div`
   display: flex;
   align-items: center;
-  margin-left: ${pxIntoRem(130)};
-  @media (max-width: 1200px) {
-    margin-left: ${pxIntoRem(130 * 0.6)};
-  }
-
-  @media (max-width: 1000px) {
-    margin-left: ${pxIntoRem(130 * 0.3)};
-  }
+  position: absolute;
+  bottom: 11.4%;
+  left: 41%;
 
   @media (max-width: 500px) {
+    flex-direction: row;
+    align-items: center;
+    position: static;
+    margin-left: 0;
     margin-top: ${pxIntoRem(22)};
-    margin-left: 0px;
   }
 `;
 
@@ -185,11 +197,14 @@ const AccountListItemStatus = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
-  position: relative;
-  bottom: ${pxIntoRem(-11)};
+  position: absolute;
+  bottom: 13%;
+  right: 4%;
+
   @media (max-width: 500px) {
     margin-top: ${pxIntoRem(55)};
     margin-left: 0px;
+    scale: 0.8;
   }
 `;
 
@@ -212,6 +227,9 @@ interface IAccountListItemStatusIndicator {
 
 const AccountListItemStatusIndicator = styled.div<IAccountListItemStatusIndicator>`
   display: flex;
+  width: ${pxIntoRem(118)};
+  height: ${pxIntoRem(36)};
+  margin-top: ${pxIntoRem(1)};
   align-items: center;
   justify-content: center;
   background-color: ${({ backgroundColor }) => backgroundColor};
@@ -225,13 +243,14 @@ const AccountListItemStatusIndicator = styled.div<IAccountListItemStatusIndicato
   line-height: 111.5%;
   color: ${({ textColor }) => textColor};
   @media (max-width: 1000px) {
+    margin-top: ${pxIntoRem(1)};
     margin-left: 0;
   }
 `;
 
 const AccountListFakeItemBlock = styled(AccountListItemBlock)`
   cursor: default;
-  padding: ${pxIntoRem(24)} ${pxIntoRem(34)} ${pxIntoRem(40)} ${pxIntoRem(28)};
+  padding: ${pxIntoRem(34)} ${pxIntoRem(34)} ${pxIntoRem(34)} ${pxIntoRem(34)};
 `;
 
 const AccountListFakeItemBackground = styled(AccountListItemBackground)`
@@ -250,16 +269,18 @@ const AccountListFakeItemBackground = styled(AccountListItemBackground)`
 `;
 
 const AccountListFakeItemUsername = styled.div`
-  padding: ${pxIntoRem(14.5)} ${pxIntoRem(23)};
+  padding: ${pxIntoRem(15)} ${pxIntoRem(23)};
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.43);
+  // border: 1px solid rgba(255, 255, 255, 0.43);
   backdrop-filter: blur(${pxIntoRem(16.5)});
   border-radius: ${pxIntoRem(59)};
-  width: fit-content;
-  & > div {
-    background-color: rgba(217, 217, 217, 0.51);
-    width: ${pxIntoRem(37)};
-    height: ${pxIntoRem(2)};
+  width: ${pxIntoRem(170)};
+  position: absolute;
+  top: 7%;
+  left: 3%;
+
+  @media (max-width: 500px) {
+    left: 7%;
   }
 `;
 
@@ -294,17 +315,18 @@ const AccountListFakeItemContent = styled(AccountListItemContent)`
 
 const AccountListFakeItemId = styled.div`
   width: ${pxIntoRem(213)};
-  height: ${pxIntoRem(20)};
+  height: ${pxIntoRem(27)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
-  @media (max-width: 1200px) {
-    position: relative;
-    top: ${pxIntoRem(-15)};
-  }
+  position: absolute;
+  bottom: 15.7%;
+  left: 4%;
 
   @media (max-width: 500px) {
+    position: static;
+    margin-top: ${pxIntoRem(24)};
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
   }
 `;
@@ -312,22 +334,24 @@ const AccountListFakeItemId = styled.div`
 const AccountListFakeItemSumm = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: ${pxIntoRem(35)};
   flex-shrink: 0;
-
-  @media (max-width: 1450px) {
-    margin-left: ${pxIntoRem(35 * 0.3)};
-  }
+  position: absolute;
+  bottom: 12.5%;
+  left: 25%;
 
   @media (max-width: 500px) {
-    margin-left: 0px;
+    flex-direction: column;
     align-items: center;
+    position: static;
+    margin-top: ${pxIntoRem(18)};
+    margin-left: 0;
   }
 `;
 
 const AccountListFakeItemSummTitle = styled.div`
   width: ${pxIntoRem(125)};
-  height: ${pxIntoRem(20)};
+  height: ${pxIntoRem(27)};
+  margin-top: ${pxIntoRem(2)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
@@ -335,21 +359,22 @@ const AccountListFakeItemSummTitle = styled.div`
 
   @media (max-width: 500px) {
     width: ${pxIntoRem(77)};
+    height: ${pxIntoRem(22)};
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
   }
 `;
 
 const AccountListFakeItemSummText = styled.div`
-  width: ${pxIntoRem(170)};
-  height: ${pxIntoRem(7)};
-  margin-top: ${pxIntoRem(8)};
+  width: ${pxIntoRem(150)};
+  height: ${pxIntoRem(6)};
+  margin-top: ${pxIntoRem(4)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
 
   @media (max-width: 500px) {
-    width: ${pxIntoRem(123)};
+    width: ${pxIntoRem(115)};
     height: ${pxIntoRem(14)};
     margin-top: ${pxIntoRem(5)};
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
@@ -357,19 +382,19 @@ const AccountListFakeItemSummText = styled.div`
 `;
 
 const AccountListFakeItemTimer = styled.div`
-  width: ${pxIntoRem(312)};
-  height: ${pxIntoRem(51)};
-  margin-left: ${pxIntoRem(77)};
+  width: ${pxIntoRem(282)};
+  height: ${pxIntoRem(37)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   border-radius: ${pxIntoRem(2)};
   flex-shrink: 0;
+  position: absolute;
+  bottom: 12.5%;
+  left: 41%;
 
   @media (max-width: 1450px) {
-    margin-left: ${pxIntoRem(77 * 0.3)};
-    width: ${pxIntoRem(312 * 0.9)};
+    width: ${pxIntoRem(235)};
   }
-
   @media (max-width: 500px) {
     display: none;
   }
@@ -379,6 +404,15 @@ const AccountListFakeItemStatus = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
+  position: absolute;
+  bottom: 13%;
+  right: 4%;
+
+  @media (max-width: 500px) {
+    margin-top: ${pxIntoRem(55)};
+    margin-left: 0px;
+    scale: 0.8;
+  }
 `;
 
 const AccountListFakeItemStatusText = styled.div`
@@ -394,15 +428,102 @@ const AccountListFakeItemStatusText = styled.div`
   }
 `;
 
+const AccountListFakeItemButton = styled.div`
+  display: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  width: ${pxIntoRem(37)};
+  height: ${pxIntoRem(44)};
+  margin-right: ${pxIntoRem(23)};
+
+  @media (max-width: 500px) {
+    display: block;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+`;
+
+const AccountListFakeItemButtons = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: row;
+    margin-left: 0;
+    margin-top: ${pxIntoRem(24)};
+  }
+`;
+
+const AccountListFakeItemButtonMore = styled.div`
+  width: ${pxIntoRem(155)};
+  height: ${pxIntoRem(51)};
+  border-radius: ${pxIntoRem(2)};
+  margin-right: ${pxIntoRem(12)};
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  flex-shrink: 0;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+    min-width: ${pxIntoRem(155)};
+    margin-right: 0px;
+    margin-bottom: ${pxIntoRem(12)};
+  }
+
+  @media (max-width: 500px) {
+    display: none;
+  }
+`;
+
 const AccountListFakeItemStatusButton = styled.div`
-  width: ${pxIntoRem(142)};
-  height: ${pxIntoRem(38)};
+  width: ${pxIntoRem(118)};
+  height: ${pxIntoRem(36)};
   border-radius: ${pxIntoRem(2)};
   background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(${pxIntoRem(45.5)});
   flex-shrink: 0;
   border-radius: ${pxIntoRem(33)};
   margin-left: ${pxIntoRem(17)};
+
+  @media (max-width: 500px) {
+    margin-left: 0px;
+  }
+`;
+
+const AccountListFakeItemButtonsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 500px) {
+    flex-direction: row;
+    margin-left: 0;
+    margin-top: ${pxIntoRem(24)};
+  }
+`;
+
+const AccountListFakeItemFakeButton = styled.div`
+  display: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 108.42%);
+  backdrop-filter: blur(${pxIntoRem(45.5)});
+  border-radius: ${pxIntoRem(2)};
+  width: ${pxIntoRem(37)};
+  height: ${pxIntoRem(41)};
+  margin-right: ${pxIntoRem(23)};
+
+  @media (max-width: 500px) {
+    margin-top: ${pxIntoRem(-2)};
+    display: block;
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
 `;
 
 export {
@@ -435,4 +556,6 @@ export {
   AccountListFakeItemStatus,
   AccountListFakeItemStatusButton,
   AccountListFakeItemStatusText,
+  AccountListFakeItemButtonsWrapper,
+  AccountListFakeItemFakeButton
 };

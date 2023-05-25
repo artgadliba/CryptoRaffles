@@ -64,12 +64,23 @@ const IndexWinnersRowItemTransaction = styled.span`
   color: #8e52f1;
 `;
 
-const IndexWinnersRowItemEmoji = styled.img`
+const IndexWinnersRowItemEmojiLine = styled.div`
+  display: flex;
+  align-items: center;
   width: ${pxIntoRem(88)};
   height: ${pxIntoRem(31)};
+  margin-right: ${pxIntoRem(17)};
   @media (max-width: 500px) {
     width: ${pxIntoRem(74)};
     height: ${pxIntoRem(30)};
+  }
+`;
+
+const IndexWinnersRowItemEmoji = styled.img`
+  height: 100%;
+  margin-left: ${pxIntoRem(7)};
+  &:first-of-type {
+    margin-left: 0px;
   }
 `;
 
@@ -188,6 +199,7 @@ export {
   IndexWinnersRowItem,
   IndexWinnersRowItemContent,
   IndexWinnersRowItemEmoji,
+  IndexWinnersRowItemEmojiLine,
   IndexWinnersRowItemHeader,
   IndexWinnersRowItemMoney,
   IndexWinnersRowItemText,

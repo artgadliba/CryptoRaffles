@@ -11,23 +11,12 @@ interface ITerm {
 
 interface IGiveawayData {
   giveaway_id: string;
-  start_time: number;
   end_timestamp: number;
   image: string;
   paytoken: string;
   grand_prize: number;
-  grand_prize_token?: number;
-  grand_prize_winner?: string;
-  minor_prize: number;
-  minor_prize_tokens?: Array<number>;
-  minor_prize_winners?: Array<string>;
   owner: string;
   giveaway_name: string;
-  status: number;
-  description: string;
-  terms: Array<ITerm>;
-  lesser_prize_text: string;
-  lesser_prize_link: string;
 }
 
 const giveaways: Array<IGiveawayData> = [];
